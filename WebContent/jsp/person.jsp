@@ -6,17 +6,20 @@
             <td valign="top">
                 <%-- -------- Include menu HTML code -------- --%>
                 <jsp:include page="../html/person_menu.html" />
+                
             </td>
             <td>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
+            <%@ page language="java" import="CSE132B.*" %>
+            
             <%@ page language="java" import="java.sql.*" %>
     
             <%-- -------- Open Connection Code -------- --%>
             <%
                 try {
-                	
+                	Person p = new Person();
                 	Class.forName("org.postgresql.Driver");
                 	String url = "jdbc:postgresql://127.0.0.1:5433/postgres";
                 	String user = "postgres";
