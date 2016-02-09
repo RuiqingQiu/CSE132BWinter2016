@@ -19,13 +19,17 @@
             <%-- -------- Open Connection Code -------- --%>
             <%
                 try {
-                	Person p = new Person();
+                	Person p = new Person("a", "b");
                 	Class.forName("org.postgresql.Driver");
-                	//String url = "jdbc:postgresql://127.0.0.1:5433/postgres";
-                	String url = "jdbc:postgresql://127.0.0.1:5432/postgres";
+                	//Ruiqing Setup
+                	String url = "jdbc:postgresql://127.0.0.1:5433/postgres";
                 	String user = "postgres";
-                	//String password = "qrq19931120";
-                	String password = "929kimbum";
+                	String password = "qrq19931120";
+
+                	//Mingshan Setup
+                	//String url = "jdbc:postgresql://127.0.0.1:5432/postgres";
+                	//String user = "postgres";
+                	//String password = "929kimbum";
                 	Connection conn = DriverManager.getConnection(url, user, password);
             %>
 
