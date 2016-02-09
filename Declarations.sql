@@ -178,8 +178,6 @@ CREATE TABLE GraduateDepartment(
 	PRIMARY KEY(StudentID,DepartmentName)
 ); 
 
-
-
 CREATE TABLE PhD_Advisor(
 	StudentID varchar(10) references PhD(StudentID),
 	SSN varchar(255) references Faculty(SSN) ON DELETE CASCADE,
