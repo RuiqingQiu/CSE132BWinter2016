@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS PeriodOfAttendence CASCADE;
 DROP TABLE IF EXISTS Probation CASCADE;
 DROP TABLE IF EXISTS StudentEnrollment CASCADE;
+DROP TABLE IF EXISTS EducationHistory CASCADE;
 DROP TABLE IF EXISTS AcademicHistory CASCADE;
 DROP TABLE IF EXISTS PhD_Advisor CASCADE;
 DROP TABLE IF EXISTS Faculty_Department CASCADE;
@@ -213,6 +214,13 @@ Create table AcademicHistory(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
 	PRIMARY KEY(StudentID, SectionID)
+);
+
+CREATE TABLE EducationHistory(
+	StudentID varchar(10) references Student(StudentID),
+	Degree varchar(255),
+	University varchar(255),
+	PRIMARY KEY (StudentID, Degree, University)
 );
 
 
