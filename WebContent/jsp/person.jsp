@@ -1,9 +1,13 @@
 <html>
-
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
-    <table border="1">
+    <table border="1" class="table table-bordered">
         <tr>
-            <td valign="top">
+            <td>
                 <%-- -------- Include menu HTML code -------- --%>
                 <jsp:include page="../html/person_menu.html" />
                 
@@ -114,7 +118,7 @@
             %>
 
             <!-- Add an HTML table header row to format the results -->
-                <table border="1">
+                <table border="1" class="table table-bordered">
                     <tr>
                         <th>Name</th>
                         <th>SSN</th>
@@ -127,7 +131,7 @@
                             <th><input value="" name="Name" size="10"></th>
                             <th><input value="" name="SSN" size="10"></th>
                             
-                            <th><input type="submit" value="Insert"></th>
+                            <th><input class="btn btn-default" type="submit" value="Insert"></th>
                         </form>
                     </tr>
 
@@ -157,7 +161,7 @@
 
                             <%-- Button --%>
                             <td>
-                                <input type="submit" value="Update">
+                                <input class="btn btn-default" type="submit" value="Update">
                             </td>
                         </form>
                         <form action="person.jsp" method="get">
@@ -166,7 +170,7 @@
                                 value="<%= rs.getString("SSN") %>" name="SSN">
                             <%-- Button --%>
                             <td>
-                                <input type="submit" value="Delete">
+                                <input class="btn btn-default" type="submit" value="Delete">
                             </td>
                         </form>
                     </tr>
