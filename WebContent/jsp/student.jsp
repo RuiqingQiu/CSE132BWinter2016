@@ -166,6 +166,7 @@
             <input class="btn btn-default" type="submit" value="Insert">
             </form> -->
 
+
 			
 			<h2>Student Data</h2>
             <table border="1" class="table table-bordered">
