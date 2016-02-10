@@ -80,11 +80,11 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE ThesisCommittee SET StudentID = ?, StartTime = ?, EndTime = ?  WHERE ProbationID = ?");
+                            "UPDATE ThesisCommittee SET StudentID = ?, FacultySSN = ?, DepartmentName = ?  WHERE ProbationID = ?");
 
                         pstmt.setString(1, request.getParameter("StudentID"));
-						pstmt.setString(2, request.getParameter("StartTime"));
-						pstmt.setString(3, request.getParameter("EndTime")); 
+						pstmt.setString(2, request.getParameter("FacultySSN"));
+						pstmt.setString(3, request.getParameter("DepartmentName")); 
 						pstmt.setInt(4, Integer.parseInt(request.getParameter("ProbationID"))); 
                         int rowCount = pstmt.executeUpdate();
 
@@ -125,15 +125,23 @@
 						("SELECT * FROM Department");
 			%>
 			<!-- Create a drop down for all department -->
-			<select>
+			<select class="form-control">
 			
 			<%
-				while(rs.next()){
-			%>			
-			<option value="<%= rs.getString("DepartmentName") %>" name="DepartmentName" > <%= rs.getString("DepartmentName") %> </option>
-			<%
-				}
+				if (!rs.isBeforeFirst() ) {    
 			%>
+				<option value="no department" name="DepartmentName" > There are no departments </option>
+			<% 
+				}
+				else{
+		
+					while(rs.next()){
+				%>			
+				<option value="<%= rs.getString("DepartmentName") %>" name="DepartmentName" > <%= rs.getString("DepartmentName") %> </option>
+				<%
+					}
+				}
+				%>
 			</select>
 			
 			
