@@ -174,9 +174,11 @@
                     // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
                         ("SELECT * FROM Course"); 
+                    
             %>
 
             <!-- Add an HTML table header row to format the results -->
+                
                 <table border="1" class="table table-bordered">
                     <tr>
                         <th>CourseName</th>
@@ -192,16 +194,16 @@
                  <tr>
                         <form action="course.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
-                            <th><input value="" name="CourseName" size="10"></th>
-                            <th><input value="" name="DepartmentName" size="10"></th>
-                            <th><input value="" name="MaxUnits" size="10"></th>
-                            <th><input value="" name="MinUnits" size="10"></th>
-                            <th><input value="" name="RequireLabWorks" size="10"></th>
-                            <th><input value="" name="GradeOption" size="10"></th>
-                            <th><input value="" name="RequireConsentOfInstructor" size="10"></th>         
-                            <th><input class="btn btn-default" type="submit" value="Insert"></th>
+                            <input value="" name="CourseName" size="10"></br>
+                            <input value="" name="DepartmentName" size="10"></br>
+                            <input value="" name="MaxUnits" size="10"></br>
+                            <input value="" name="MinUnits" size="10"></br>
+                            <input value="" name="RequireLabWorks" size="10"></br>
+                            <input value="" name="GradeOption" size="10"></br>
+                            <input value="" name="RequireConsentOfInstructor" size="10"></br>         
+                            <input class="btn btn-default" type="submit" value="Insert"></br>
                         </form>
-                    </tr>
+                 </tr>
 
             <%-- -------- Iteration Code -------- --%>
             <%
