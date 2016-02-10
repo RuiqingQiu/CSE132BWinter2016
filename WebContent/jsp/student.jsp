@@ -4,11 +4,49 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<script src="http://code.jquery.com/jquery-latest.js">   
+        </script>
+        <script>
+            $(document).ready(function() { 
+            	 $("#ddl").change(function () {
+                     alert($(this).val());
+                 });
+                $('#StudentType').change(function() {  
+                    var username=$(this).val();
+                 	$.get('../StudentTypeSelectServlet',{StudentType:username},function(responseText) { 
+                        $('#form').html(responseText);        
+                    });
+                });
+            });
+    </script>
 </head>
 <body>
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <h2>Student Entry Form</h2>
+            What type of students are you entering?
+            <select id="StudentType" name="StudentType">
+			<option value="Undergraduate">Undergraduate</option>
+			<option value="BSMS">BS/MS</option>
+			<option value="Master">Master</option>
+			<option value="PhdPreCandidacy">Pre-Candidacy PhD</option>
+			<option value="PhDCandidates">PhD Candidates</option>
+			</select>
+			<div id="form">
+			<!-- Default form is undergraduate -->
+			<h3>Undergraduate Student Form</h3><br>
+			<form action="student.jsp" method="get">
+			<input type="hidden" value="insert" name="action">
+			<input type="hidden" value="Undergraduate" name="StudentType">
+            Name: <input value="" name="Name" size="10"><br>
+            SSN: <input value="" name="SSN" size="10"><br>
+            StudentID: <input value="" name="StudentID" size="10"><br>
+            Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
+            Academic Level: <input value="" name="AcademicLevel" size="10"><br>
+            <input class="btn btn-default" type="submit" value="Insert">
+            </form>
+			</div>
+			<br>
             <%@ page language="java" import="CSE132B.*" %>
             
             <%@ page language="java" import="java.sql.*" %>
@@ -44,36 +82,14 @@
             				);
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
-
-                        // Begin transaction
-                        conn.setAutoCommit(false);
-                        
-                        // Create the prepared statement and use it to
-                        // INSERT the student attributes INTO the Student table.
-                        PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Person VALUES (?, ?)");
-                        pstmt.setString(1, s.Name);
- 						pstmt.setString(2, s.SSN);
- 						// Commit transaction
- 						int rowCount = pstmt.executeUpdate();
-                        conn.commit();
-                        conn.setAutoCommit(true);
- 						
-                        //Then insert into the student table
-                        conn.setAutoCommit(false);
-                        pstmt = conn.prepareStatement(
-                            "INSERT INTO Student VALUES (?, ?, ?, ?, ?)");
-						pstmt.setString(1, s.StudentID);
-						pstmt.setString(2, s.Name);
-						pstmt.setString(3, s.SSN);
-						pstmt.setString(4, s.ResidenceStatus);
-						pstmt.setString(5, s.AcademicLevel);
-
-			          	rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                        conn.commit();
-                        conn.setAutoCommit(true);
+						String table = request.getParameter("StudentType");
+						if(table.equals("Undergraduate")){
+							Undergraduate u = new Undergraduate(request.getParameter("Name"), request.getParameter("SSN"),
+        							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
+        							request.getParameter("AcademicLevel"), "Marshall");
+							u.insert(conn);
+						}
+                    
                     }
             %>
 
@@ -140,7 +156,7 @@
             %>
 
             <!-- Add an HTML table header row to format the results -->
-            <form action="student.jsp" method="get">
+           <!--  <form action="student.jsp" method="get">
 			<input type="hidden" value="insert" name="action">
             Name: <input value="" name="Name" size="10"><br>
             SSN: <input value="" name="SSN" size="10"><br>
@@ -148,8 +164,10 @@
             Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
             Academic Level: <input value="" name="AcademicLevel" size="10"><br>
             <input class="btn btn-default" type="submit" value="Insert">
-            </form>
+            </form> -->
 
+			
+			<h2>Student Data</h2>
             <table border="1" class="table table-bordered">
 				<tr>
                    	<th>Name</th>
