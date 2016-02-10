@@ -125,6 +125,7 @@
 						("SELECT * FROM Department");
 			%>
 			<!-- Create a drop down for all department -->
+			Department: 
 			<select class="form-control">
 			
 			<%
