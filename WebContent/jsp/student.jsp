@@ -25,19 +25,20 @@
                 try {
                 	Class.forName("org.postgresql.Driver");
                 	//Ruiqing Setup
-                	String url = "jdbc:postgresql://127.0.0.1:5433/postgres";
+                	/* String url = "jdbc:postgresql://127.0.0.1:5433/postgres";
                 	String user = "postgres";
-                	String password = "qrq19931120";
+                	String password = "qrq19931120"; */
 
                 	//Mingshan Setup
-                	//String url = "jdbc:postgresql://127.0.0.1:5432/postgres";
-                	//String user = "postgres";
-                	//String password = "929kimbum";
+                	String url = "jdbc:postgresql://127.0.0.1:5432/postgres";
+                	String user = "postgres";
+                	String password = "929kimbum";
                 	Connection conn = DriverManager.getConnection(url, user, password);
             %>
 
             <%-- -------- INSERT Code -------- --%>
             <%
+            		// request is a implicit object
                     String action = request.getParameter("action");
             		Student s = new Student(request.getParameter("Name"), request.getParameter("SSN"),
             							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
@@ -91,10 +92,11 @@
                         PreparedStatement pstmt = conn.prepareStatement(
                             "UPDATE Student SET Name = ?, SSN = ?, ResidenceStatus = ?, AcademicLevel = ? WHERE StudentID = ?");
 
+                  
                         pstmt.setString(1, request.getParameter("Name"));
                         pstmt.setString(2, request.getParameter("SSN"));
-                        pstmt.setString(2, request.getParameter("ResidenceStatus"));                        
-                        pstmt.setString(2, request.getParameter("AcademicLevel"));                        
+                        pstmt.setString(3, request.getParameter("ResidenceStatus"));                        
+                        pstmt.setString(4, request.getParameter("AcademicLevel"));                        
                         pstmt.setString(5, request.getParameter("StudentID"));                        
 
                         int rowCount = pstmt.executeUpdate();
