@@ -230,10 +230,10 @@ CREATE TABLE PeriodOfAttendence(
 );
      
 CREATE TABLE Probation(
+	ProbationID Serial PRIMARY KEY,
 	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
 	StartTime varchar(255),
-	EndTime varchar(255),
-	PRIMARY KEY (StudentID,StartTime,EndTime)
+	EndTime varchar(255)
 );
 
 CREATE TABLE Prereq(
