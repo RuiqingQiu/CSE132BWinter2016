@@ -9,7 +9,7 @@
         <tr>
             <td>
                 <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../html/faculty_menu.html" />
+                <jsp:include page="../form_html/faculty_menu.html" />
                 
             </td>
             <td>
@@ -27,6 +27,7 @@
                 	String url;
                 	String user;
                 	String password;
+                	
                 	if(CSE132B.NUM == 1){
 		               	//Mingshan Setup
 		               	url = "jdbc:postgresql://127.0.0.1:5432/postgres";
