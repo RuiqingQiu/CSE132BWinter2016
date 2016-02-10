@@ -5,13 +5,13 @@ public class Course {
 	public String DepartmentName;
 	public int MaxUnits;
 	public int MinUnits;
-	public boolean RequireLabWorks;
+	public String RequireLabWorks;
 	public String GradeOption;
-	public boolean RequireConsentOfInstructor;
+	public String RequireConsentOfInstructor;
 	
 	public Course(String CourseName, String DepartmentName, int MaxUnits, int MinUnits,
-			boolean RequireLabWorks, String GradeOption,
-			boolean RequireConsentOfInstructor)
+			String RequireLabWorks, String GradeOption,
+			String RequireConsentOfInstructor)
 	{
 		this.CourseName = CourseName;
 		this.DepartmentName = DepartmentName;

@@ -227,24 +227,6 @@
                         </form>
                     </tr>
                     
-                    <%-- need to update person table if name/ssn changes --%>
-                    <%-- <tr>
-                            <form action="person.jsp" method="get">
-                            <input type="hidden" value="update" name="action">
-
-                            Get the SSN
-                            <td>
-                                <input value="<%= rs.getString("SSN") %>" 
-                                    name="SSN" size="10">
-                            </td>
-    
-                            Get the Name
-                            <td>
-                                <input value="<%= rs.getString("Name") %>" 
-                                    name="Name" size="10">
-                            </td>
-                           	</form>
-                    </tr>  --%>
             <%
                     }
             %>
