@@ -141,13 +141,13 @@
 
             <!-- Add an HTML table header row to format the results -->
             <form action="student.jsp" method="get">
-			<input type="hidden" value="insert" name="action">
-            Name: <input value="" name="Name" size="10"><br>
-            SSN: <input value="" name="SSN" size="10"><br>
-            StudentID: <input value="" name="StudentID" size="10"><br>
-            Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
-            Academic Level: <input value="" name="AcademicLevel" size="10"><br>
-            <input class="btn btn-default" type="submit" value="Insert">
+				<input type="hidden" value="insert" name="action">
+            	Name: <input value="" name="Name" size="10"><br>
+            	SSN: <input value="" name="SSN" size="10"><br>
+            	StudentID: <input value="" name="StudentID" size="10"><br>
+            	Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
+            	Academic Level: <input value="" name="AcademicLevel" size="10"><br>
+            	<input class="btn btn-default" type="submit" value="Insert">
             </form>
 
             <table border="1" class="table table-bordered">

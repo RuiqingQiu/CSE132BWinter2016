@@ -59,7 +59,9 @@
                    				request.getParameter("GradeOption"),
                    				request.getParameter("RequireConsentOfInstructor"));
                 	   
-                
+                	   System.out.println(request.getParameter("GradeOption"));
+                	     	
+                	   
                         // Begin transaction
                         conn.setAutoCommit(false);
                         
@@ -74,7 +76,7 @@
 						pstmt.setInt(4,c.MinUnits);
 						
 						// by default user enter 0 or 1
-						if(c.RequireLabWorks.equals("1")){
+						if(c.RequireLabWorks.equals("Yes")){
 							pstmt.setBoolean(5,true);
 						}else{
 							pstmt.setBoolean(5,false);
@@ -82,7 +84,7 @@
 						
 						pstmt.setString(6,c.GradeOption);
 						
-						if(c.RequireConsentOfInstructor.equals("1")){
+						if(c.RequireConsentOfInstructor.equals("Yes")){
 							pstmt.setBoolean(7,true);
 						}else{
 							pstmt.setBoolean(7,false);
@@ -167,15 +169,77 @@
 
             <%-- -------- SELECT Statement Code -------- --%>
             <%
-                    // Create the statement
-                   Statement statement = conn.createStatement();
+                 // Create the statement
+                Statement statement = conn.createStatement();
 
-                    // Use the created statement to SELECT
-                    // the student attributes FROM the Student table.
+                // Use the created statement to SELECT
+                 // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
                         ("SELECT * FROM Course"); 
                     
             %>
+            
+            <%-- Find out all the department available --%>
+			<%
+				Statement departmentStatement = conn.createStatement();
+				ResultSet rs_department = departmentStatement.executeQuery
+						("SELECT * FROM Department");
+			%>
+            
+            <!-- Make the input box vertically listed -->
+            <form action="course.jsp" method="get">
+				<input type="hidden" value="insert" name="action">
+            	CourseName: <input value="" name="CourseName" size="10"><br>
+            	
+            	<!-- Create a drop down for all department -->
+            	DepartmentName: <select name="DepartmentName">
+            	
+            	<%
+            		// if there is no entry in the Department table
+					if (!rs_department.isBeforeFirst() ) {    
+				%>
+					<option value="no department" name="DepartmentName" > There are no departments </option>
+				<% 
+				}
+				else{
+		
+					while(rs_department.next()){
+				%>	
+				<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
+            	<%
+					} // close of while loop
+				}// close of else statement
+				%>
+				</select><br> <!-- end of select department  -->
+			
+            	MaxUnits: <input value="" name="MaxUnits" size="10"><br>
+            	MinUnits:<input value="" name="MinUnits" size="10"><br>
+            	
+            	RequireLabWorks:<select name="RequireLabWorks"> 
+            		<option value="" ></option>
+  					<option value="Yes" >Yes</option>
+  					<option value="No" >No</option>	
+				</select><br>
+            	
+            	
+            	GradeOption: 
+            	<select name="GradeOption">
+            		<option value=""></option>
+            		<option value="Letter Grade Only">Letter Grade Only</option>
+            		<option value="Pass/No pass only">Pass/No pass only</option>
+            		<option value="Letter Grade & Pass/No pass">Letter Grade & Pass/No pass</option>
+            	</select><br>
+            	
+            	RequireConsentOfInstructor: 
+            	<select name="RequireConsentOfInstructor">
+            		<option value=""></option>
+            		<option value="Yes">Yes</option>
+            		<option value="No">No</option>
+            	</select>
+            	
+            	<input class="btn btn-default" type="submit" value="Insert">
+            
+            </form>
 
             <!-- Add an HTML table header row to format the results -->
                 
@@ -190,20 +254,7 @@
                         <th>RequireConsentOfInstructors</th>
 						<th>Action</th>
                     </tr>
-     
-                 <tr>
-                        <form action="course.jsp" method="get">
-                            <input type="hidden" value="insert" name="action">
-                            <input value="" name="CourseName" size="10"></br>
-                            <input value="" name="DepartmentName" size="10"></br>
-                            <input value="" name="MaxUnits" size="10"></br>
-                            <input value="" name="MinUnits" size="10"></br>
-                            <input value="" name="RequireLabWorks" size="10"></br>
-                            <input value="" name="GradeOption" size="10"></br>
-                            <input value="" name="RequireConsentOfInstructor" size="10"></br>         
-                            <input class="btn btn-default" type="submit" value="Insert"></br>
-                        </form>
-                 </tr>
+      
 
             <%-- -------- Iteration Code -------- --%>
             <%
@@ -215,16 +266,22 @@
 
                   <tr>
                         <form action="course.jsp" method="get">
-                            <input type="hidden" value="update" name="action"> -->
+                            <input type="hidden" value="update" name="action">
 
                             <%-- Get the CourseName --%>
                             <td>
+              
                                 <input value="<%= rs.getString("CourseName") %>" 
                                     name="CourseName" size="10">
                             </td> 
     
                             <%-- Get the Department --%>
                             <td>
+                            
+                            	<% 
+                            		System.out.println(rs.getString("DepartmentName")); 
+                            	%> 
+                            	
                                 <input value="<%= rs.getString("DepartmentName") %>" 
                                     name="DepartmentName" size="10">
                             </td> 
