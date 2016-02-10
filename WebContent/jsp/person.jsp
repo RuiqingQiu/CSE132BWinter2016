@@ -9,7 +9,7 @@
         <tr>
             <td>
                 <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../html/person_menu.html" />
+                <jsp:include page="../form_html/person_menu.html" />
                 
             </td>
             <td>
