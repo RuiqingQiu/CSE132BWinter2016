@@ -6,17 +6,9 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/student_menu.html" />
-                
-            </td>
-            <td>
-
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
+            <h2>Student Entry Form</h2>
             <%@ page language="java" import="CSE132B.*" %>
             
             <%@ page language="java" import="java.sql.*" %>
@@ -148,28 +140,25 @@
             %>
 
             <!-- Add an HTML table header row to format the results -->
-                <table border="1" class="table table-bordered">
-                    <tr>
-                        <th>Name</th>
-                        <th>SSN</th>
-                     	<th>StudentID</th>
-                        <th>ResidenceStatus</th>
-                        <th>AcademicLevel</th>
-                        <th>Action</th>
-                    </tr>
-                    <tr>
-                        <form action="student.jsp" method="get">
-                            <input type="hidden" value="insert" name="action">
-                            <th><input value="" name="Name" size="10"></th>
-                            <th><input value="" name="SSN" size="10"></th>
-                            <th><input value="" name="StudentID" size="10"></th>
-                            <th><input value="" name="ResidenceStatus" size="10"></th>
-                            <th><input value="" name="AcademicLevel" size="10"></th>
-                            
-                            <th><input class="btn btn-default" type="submit" value="Insert"></th>
-                        </form>
-                    </tr>
+            <form action="student.jsp" method="get">
+			<input type="hidden" value="insert" name="action">
+            Name: <input value="" name="Name" size="10"><br>
+            SSN: <input value="" name="SSN" size="10"><br>
+            StudentID: <input value="" name="StudentID" size="10"><br>
+            Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
+            Academic Level: <input value="" name="AcademicLevel" size="10"><br>
+            <input class="btn btn-default" type="submit" value="Insert">
+            </form>
 
+            <table border="1" class="table table-bordered">
+				<tr>
+                   	<th>Name</th>
+                   	<th>SSN</th>
+                	<th>StudentID</th>
+                   	<th>ResidenceStatus</th>
+                   	<th>AcademicLevel</th>
+                   	<th>Action</th>
+               </tr>
             <%-- -------- Iteration Code -------- --%>
             <%
                     // Iterate over the ResultSet
@@ -230,6 +219,7 @@
             <%
                     }
             %>
+            </table>
 
             <%-- -------- Close Connection Code -------- --%>
             <%
@@ -247,10 +237,7 @@
                     out.println(e.getMessage());
                 }
             %>
-                </table>
-            </td>
-        </tr>
-    </table>
+              
 </body>
 
 </html>
