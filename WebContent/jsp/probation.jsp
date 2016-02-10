@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Probation Entry Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -46,7 +47,6 @@
             <%-- -------- INSERT Code -------- --%>
             <%
                     String action = request.getParameter("action");
-            		Person p = new Person(request.getParameter("Name"), request.getParameter("SSN"));
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
 

@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Student Entry Form</title>
+	<title>Department Entry Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -8,12 +8,13 @@
 <body>
     <table border="1" class="table table-bordered">
         <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/student_menu.html" />
+        	
+        
+            <td class="field-label col-xs-4 active">
+                            <h4>Department Data Entry Form</h4>
                 
             </td>
-            <td>
+            <td class="col-md-8">
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -28,6 +29,7 @@
                 	String url;
                 	String user;
                 	String password;
+                	
                 	if(CSE132B.NUM == 1){
 		               	//Mingshan Setup
 		               	url = "jdbc:postgresql://127.0.0.1:5432/postgres";
@@ -46,12 +48,10 @@
             <%
             		// request is a implicit object
                     String action = request.getParameter("action");
-            		Student s = new Student(request.getParameter("Name"), request.getParameter("SSN"),
-            							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
-            							request.getParameter("AcademicLevel")
-            				);
+            				
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
+                		Department d = new Department(request.getParameter("DepartmentName"));
 
                         // Begin transaction
                         conn.setAutoCommit(false);
@@ -59,29 +59,14 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Person VALUES (?, ?)");
-                        pstmt.setString(1, s.Name);
- 						pstmt.setString(2, s.SSN);
+                            "INSERT INTO Department VALUES (?)");
+                        pstmt.setString(1, d.DepartmentName); 		
+ 						
  						// Commit transaction
  						int rowCount = pstmt.executeUpdate();
                         conn.commit();
                         conn.setAutoCommit(true);
- 						
-                        //Then insert into the student table
-                        conn.setAutoCommit(false);
-                        pstmt = conn.prepareStatement(
-                            "INSERT INTO Student VALUES (?, ?, ?, ?, ?)");
-						pstmt.setString(1, s.StudentID);
-						pstmt.setString(2, s.Name);
-						pstmt.setString(3, s.SSN);
-						pstmt.setString(4, s.ResidenceStatus);
-						pstmt.setString(5, s.AcademicLevel);
 
-			          	rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                        conn.commit();
-                        conn.setAutoCommit(true);
                     }
             %>
 
@@ -89,27 +74,43 @@
             <%
                     // Check if an update is requested
                     if (action != null && action.equals("update")) {
-
+						/* There's no update method for department since department name is already the primary key
                         // Begin transaction
-                        conn.setAutoCommit(false);
+                         conn.setAutoCommit(false);
                         
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Student SET Name = ?, SSN = ?, ResidenceStatus = ?, AcademicLevel = ? WHERE StudentID = ?");
+                            "UPDATE Department SET DepartmentName = ? WHERE Department = ?");
 
-                  
-                        pstmt.setString(1, request.getParameter("Name"));
                         pstmt.setString(2, request.getParameter("SSN"));
-                        pstmt.setString(3, request.getParameter("ResidenceStatus"));                        
-                        pstmt.setString(4, request.getParameter("AcademicLevel"));                        
-                        pstmt.setString(5, request.getParameter("StudentID"));                        
+                        pstmt.setString(1, request.getParameter("Name"));
+                                         
 
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
-                         conn.commit();
+                        conn.commit();
                         conn.setAutoCommit(true);
+                        
+                        conn.setAutoCommit(false);
+                        
+                        // Create the prepared statement and use it to
+                        // UPDATE the student attributes in the Student table.
+                        pstmt = conn.prepareStatement(
+                            "UPDATE Faculty SET SSN = ?, Name = ?, Title = ?");
+
+                        pstmt.setString(1, request.getParameter("SSN"));
+                        pstmt.setString(2, request.getParameter("Name"));
+                        pstmt.setString(3, request.getParameter("Title"));                        
+                                         
+
+                       	rowCount = pstmt.executeUpdate();
+
+                        // Commit transaction
+                        conn.commit();
+                        conn.setAutoCommit(true);
+                        */
                     }
             %>
 
@@ -124,14 +125,14 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM Student WHERE StudentID = ?");
+                            "DELETE FROM Department WHERE DepartmentName = ?");
 
                         pstmt.setString(
-                            1, request.getParameter("StudentID"));
+                            1, request.getParameter("DepartmentName"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
-                         conn.commit();
+                        conn.commit();
                         conn.setAutoCommit(true);
                     }
             %>
@@ -144,28 +145,18 @@
                     // Use the created statement to SELECT
                     // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Student");
+                        ("SELECT * FROM Department");
             %>
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
-                        <th>Name</th>
-                        <th>SSN</th>
-                     	<th>StudentID</th>
-                        <th>ResidenceStatus</th>
-                        <th>AcademicLevel</th>
-                        <th>Action</th>
+                        <th>DepartmentName</th>
                     </tr>
                     <tr>
-                        <form action="student.jsp" method="get">
+                        <form action="department.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
-                            <th><input value="" name="Name" size="10"></th>
-                            <th><input value="" name="SSN" size="10"></th>
-                            <th><input value="" name="StudentID" size="10"></th>
-                            <th><input value="" name="ResidenceStatus" size="10"></th>
-                            <th><input value="" name="AcademicLevel" size="10"></th>
-                            
+                            <th><input class="form-control input-lg" value="" name="DepartmentName" size="10"></th>
                             <th><input class="btn btn-default" type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -173,60 +164,43 @@
             <%-- -------- Iteration Code -------- --%>
             <%
                     // Iterate over the ResultSet
-        
                     while ( rs.next() ) {
-        
             %>
 
                     <tr>
-                        <form action="person.jsp" method="get">
+                    	<%--need to update person table if faculty name changes --%>
+                        
+                        <%-- GET method read form data --%>
+                        <form action="department.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
-                            <%-- Get the Name --%>
-                            <td>
-                                <input value="<%= rs.getString("Name") %>" 
-                                    name="Name" size="10">
-                            </td>
-    
                             <%-- Get the SSN --%>
                             <td>
-                                <input value="<%= rs.getString("SSN") %>" 
-                                    name="SSN" size="10">
+                                <input class="form-control input-lg" value="<%= rs.getString("DepartmentName") %>" 
+                                    name="DepartmentName" size="10">
                             </td>
-                            
-                            <%-- Get the StudentID --%>
-                            <td>
-                                <input value="<%= rs.getString("StudentID") %>" 
-                                    name="StudentID" size="10">
-                            </td>
-                            
-                            <%-- Get the ResidenceStatus --%>
-                            <td>
-                                <input value="<%= rs.getString("ResidenceStatus") %>" 
-                                    name="ResidenceStatus" size="10">
-                            </td>
-                            
-                            <%-- Get the AcademicLevel --%>
-                            <td>
-                                <input value="<%= rs.getString("AcademicLevel") %>" 
-                                    name="AcademicLevel" size="10">
-                            </td>
-
+    
+                             
                             <%-- Button --%>
+                            <!--  No update button
                             <td>
                                 <input class="btn btn-default" type="submit" value="Update">
                             </td>
+                            -->
                         </form>
-                        <form action="student.jsp" method="get">
+                        
+                        <form action="department.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
+                            
                             <input type="hidden" 
-                                value="<%= rs.getString("StudentID") %>" name="StudentID">
+                                value="<%= rs.getString("DepartmentName") %>" name="DepartmentName">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">
                             </td>
                         </form>
                     </tr>
+                    
             <%
                     }
             %>

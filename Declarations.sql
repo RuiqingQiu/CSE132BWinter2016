@@ -306,7 +306,7 @@ CREATE TABLE StudentPursueDegree(
 );
 
 CREATE TABLE ThesisCommittee(
-	StudentID varchar(10) references PhDCandidates(StudentID),
+	StudentID varchar(10) references Graduate(StudentID),
 	FacultySSN varchar(255) references Faculty(SSN),
 	DepartmentName varchar(255) references Department(DepartmentName),
 	PRIMARY KEY(StudentID, FacultySSN, DepartmentName)
