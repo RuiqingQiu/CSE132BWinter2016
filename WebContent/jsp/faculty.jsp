@@ -47,41 +47,13 @@
             <%
             		// request is a implicit object
                     String action = request.getParameter("action");
-            		Faculty s = new Faculty(request.getParameter("Name"), request.getParameter("SSN"),
-            							request.getParameter("Title"));
+            		
             				
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
-
-                        // Begin transaction
-                        conn.setAutoCommit(false);
-                        
-                        // Create the prepared statement and use it to
-                        // INSERT the student attributes INTO the Student table.
-                        PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Person VALUES (?, ?)");
-                        pstmt.setString(1, s.Name);
- 						pstmt.setString(2, s.SSN);
- 		
- 						
- 						// Commit transaction
- 						int rowCount = pstmt.executeUpdate();
-                        conn.commit();
-                        conn.setAutoCommit(true);
- 						
-                        //Then insert into the student table
-                        conn.setAutoCommit(false);
-                        pstmt = conn.prepareStatement(
-                            "INSERT INTO Faculty VALUES (?, ?, ?)");
-						pstmt.setString(1, s.SSN);
-						pstmt.setString(2, s.Name);
-						pstmt.setString(3, s.Title);
-
-			          	rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                        conn.commit();
-                        conn.setAutoCommit(true);
+                    	Faculty f = new Faculty(request.getParameter("Name"), request.getParameter("SSN"),
+    							request.getParameter("Title"));
+                    	f.insert(conn);
                     }
             %>
 
@@ -96,10 +68,10 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Person SET Name = ? WHERE SSN = ?");
+                            "UPDATE Person SET SSN = ? WHERE Name = ?");
 
-                        pstmt.setString(2, request.getParameter("SSN"));
-                        pstmt.setString(1, request.getParameter("Name"));
+                        pstmt.setString(1, request.getParameter("SSN"));
+                        pstmt.setString(2, request.getParameter("Name"));
                                          
 
                         int rowCount = pstmt.executeUpdate();
@@ -107,24 +79,7 @@
                         // Commit transaction
                         conn.commit();
                         conn.setAutoCommit(true);
-                        
-                        conn.setAutoCommit(false);
-                        
-                        // Create the prepared statement and use it to
-                        // UPDATE the student attributes in the Student table.
-                        pstmt = conn.prepareStatement(
-                            "UPDATE Faculty SET SSN = ?, Name = ?, Title = ?");
 
-                        pstmt.setString(1, request.getParameter("SSN"));
-                        pstmt.setString(2, request.getParameter("Name"));
-                        pstmt.setString(3, request.getParameter("Title"));                        
-                                         
-
-                       	rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                        conn.commit();
-                        conn.setAutoCommit(true);
                     }
             %>
 
@@ -139,10 +94,10 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM Faculty WHERE SSN = ?");
+                            "DELETE FROM Faculty WHERE Name = ?");
 
                         pstmt.setString(
-                            1, request.getParameter("SSN"));
+                            1, request.getParameter("Name"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction

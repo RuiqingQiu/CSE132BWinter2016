@@ -17,6 +17,19 @@
                         $('#form').html(responseText);        
                     });
                 });
+                $('#show_student').click(function(){
+                	console.log($('#student_table').style.visibility);
+                	if($('#student_table').is(':visible')){
+                		$("#student_table").attr("style", "visibility: hidden")
+                	}
+                	else{
+                		$("#student_table").attr("style", "visibility: visible")
+
+                    	$('#student_table').style.visibility = "visible";
+
+                		//$('#student_table').show();
+                	}
+                });
             });
     </script>
 </head>
@@ -172,20 +185,10 @@
                         conn.setAutoCommit(true);
                     }
             %>
-
-            <%-- -------- SELECT Statement Code -------- --%>
-            <%
-                    // Create the statement
-                    Statement statement = conn.createStatement();
-
-                    // Use the created statement to SELECT
-                    // the student attributes FROM the Student table.
-                    ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Student");
-            %>
 			
 			<h2>Student Data</h2>
-            <table border="1" class="table table-bordered">
+			<button id="show_student">Show Student Data</button>
+            <table border="1" class="table table-bordered" style="visibility:hidden">
 				<tr>
                    	<th>Name</th>
                    	<th>SSN</th>
@@ -194,63 +197,53 @@
                    	<th>AcademicLevel</th>
                    	<th>Action</th>
                </tr>
-            <%-- -------- Iteration Code -------- --%>
             <%
+                    // Create the statement
+                    Statement statement = conn.createStatement();
+                    // Use the created statement to SELECT
+                    // the student attributes FROM the Student table.
+                    ResultSet rs = statement.executeQuery
+                        ("SELECT * FROM Student");
                     // Iterate over the ResultSet
-        
                     while ( rs.next() ) {
-        
             %>
 
-                    <tr>
-                        <form action="student.jsp" method="get">
-                            <input type="hidden" value="update" name="action">
-
-                            <%-- Get the Name --%>
-                            <td>
-                                <input value="<%= rs.getString("Name") %>" 
-                                    name="Name" size="10">
-                            </td>
-    
-                            <%-- Get the SSN --%>
-                            <td>
-                                <input value="<%= rs.getString("SSN") %>" 
-                                    name="SSN" size="10">
-                            </td>
-                            
-                            <%-- Get the StudentID --%>
-                            <td>
-                                <input value="<%= rs.getString("StudentID") %>" 
-                                    name="StudentID" size="10">
-                            </td>
-                            
-                            <%-- Get the ResidenceStatus --%>
-                            <td>
-                                <input value="<%= rs.getString("ResidenceStatus") %>" 
-                                    name="ResidenceStatus" size="10">
-                            </td>
-                            
-                            <%-- Get the AcademicLevel --%>
-                            <td>
-                                <input value="<%= rs.getString("AcademicLevel") %>" 
-                                    name="AcademicLevel" size="10">
-                            </td>
-
-                            <%-- Button --%>
-                            <td>
-                                <input class="btn btn-default" type="submit" value="Update">
-                            </td>
-                        </form>
-                        <form action="student.jsp" method="get">
-                            <input type="hidden" value="delete" name="action">
-                            <input type="hidden" 
-                                value="<%= rs.getString("StudentID") %>" name="StudentID">
-                            <%-- Button --%>
-                            <td>
-                                <input class="btn btn-default" type="submit" value="Delete">
-                            </td>
-                        </form>
-                    </tr>
+               <tr>
+                   <form action="student.jsp" method="get">
+                       <input type="hidden" value="update" name="action">
+                       <td>
+                           <input value="<%= rs.getString("Name") %>" 
+                               name="Name" size="10">
+                       </td>
+                       <td>
+                           <input value="<%= rs.getString("SSN") %>" 
+                               name="SSN" size="10">
+                       </td>
+                       <td>
+                           <input value="<%= rs.getString("StudentID") %>" 
+                               name="StudentID" size="10">
+                       </td>
+                       <td>
+                           <input value="<%= rs.getString("ResidenceStatus") %>" 
+                               name="ResidenceStatus" size="10">
+                       </td>
+                       <td>
+                           <input value="<%= rs.getString("AcademicLevel") %>" 
+                               name="AcademicLevel" size="10">
+                       </td>
+                       <td>
+                           <input class="btn btn-default" type="submit" value="Update">
+                       </td>
+                   </form>
+                   <form action="student.jsp" method="get">
+                       <input type="hidden" value="delete" name="action">
+                       <input type="hidden" 
+                           value="<%= rs.getString("StudentID") %>" name="StudentID">
+                       <td>
+                           <input class="btn btn-default" type="submit" value="Delete">
+                       </td>
+                   </form>
+               </tr>
             <%
                     }
             %>

@@ -168,7 +168,26 @@
                         <form action="thesis_committee.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th><input value="" name="StudentID" size="10"></th>
-                            <th><input value="" type="text" name="DepartmentName" size="10"></th>
+                            <th>
+                            	<select class="form-control">
+			
+								<%
+									if (!rs.isBeforeFirst() ) {    
+								%>
+									<option value="no department" name="DepartmentName" > There are no departments </option>
+								<% 
+									}
+									else{
+							
+										while(rs.next()){
+									%>			
+									<option value="<%= rs.getString("DepartmentName") %>" name="DepartmentName" > <%= rs.getString("DepartmentName") %> </option>
+									<%
+										}
+									}
+									%>
+								</select>
+                            </th>
                             <th><input value="" type="text" name="FacultySSN" size="10"></th>
                             
                             <th><input class="btn btn-default" type="submit" value="Insert"></th>
