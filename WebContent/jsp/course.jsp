@@ -183,7 +183,10 @@
 				<% 
 				}
 				else{
-		
+				%>
+					
+					<option value="" ></option>
+				<% 	
 					while(rs_department.next()){
 				%>	
 				<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>

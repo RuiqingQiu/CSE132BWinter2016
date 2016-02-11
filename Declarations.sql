@@ -130,7 +130,6 @@ CREATE TABLE PhDCandidates(
 );
 
 
-
 CREATE TABLE Department(
 	DepartmentName varchar(255) NOT NULL PRIMARY KEY
 );
@@ -275,9 +274,9 @@ CREATE TABLE Instructor(
 );
 
 CREATE TABLE CourseHasClass(
+	ID SERIAL PRIMARY KEY, 
 	CourseName varchar(255) references Course(CourseName),
-	SectionID varchar(255) references Classes(SectionID),
-	PRIMARY KEY(CourseName, SectionID)
+	SectionID varchar(255) references Classes(SectionID)
 );
 
 
