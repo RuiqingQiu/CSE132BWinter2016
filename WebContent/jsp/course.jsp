@@ -106,7 +106,7 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Course SET  DepartmentName = ?, MaxUnits = ?, MinUnits = ?, RequireLabWorks = ?, GradeOption = ?, RequireConsentOfInstrcutor = ? WHERE CourseName = ?");
+                            "UPDATE Course SET DepartmentName = ?, MaxUnits = ?, MinUnits = ?, RequireLabWorks = ?, GradeOption = ?, RequireConsentOfInstructor = ? WHERE CourseName = ?");
 
                         pstmt.setString(1, request.getParameter("DepartmentName"));
                         pstmt.setInt(2, Integer.parseInt(request.getParameter("MaxUnits")));  
@@ -120,14 +120,14 @@
                    
                         pstmt.setString(5,request.getParameter("GradeOption"));
                       
-                        if(request.getParameter("RequireConsentOfInstrcutor").equals("Yes")){
-                        	pstmt.setBoolean(5,true);
+                        if(request.getParameter("RequireConsentOfInstructor").equals("Yes")){
+                        	pstmt.setBoolean(6,true);
                         }else{
-                        	pstmt.setBoolean(5,false);
+                        	pstmt.setBoolean(6,false);
                         }
                         
                   
-                        pstmt.setString(6,request.getParameter("CourseName"));                        
+                        pstmt.setString(7,request.getParameter("CourseName"));                        
                         
                         int rowCount = pstmt.executeUpdate();
 
@@ -158,18 +158,6 @@
                         conn.commit();
                         conn.setAutoCommit(true);
                     } 
-            %>
-
-            <%-- -------- SELECT Statement Code -------- --%>
-            <%
-                 // Create the statement
-                Statement statement = conn.createStatement();
-
-                // Use the created statement to SELECT
-                 // the student attributes FROM the Student table.
-                    ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Course"); 
-                    
             %>
             
             <%-- Find out all the department available --%>
@@ -218,7 +206,7 @@
             	<select name="GradeOption">
             		<option value=""></option>
             		<option value="Letter Grade Only">Letter Grade Only</option>
-            		<option value="Pass/No pass only">Pass/No pass only</option>
+            		<option value="Pass/No pass Only">Pass/No pass only</option>
             		<option value="Letter Grade & Pass/No pass">Letter Grade & Pass/No pass</option>
             	</select><br>
             	
@@ -247,10 +235,15 @@
 						<th>Action</th>
                     </tr>
       
-
-            <%-- -------- Iteration Code -------- --%>
+            <%-- -------- SELECT Statement Code -------- --%>
             <%
-                    // Iterate over the ResultSet
+                 // Create the statement
+                Statement statement = conn.createStatement();
+
+                // Use the created statement to SELECT
+                 // the student attributes FROM the Student table.
+                    ResultSet rs = statement.executeQuery
+                        ("SELECT * FROM Course"); 
         
                     while ( rs.next() ) {
         
@@ -263,14 +256,46 @@
                             <%-- Get the CourseName --%>
                             <td>
               
-                                <input value="<%= rs.getString("CourseName") %>" 
-                                    name="CourseName" size="10">
+                                <%= rs.getString("CourseName") %>
                             </td> 
     
-                            <%-- Get the Department --%>
+    						<%
+    							// reselect from the department table
+								departmentStatement = conn.createStatement();
+								rs_department = departmentStatement.executeQuery
+										    ("SELECT * FROM Department");
+							%>
+                           <%-- Get the Department --%>
                             <td>
-                              <input value="<%= rs.getString("DepartmentName") %>" 
-                                    name="DepartmentName" size="10">
+                            	<select name="DepartmentName">
+            	
+            					<%
+            						// if there is no entry in the Department table
+									if (!rs_department.isBeforeFirst() ) {    
+								%>
+											<option value="no department" name="DepartmentName" > There are no departments </option>
+								<% 
+									}
+								else{
+		
+										while(rs_department.next()){
+											if(rs_department.getString("DepartmentName").equals(rs.getString("DepartmentName"))){
+								%>
+								<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" selected> <%= rs_department.getString("DepartmentName") %> </option>
+								<% 
+											}
+											else{
+								%>
+								<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
+								<%
+											}
+								%>										
+            	<%
+					} // close of while loop
+				}// close of else statement
+				%>
+				</select>
+                     
                             </td> 
                             
                             <%-- Get the MaxUnits --%>
@@ -287,21 +312,71 @@
                             
                             <%-- Get the RequireLabWorks --%>
                            <td>
-                                <input value="<%= rs.getString("RequireLabWorks") %>" 
-                                    name="RequireLabWorks" size="10">
+                           		<select name="RequireLabWorks">
+                           		<%
+                           			if(rs.getBoolean("RequireLabWorks") == true){
+                           		%>
+                           				<option value="Yes" selected>Yes</option>
+                               			<option value="No">No</option>
+                           		<% 	}
+                           			else{
+                           		%>
+                           			<option value="Yes">Yes</option>
+                               		<option value="No" selected>No</option>
+                               	<%
+                           			}
+                           		%>
+                           		</select>
+                             
                             </td> 
                             
                             <%-- Get the GradeOption --%>
      
                             <td>
-                                <input value="<%= rs.getString("GradeOption") %>" 
-                                    name="GradeOption" size="10">
+                            	<select name="GradeOption">
+                            	<% 
+                            		if(rs.getString("GradeOption").equals("Letter Grade Only")){
+                            	%>		
+                            		<option value="Letter Grade Only" selected>Letter Grade Only</option>
+                            		<option value="Pass/No pass Only">Pass/No pass Only</option>
+                            		<option value="Letter Grade & Pass/No pass">Letter Grade & Pass/No pass</option>
+                           		<% 
+                            		}else if(rs.getString("GradeOption").equals("Pass/No pass Only")){
+                           		%>	
+                           			<option value="Pass/No pass Only" selected>Pass/No pass Only</option>
+                            		<option value="Letter Grade Only">Letter Grade Only</option>
+                            		<option value="Letter Grade & Pass/No pass">Letter Grade & Pass/No pass</option>
+                           		<% 
+                           			}else{
+                           		%>
+                           		    <option value="Letter Grade & Pass/No pass" selected>Letter Grade & Pass/No pass</option>
+                           			<option value="Letter Grade Only">Letter Grade Only</option>
+                           			<option value="Pass/No pass Only">Pass/No pass Only</option>
+                      			<% 
+                      				}
+                      			%>
+	                            	
+                            	</select>
+                     
                             </td> 
                             
                             <%-- Get the RequireConsentOfInstructor --%>
                            <td>
-                                <input value="<%= rs.getString("RequireConsentOfInstructor") %>" 
-                                    name="RequireConsentOfInstructor" size="10">
+                               <select name="RequireConsentOfInstructor">
+                           		<%
+                           			if(rs.getBoolean("RequireConsentOfInstructor") == true){
+                           		%>
+                           				<option value="Yes" selected>Yes</option>
+                               			<option value="No">No</option>
+                           		<% 	}
+                           			else{
+                           		%>
+                           			<option value="Yes">Yes</option>
+                               		<option value="No" selected>No</option>
+                               	<%
+                           			}
+                           		%>
+                           		</select>
                             </td> 
                       
                             <%-- Button --%>
