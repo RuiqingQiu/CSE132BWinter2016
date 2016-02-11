@@ -58,10 +58,7 @@
                   				request.getParameter("RequireLabWorks"),
                    				request.getParameter("GradeOption"),
                    				request.getParameter("RequireConsentOfInstructor"));
-                	   
-                	   System.out.println(request.getParameter("GradeOption"));
-                	     	
-                	   
+                	
                         // Begin transaction
                         conn.setAutoCommit(false);
                         
@@ -115,25 +112,21 @@
                         pstmt.setInt(2, Integer.parseInt(request.getParameter("MaxUnits")));  
                         pstmt.setInt(3,Integer.parseInt(request.getParameter("MinUnits")));
                         
-                        if(request.getParameter("RequireLabWorks").equals("1")){
+                        if(request.getParameter("RequireLabWorks").equals("Yes")){
                         	pstmt.setBoolean(4,true);
                         }else{
                         	pstmt.setBoolean(4,false);
                         }
-                        System.out.println("here");
-                        
-                        
+                   
                         pstmt.setString(5,request.getParameter("GradeOption"));
-                       	System.out.println("Gradeoptino "+ request.getParameter("GradeOption"));
-                    	System.out.println("consent "+ request.getParameter("RequireConsentOfInstructor"));
-                        
-                        if(request.getParameter("RequireConsentOfInstrcutor").equals("1")){
+                      
+                        if(request.getParameter("RequireConsentOfInstrcutor").equals("Yes")){
                         	pstmt.setBoolean(5,true);
                         }else{
                         	pstmt.setBoolean(5,false);
                         }
                         
-                        System.out.println("here 2");
+                  
                         pstmt.setString(6,request.getParameter("CourseName"));                        
                         
                         int rowCount = pstmt.executeUpdate();
@@ -221,7 +214,6 @@
   					<option value="No" >No</option>	
 				</select><br>
             	
-            	
             	GradeOption: 
             	<select name="GradeOption">
             		<option value=""></option>
@@ -277,12 +269,7 @@
     
                             <%-- Get the Department --%>
                             <td>
-                            
-                            	<% 
-                            		System.out.println(rs.getString("DepartmentName")); 
-                            	%> 
-                            	
-                                <input value="<%= rs.getString("DepartmentName") %>" 
+                              <input value="<%= rs.getString("DepartmentName") %>" 
                                     name="DepartmentName" size="10">
                             </td> 
                             
@@ -305,6 +292,7 @@
                             </td> 
                             
                             <%-- Get the GradeOption --%>
+     
                             <td>
                                 <input value="<%= rs.getString("GradeOption") %>" 
                                     name="GradeOption" size="10">
@@ -325,7 +313,7 @@
                         <form action="course.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
-                                value="<%= rs.getString("CourseName") %>" name="CourseName"> --%>
+                                value="<%= rs.getString("CourseName") %>" name="CourseName"> 
                                 
                             <%-- Button --%>
                            <td>
