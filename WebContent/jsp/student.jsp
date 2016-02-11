@@ -18,17 +18,7 @@
                     });
                 });
                 $('#show_student').click(function(){
-                	console.log($('#student_table').style.visibility);
-                	if($('#student_table').is(':visible')){
-                		$("#student_table").attr("style", "visibility: hidden")
-                	}
-                	else{
-                		$("#student_table").attr("style", "visibility: visible")
-
-                    	$('#student_table').style.visibility = "visible";
-
-                		//$('#student_table').show();
-                	}
+                	$("#student_table").toggle();
                 });
             });
     </script>
@@ -188,7 +178,7 @@
 			
 			<h2>Student Data</h2>
 			<button id="show_student">Show Student Data</button>
-            <table border="1" class="table table-bordered" style="visibility:hidden">
+            <table id="student_table" border="1" class="table table-bordered">
 				<tr>
                    	<th>Name</th>
                    	<th>SSN</th>

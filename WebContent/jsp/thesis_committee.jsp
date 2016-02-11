@@ -190,7 +190,7 @@
 											<option value="no department" name="DepartmentName" > There are no departments </option>
 								<% 
 									}
-								else{
+									else{
 		
 										while(rs_department.next()){
 											if(rs_department.getString("DepartmentName").equals(rs.getString("DepartmentName"))){
@@ -203,12 +203,10 @@
 								<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
 								<%
 											}
-								%>										
-            	<%
-					} // close of while loop
-				}// close of else statement
-				%>
-				</select>
+										} // close of while loop
+									}// close of else statement
+								%>
+								</select>
                      
                             </td> 
 							<td>

@@ -294,9 +294,9 @@ CREATE TABLE DegreeDetailedCourseRequirement(
 );
 
 CREATE TABLE DegreeOffer(
+	DegreeOfferID Serial Primary Key,
 	DepartmentName varchar(255) references Department(DepartmentName),
-	DegreeName varchar(255) references Degree(DegreeName),
-	PRIMARY KEY(DepartmentName, DegreeName)
+	DegreeName varchar(255) references Degree(DegreeName)
 );
 
 CREATE TABLE StudentPursueDegree(
