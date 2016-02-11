@@ -7,15 +7,7 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/thesis_committee.html" />
-               
-            </td>
-            <td>
-
+		<h2>Thesis Committee Entry Form</h2>
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <%@ page language="java" import="CSE132B.*" %>
@@ -56,9 +48,9 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO ThesisCommittee(StudentID, FacultySSN, DepartmentName) VALUES (?, ?, ?)");
+                            "INSERT INTO ThesisCommittee(StudentID, FacultyName, DepartmentName) VALUES (?, ?, ?)");
 						pstmt.setString(1, request.getParameter("StudentID"));
-						pstmt.setString(2, request.getParameter("FacultySSN"));
+						pstmt.setString(2, request.getParameter("FacultyName"));
 						pstmt.setString(3, request.getParameter("DepartmentName"));
 
                         int rowCount = pstmt.executeUpdate();
@@ -74,13 +66,14 @@
                     // Check if an update is requested
                     if (action != null && action.equals("update")) {
 
+                    	/*
                         // Begin transaction
                         conn.setAutoCommit(false);
                         
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE ThesisCommittee SET StudentID = ?, FacultySSN = ?, DepartmentName = ?  WHERE ProbationID = ?");
+                            "UPDATE ThesisCommittee SET StudentID = ?, Faculty = ?, DepartmentName = ?  WHERE ProbationID = ?");
 
                         pstmt.setString(1, request.getParameter("StudentID"));
 						pstmt.setString(2, request.getParameter("FacultySSN"));
@@ -91,6 +84,7 @@
                         // Commit transaction
                          conn.commit();
                         conn.setAutoCommit(true);
+                        */
                     }
             %>
 
@@ -105,10 +99,14 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM ThesisCommittee WHERE Probation = ?");
+                            "DELETE FROM ThesisCommittee WHERE StudentID = ? and DepartmentName = ? and FacultyName = ?");
 
                         pstmt.setInt(
-                            1, Integer.parseInt(request.getParameter("ProbationID")));
+                            1, Integer.parseInt(request.getParameter("StudentID")));
+                        pstmt.setInt(
+                                2, Integer.parseInt(request.getParameter("DepartmantName")));
+                        pstmt.setInt(
+                                3, Integer.parseInt(request.getParameter("FacultyName")));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -118,77 +116,44 @@
             %>
 			
 			
-			<%-- Find out all the department available --%>
-			<%
-				Statement statement = conn.createStatement();
-				ResultSet rs = statement.executeQuery
-						("SELECT * FROM Department");
-			%>
-			<!-- Create a drop down for all department -->
-			Department: 
-			<select class="form-control">
-			
-			<%
-				if (!rs.isBeforeFirst() ) {    
-			%>
-				<option value="no department" name="DepartmentName" > There are no departments </option>
-			<% 
-				}
-				else{
-		
-					while(rs.next()){
-				%>			
-				<option value="<%= rs.getString("DepartmentName") %>" name="DepartmentName" > <%= rs.getString("DepartmentName") %> </option>
-				<%
-					}
-				}
-				%>
-			</select>
 			
 			
-            <%-- -------- SELECT Statement Code -------- --%>
-            <%
-                    // Create the statement
-                    statement = conn.createStatement();
-
-                    // Use the created statement to SELECT
-                    // the student attributes FROM the Student table.
-                    rs = statement.executeQuery
-                        ("SELECT * FROM ThesisCommittee");
-            %>
+			
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
                         <th>StudentID</th>
                         <th>DepartmentName</th>
-                        <th>FacultySSN</th>
+                        <th>Faculty Name</th>
                     </tr>
                     <tr>
                         <form action="thesis_committee.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th><input value="" name="StudentID" size="10"></th>
                             <th>
-                            	<select class="form-control">
+                            	<select name="DepartmentName" class="form-control">
 			
-								<%
+								<%									
+									Statement statement = conn.createStatement();
+									ResultSet rs = statement.executeQuery("SELECT * FROM Department");
 									if (!rs.isBeforeFirst() ) {    
 								%>
 									<option value="no department" name="DepartmentName" > There are no departments </option>
 								<% 
 									}
 									else{
-							
 										while(rs.next()){
-									%>			
-									<option value="<%= rs.getString("DepartmentName") %>" name="DepartmentName" > <%= rs.getString("DepartmentName") %> </option>
+									%>	
+									
+									<option value="<%= rs.getString("DepartmentName") %>"> <%= rs.getString("DepartmentName") %> </option>
 									<%
 										}
 									}
 									%>
 								</select>
                             </th>
-                            <th><input value="" type="text" name="FacultySSN" size="10"></th>
+                            <th><input value="" type="text" name="FacultyName" size="10"></th>
                             
                             <th><input class="btn btn-default" type="submit" value="Insert"></th>
                         </form>
@@ -197,7 +162,8 @@
             <%-- -------- Iteration Code -------- --%>
             <%
                     // Iterate over the ResultSet
-        
+        			rs = statement.executeQuery
+						("SELECT * FROM ThesisCommittee");
                     while ( rs.next() ) {
         
             %>
@@ -212,13 +178,41 @@
                                     name="ProbationID" size="10">
                             </td>
     
-                            <%-- Get the SSN --%>
                             <td>
-                                <input value="<%= rs.getString("DepartmentName") %>" 
-                                    name="StudentID" size="10">
-                            </td>
+                            	<select name="DepartmentName">
+            	
+            					<%
+            						Statement departmentStatement = conn.createStatement();
+                        			ResultSet rs_department = departmentStatement.executeQuery("SELECT * FROM Department");
+            						// if there is no entry in the Department table
+									if (!rs_department.isBeforeFirst() ) {    
+								%>
+											<option value="no department" name="DepartmentName" > There are no departments </option>
+								<% 
+									}
+								else{
+		
+										while(rs_department.next()){
+											if(rs_department.getString("DepartmentName").equals(rs.getString("DepartmentName"))){
+								%>
+								<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" selected> <%= rs_department.getString("DepartmentName") %> </option>
+								<% 
+											}
+											else{
+								%>
+								<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
+								<%
+											}
+								%>										
+            	<%
+					} // close of while loop
+				}// close of else statement
+				%>
+				</select>
+                     
+                            </td> 
 							<td>
-                                <input value="<%= rs.getString("FacultySSN") %>" 
+                                <input value="<%= rs.getString("FacultyName") %>" 
                                     name="StartTime" size="10">
                             </td>
                             <%-- Button --%>
@@ -229,11 +223,11 @@
                         <form action="thesis_committee.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
-                                value="<%= rs.getInt("StudentID") %>" name="StudentID">
+                                value="<%= rs.getString("StudentID") %>" name="StudentID">
                              <input type="hidden" 
-                                value="<%= rs.getInt("DepartmentName") %>" name="DepartmentName">
+                                value="<%= rs.getString("DepartmentName") %>" name="DepartmentName">
                              <input type="hidden" 
-                                value="<%= rs.getInt("FacultySSN") %>" name="FacultySSN">
+                                value="<%= rs.getString("FacultyName") %>" name="FacultyName">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">
@@ -261,9 +255,6 @@
                 }
             %>
                 </table>
-            </td>
-        </tr>
-    </table>
 </body>
 
 </html>
