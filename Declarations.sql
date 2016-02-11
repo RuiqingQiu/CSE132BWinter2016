@@ -66,9 +66,8 @@ CREATE TABLE Student
 
 CREATE TABLE Faculty(
 	SSN varchar(255) references Person(SSN),
-	Name varchar(255) UNIQUE,
-	Title varchar(255),
-	Primary Key(SSN)
+	Name varchar(255) Primary Key,
+	Title varchar(255)
 );
 
 CREATE TABLE Undergraduate(
@@ -180,14 +179,14 @@ CREATE TABLE GraduateDepartment(
 
 CREATE TABLE PhD_Advisor(
 	StudentID varchar(10) references PhD(StudentID),
-	SSN varchar(255) references Faculty(SSN) ON DELETE CASCADE,
-	PRIMARY KEY(StudentID,SSN)
+	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
+	PRIMARY KEY(StudentID, FacultyName)
 );
 
 CREATE TABLE Faculty_Department(
-	SSN varchar(255) references Faculty(SSN) ON DELETE CASCADE,
+	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
 	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE,
-	PRIMARY KEY(SSN,DepartmentName)
+	PRIMARY KEY(FacultyName,DepartmentName)
 );
 
 CREATE TABLE HasMajor(
@@ -271,8 +270,8 @@ CREATE TABLE ClassReview(
 
 CREATE TABLE Instructor(
 	SectionID varchar(255) references Classes(SectionID),
-	SSN varchar(255) references Faculty(SSN),
-	PRIMARY KEY(SectionID, SSN)
+	FacultyName varchar(255) references Faculty(Name),
+	PRIMARY KEY(SectionID, FacultyName)
 );
 
 CREATE TABLE CourseHasClass(
@@ -307,9 +306,9 @@ CREATE TABLE StudentPursueDegree(
 
 CREATE TABLE ThesisCommittee(
 	StudentID varchar(10) references Graduate(StudentID),
-	FacultySSN varchar(255) references Faculty(SSN),
+	FacultyName varchar(255) references Faculty(Name),
 	DepartmentName varchar(255) references Department(DepartmentName),
-	PRIMARY KEY(StudentID, FacultySSN, DepartmentName)
+	PRIMARY KEY(StudentID, FacultyName, DepartmentName)
 );
 
 CREATE TABLE OrganizationMember(
@@ -320,6 +319,6 @@ CREATE TABLE OrganizationMember(
 
 CREATE TABLE OrganizationFacultyMentor(
 	OrganizationName varchar(255) references StudentOrganization(OrganizationName),
-	SSN varchar(255) references Faculty(SSN),
-	PRIMARY KEY (OrganizationName, SSN)
+	FacultyName varchar(255) references Faculty(Name),
+	PRIMARY KEY (OrganizationName, FacultyName)
 );
