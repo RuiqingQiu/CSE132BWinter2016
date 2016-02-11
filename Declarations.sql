@@ -130,14 +130,12 @@ CREATE TABLE PhDCandidates(
 );
 
 
-
 CREATE TABLE Department(
 	DepartmentName varchar(255) NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE Classes(
 	SectionID varchar(255) NOT NULL PRIMARY KEY,
-	CourseName varchar(255) references Course(CourseName),
 	Title varchar(255),
 	Quarter varchar(255),
 	Year varchar(255),
