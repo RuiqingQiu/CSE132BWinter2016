@@ -255,7 +255,7 @@
 
                             <%-- Get the CourseName --%>
                             <td>
-              
+              				 	<input type="hidden" value="<%= rs.getString("CourseName") %>" name="CourseName" size="10">
                                 <%= rs.getString("CourseName") %>
                             </td> 
     
@@ -281,12 +281,12 @@
 										while(rs_department.next()){
 											if(rs_department.getString("DepartmentName").equals(rs.getString("DepartmentName"))){
 								%>
-								<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" selected> <%= rs_department.getString("DepartmentName") %> </option>
+								<option value="<%= rs_department.getString("DepartmentName") %>" selected> <%= rs_department.getString("DepartmentName") %> </option>
 								<% 
 											}
 											else{
 								%>
-								<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
+								<option value="<%= rs_department.getString("DepartmentName") %>" > <%= rs_department.getString("DepartmentName") %> </option>
 								<%
 											}
 								%>										
