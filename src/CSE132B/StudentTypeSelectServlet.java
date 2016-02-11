@@ -22,6 +22,7 @@ public class StudentTypeSelectServlet extends HttpServlet {
 								"StudentID: <input value=\"\" name=\"StudentID\" size=\"10\"><br>" +
 								"Residence Status:<input value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
 								"Academic Level: <input value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
+								"College: <input value=\"\" name=\"College\" size=\"10\"><br>" +
 								"<input class=\"btn btn-default\" type=\"submit\" value=\"Insert\"></form>";
 	
 	public String MasterForm = "<h3>Master Student Form</h3><br>" +
@@ -44,6 +45,8 @@ public class StudentTypeSelectServlet extends HttpServlet {
 			"StudentID: <input value=\"\" name=\"StudentID\" size=\"10\"><br>" +
 			"Residence Status:<input value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
 			"Academic Level: <input value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
+			"College: <input value=\"\" name=\"College\" size=\"10\"><br>" +
+			"Expected Date to Enter Graduate Program: <input value=\"\" type=\"date\" name=\"ExpectedGraduateDate\" size=\"10\"><br>" + 
 			"<input class=\"btn btn-default\" type=\"submit\" value=\"Insert\"></form>";
 	public String PhdPreCandidacyForm = 
 			"<h3>PhD Pre-Candidacy Student Form</h3><br>" +

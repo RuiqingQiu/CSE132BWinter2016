@@ -43,6 +43,7 @@
             StudentID: <input value="" name="StudentID" size="10"><br>
             Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
             Academic Level: <input value="" name="AcademicLevel" size="10"><br>
+            College: <input value="" name="College" size="10"><br>
             <input class="btn btn-default" type="submit" value="Insert">
             </form>
 			</div>
@@ -86,8 +87,36 @@
 						if(table.equals("Undergraduate")){
 							Undergraduate u = new Undergraduate(request.getParameter("Name"), request.getParameter("SSN"),
         							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
-        							request.getParameter("AcademicLevel"), "Marshall");
+        							request.getParameter("AcademicLevel"), request.getParameter("College"));
 							u.insert(conn);
+						}
+						else if(table.equals("BSMS")){
+							BSMS b = new BSMS(request.getParameter("Name"), request.getParameter("SSN"),
+        							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
+        							request.getParameter("AcademicLevel"), request.getParameter("College"), 
+        							request.getParameter("ExpectedGraduateDate"));
+							b.insert(conn);
+						}
+						else if(table.equals("Master")){
+							Master m = new Master(request.getParameter("Name"), request.getParameter("SSN"),
+        							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
+        							request.getParameter("AcademicLevel"));
+							m.insert(conn);
+						}
+						else if(table.equals("PhdPreCandidacy")){
+							PhdPreCandidacy m = new PhdPreCandidacy(request.getParameter("Name"), request.getParameter("SSN"),
+        							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
+        							request.getParameter("AcademicLevel"));
+							m.insert(conn);
+						}
+						else if(table.equals("PhDCandidates")){
+							PhDCandidates m = new PhDCandidates(request.getParameter("Name"), request.getParameter("SSN"),
+        							request.getParameter("StudentID"), request.getParameter("ResidenceStatus"),
+        							request.getParameter("AcademicLevel"));
+							m.insert(conn);
+						}
+						else{
+							System.out.println("Something went wrong");
 						}
                     
                     }
@@ -154,19 +183,6 @@
                     ResultSet rs = statement.executeQuery
                         ("SELECT * FROM Student");
             %>
-
-            <!-- Add an HTML table header row to format the results -->
-           <!--  <form action="student.jsp" method="get">
-			<input type="hidden" value="insert" name="action">
-            Name: <input value="" name="Name" size="10"><br>
-            SSN: <input value="" name="SSN" size="10"><br>
-            StudentID: <input value="" name="StudentID" size="10"><br>
-            Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
-            Academic Level: <input value="" name="AcademicLevel" size="10"><br>
-            <input class="btn btn-default" type="submit" value="Insert">
-            </form> -->
-
-
 			
 			<h2>Student Data</h2>
             <table border="1" class="table table-bordered">
@@ -187,7 +203,7 @@
             %>
 
                     <tr>
-                        <form action="person.jsp" method="get">
+                        <form action="student.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
                             <%-- Get the Name --%>

@@ -12,31 +12,21 @@ public class Undergraduate extends Student {
 	}
 	
 	public void insert(Connection conn) throws Exception{
-
-		// Begin transaction
-        conn.setAutoCommit(false);
-        // Create the prepared statement and use it to
-        // INSERT the student attributes INTO the Student table.
-        PreparedStatement pstmt = conn.prepareStatement(
-            "INSERT INTO Person VALUES (?, ?)");
-        pstmt.setString(1, this.Name);
-		pstmt.setString(2, this.SSN);
-			// Commit transaction
-		int rowCount = pstmt.executeUpdate();
-        conn.commit();
-        conn.setAutoCommit(true);
-			
+		super.insert(conn);
+		
         //Then insert into the student table
         conn.setAutoCommit(false);
-        pstmt = conn.prepareStatement(
-            "INSERT INTO Student VALUES (?, ?, ?, ?, ?)");
+        PreparedStatement pstmt = conn.prepareStatement(
+            "INSERT INTO Undergraduate VALUES (?, ?, ?, ?, ?, ?)");
 		pstmt.setString(1, this.StudentID);
 		pstmt.setString(2, this.Name);
 		pstmt.setString(3, this.SSN);
 		pstmt.setString(4, this.ResidenceStatus);
 		pstmt.setString(5, this.AcademicLevel);
+		pstmt.setString(6, this.College);
 
-      	rowCount = pstmt.executeUpdate();
+
+      	int rowCount = pstmt.executeUpdate();
 
         // Commit transaction
         conn.commit();
