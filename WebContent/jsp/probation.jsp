@@ -112,7 +112,7 @@
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
-                         conn.commit();
+                        conn.commit();
                         conn.setAutoCommit(true);
                     }
             %>
@@ -163,8 +163,9 @@
 
                             <%-- Get the Name --%>
                             <td>
-                                <input value="<%= rs.getInt("ProbationID") %>" 
+                                <input type="hidden" value="<%= rs.getInt("ProbationID") %>" 
                                     name="ProbationID" size="10">
+                                 <%= rs.getInt("ProbationID") %> 
                             </td>
     
                             <%-- Get the SSN --%>
