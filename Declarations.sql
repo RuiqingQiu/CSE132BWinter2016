@@ -210,7 +210,6 @@ Create table StudentEnrollment(
 Create table AcademicHistory(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
-	Grade varchar(255),
 	PRIMARY KEY(StudentID, SectionID)
 );
 
@@ -283,15 +282,15 @@ CREATE TABLE CourseHasClass(
 
 
 CREATE TABLE DegreeDetailedUnitRequirement(
+	DDUR_ID Serial Primary Key,
 	DegreeName varchar(255) references Degree(DegreeName),
 	RequirementDescription varchar(255),
-	UnitsRequired int,
-	PRIMARY KEY (DegreeName,RequirementDescription)
+	UnitsRequired int
 );
 CREATE TABLE DegreeDetailedCourseRequirement(
+	DDCR_ID Serial Primary Key,
 	DegreeName varchar(255) references Degree(DegreeName),
-	CourseName varchar(255) references Course(CourseName),
-	PRIMARY KEY (DegreeName,CourseName)
+	CourseName varchar(255) references Course(CourseName)
 );
 
 CREATE TABLE DegreeOffer(

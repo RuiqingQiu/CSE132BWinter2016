@@ -284,7 +284,6 @@
 												}
 											
 												ID = degree_offer.getInt("DegreeOfferID");
-												System.out.println("DegreeOfferID is " + ID);
 												break;
 											}
 										}//End of while

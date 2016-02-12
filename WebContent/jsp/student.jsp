@@ -8,9 +8,6 @@
         </script>
         <script>
             $(document).ready(function() { 
-            	 $("#ddl").change(function () {
-                     alert($(this).val());
-                 });
                 $('#StudentType').change(function() {  
                     var username=$(this).val();
                  	$.get('../StudentTypeSelectServlet',{StudentType:username},function(responseText) { 
