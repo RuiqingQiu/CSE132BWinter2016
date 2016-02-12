@@ -245,6 +245,7 @@
               	  	  ps_delete.setString(1, request.getParameter("SectionID"));
             		  // retrieve all the valid meetingID for that seciondID
               	  	  ResultSet meeting_to_delete = ps_delete.executeQuery();
+            		  ResultSet tmp = meeting_to_delete;
               		
                        // Delete from WeeklyMeeting table
                        while(meeting_to_delete.next()){
@@ -253,16 +254,19 @@
                     	   pstmt.setString(1,meeting_to_delete.getString("MeetingID"));
                     	   pstmt.setString(2,request.getParameter("MeetingID"));
                     	   rowCount = pstmt.executeUpdate();
-                       }
-                       
-                       // Delete from WeeklyMeeting table
-                       while(meeting_to_delete.next()){
-                           pstmt = conn.prepareStatement(
+                    	   
+                    	   pstmt = conn.prepareStatement(
                                    "DELETE FROM WeeklyMeeting WHERE MeetingID = ?");
                     	   pstmt.setString(1,meeting_to_delete.getString("MeetingID"));
                     	   rowCount = pstmt.executeUpdate();
                        }
                        
+                       // Delete from WeeklyMeeting table
+                       /* 
+                       while(tmp.next()){
+                         
+                       }
+                       */
                    
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.

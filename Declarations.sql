@@ -261,8 +261,8 @@ CREATE TABLE ReviewSession(
 );
 
 CREATE TABLE ClassMeeting(
-	SectionID varchar(255) references Classes(SectionID),
-	MeetingID varchar(255) references WeeklyMeeting(MeetingID)
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
+	MeetingID varchar(255) references WeeklyMeeting(MeetingID) ON DELETE CASCADE
 );
 
 CREATE TABLE ClassReview(
