@@ -304,7 +304,8 @@ CREATE TABLE DegreeOffer(
 
 CREATE TABLE StudentPursueDegree(
 	StudentID varchar(10) references Student(StudentID),
-	DegreeName varchar(255) references Degree(DegreeName)
+	DegreeName varchar(255) references Degree(DegreeName),
+	Primary key (StudentID, DegreeName)
 );
 
 CREATE TABLE ThesisCommittee(
