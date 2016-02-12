@@ -355,10 +355,13 @@
   					<input type="checkbox" name="DayOfTheWeek" value="Friday">Friday
   					<br>
   				Time:<input value="" type="time" name="Time" size="10"><br>
+  				
             	<input class="btn btn-default" type="submit" value="Insert">
-            	<input class="btn btn-default" type="submit" value="Add Meeting Time">
+            	
             </form>
-            <a href="instructor.jsp">Click here to Add an Instructor</a>
+            <a href="instructor.jsp">Click here to Add an Instructor</a><br>
+                     <a href="meeting_time.jsp">Click here to Add Extra Weekly Meeting</a>
+            
             
 
             <!-- Add an HTML table header row to format the results -->
