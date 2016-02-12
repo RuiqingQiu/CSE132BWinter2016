@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Major Form</title>
+	<title>Prereq Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -36,8 +36,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-	<h2>Prereq Entry Form</h2>
-
+	<h2>Prereq Form</h2>
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <%@ page language="java" import="CSE132B.*" %>
@@ -80,10 +79,9 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO HasMajor VALUES (?, ?)");
-                        pstmt.setString(1, request.getParameter("StudentID")); 
-                        pstmt.setString(2, request.getParameter("MajorName")); 		
-
+                            "INSERT INTO Prereq VALUES (?, ?)");
+                        pstmt.setString(1, request.getParameter("CourseName")); 
+                        pstmt.setString(2, request.getParameter("PrereqCourseName")); 		
  						
  						// Commit transaction
  						int rowCount = pstmt.executeUpdate();
@@ -111,10 +109,10 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM HasMajor WHERE StudentID = ? and MajorName = ?");
+                            "DELETE FROM Prereq WHERE CourseName = ? and PrereqCourseName = ?");
 
-                        pstmt.setString(1, request.getParameter("StudentID")); 
-                        pstmt.setString(2, request.getParameter("MajorName")); 		
+                        pstmt.setString(1, request.getParameter("CourseName")); 
+                        pstmt.setString(2, request.getParameter("PrereqCourseName")); 		
 
                         int rowCount = pstmt.executeUpdate();
 
@@ -128,58 +126,25 @@
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
-                        <th>CourseName</th>
-                        <th>PrereqCourseName</th>
+                        <th>Course Name</th>
+                        <th>Prereq Course Name</th>
                     </tr>
                     <tr>
                         <form action="prereq.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th>
-                            Prereq:
-   									<select name="Prereq">
-            	
-            	<%
-            		// if there is no entry in the Department table
-					if (!rs_course.isBeforeFirst() ) {    
-				%>
-					<option value="no course" name="Prereq" > There are no courses </option>
-				<% 
-				}
-				else{
-				%>
-					<option value="" ></option>
-					<option value="">No prereq</option>
-				<% 	
-					while(rs_course.next()){
-				%>	
-					<option value="<%= rs_course.getString("CourseName") %>" name="Prereq" > <%= rs_course.getString("CourseName") %> </option>
-            	<%
-					} // close of while loop
-				}// close of else statement
-				%>
-				</select><br> <!-- end of select prereq course  -->
-                            
-                            
-                            
-                            
-                         
-                            
-                            
-                            
-                            </th>
-                            <th>
                             <%
 							Statement departmentStatement = conn.createStatement();
 							ResultSet rs_department = departmentStatement.executeQuery
-									("SELECT * FROM Major");
+									("SELECT * FROM Course");
 							%>
-			                <select name="MajorName">
+			                <select name="CourseName">
 			            	
 			            	<%
 			            		// if there is no entry in the Department table
 								if (!rs_department.isBeforeFirst() ) {    
 							%>
-								<option value="no major" name="MajorName" > There are no majors </option>
+								<option value="no course" name="CourseName" > There are no courses </option>
 							<% 
 							}
 							else{
@@ -189,7 +154,37 @@
 							<% 	
 								while(rs_department.next()){
 							%>	
-							<option value="<%= rs_department.getString("MajorName") %>" name="MajorName" > <%= rs_department.getString("MajorName") %> </option>
+							<option value="<%= rs_department.getString("CourseName") %>" name="CourseName" > <%= rs_department.getString("CourseName") %> </option>
+			            	<%
+								} // close of while loop
+							}// close of else statement
+							%>
+							</select>
+                            
+                            </th>
+                            <th>
+                            <%
+							departmentStatement = conn.createStatement();
+							rs_department = departmentStatement.executeQuery
+									("SELECT * FROM Course");
+							%>
+			                <select name=PrereqCourseName>
+			            	
+			            	<%
+			            		// if there is no entry in the Department table
+								if (!rs_department.isBeforeFirst() ) {    
+							%>
+								<option value="no course" name="PrereqCourseName" > There are no courses </option>
+							<% 
+							}
+							else{
+							%>
+								
+								<option value="" ></option>
+							<% 	
+								while(rs_department.next()){
+							%>	
+							<option value="<%= rs_department.getString("CourseName") %>" name="CourseName" > <%= rs_department.getString("CourseName") %> </option>
 			            	<%
 								} // close of while loop
 							}// close of else statement
@@ -209,7 +204,7 @@
                     // Use the created statement to SELECT
                     // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM HasMajor");
+                        ("SELECT * FROM Prereq");
                     while (rs.next() ) {
             %>
 
@@ -217,32 +212,51 @@
                     	<%--need to update person table if faculty name changes --%>
                         
                         <%-- GET method read form data --%>
-                        <form action=""has_major.jsp" method="get">
+                        <form action="prereq.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
 
                             <%-- Get the SSN --%>
                             <td>
-                                <input value="<%= rs.getString("StudentID") %>" 
-                                    name="StudentID" size="10">
-                            </td>
-    
-                            <td>
-                            	<select name="MajorName">
+                                <select name="CourseName">
             	
             					<%
             						Statement department_Statement = conn.createStatement();
-                        			rs_department = department_Statement.executeQuery("SELECT * FROM Major");
+                        			rs_department = department_Statement.executeQuery("SELECT * FROM Course");
                         			
   
                             		while (rs_department.next() ) {
-											if(rs_department.getString("MajorName").equals(rs.getString("MajorName"))){
+											if(rs_department.getString("CourseName").equals(rs.getString("CourseName"))){
 									%>
-									<option value="<%= rs_department.getString("MajorName") %>" name="MajorName" selected> <%= rs_department.getString("MajorName") %> </option>
+									<option value="<%= rs_department.getString("CourseName") %>" name="CourseName" selected> <%= rs_department.getString("CourseName") %> </option>
 									<% 			
 											}
 											else{
 									%>
-									<option value="<%= rs_department.getString("MajorName") %>" name="MajorName" > <%= rs_department.getString("MajorName") %> </option>
+									<option value="<%= rs_department.getString("Name") %>" name="Name" > <%= rs_department.getString("Name") %> </option>
+									<%
+											}
+									} // close of while loop
+                        
+								%>
+                            </td>
+    
+                            <td>
+                            	<select name="PrereqCourseName">
+            	
+            					<%
+            						department_Statement = conn.createStatement();
+                        			rs_department = department_Statement.executeQuery("SELECT * FROM Course");
+                        			
+  
+                            		while (rs_department.next() ) {
+											if(rs_department.getString("CourseName").equals(rs.getString("PrereqCourseName"))){
+									%>
+									<option value="<%= rs_department.getString("CourseName") %>" name="PrereqCourseName" selected> <%= rs_department.getString("CourseName") %> </option>
+									<% 			
+											}
+											else{
+									%>
+									<option value="<%= rs_department.getString("CourseName") %>" name="PrereqCourseName" > <%= rs_department.getString("CourseName") %> </option>
 									<%
 											}
 									} // close of while loop
