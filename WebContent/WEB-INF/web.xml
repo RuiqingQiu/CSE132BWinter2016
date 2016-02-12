@@ -4,7 +4,6 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
-  
   <servlet>
     <servlet-name>ActionServlet</servlet-name>
     <servlet-class>CSE132B.ActionServlet</servlet-class>
@@ -13,8 +12,6 @@
     <servlet-name>ActionServlet</servlet-name>
     <url-pattern>/ActionServlet/*</url-pattern>
   </servlet-mapping>
-  
-  
   <servlet>
     <servlet-name>StudentTypeSelectServlet</servlet-name>
     <servlet-class>CSE132B.StudentTypeSelectServlet</servlet-class>
@@ -22,6 +19,15 @@
   <servlet-mapping>
     <servlet-name>StudentTypeSelectServlet</servlet-name>
     <url-pattern>/StudentTypeSelectServlet/*</url-pattern>
+  </servlet-mapping>
+  
+    <servlet>
+    <servlet-name>ClassEnrollmentHandler</servlet-name>
+    <servlet-class>CSE132B.ClassEnrollmentHandler</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ClassEnrollmentHandler</servlet-name>
+    <url-pattern>/ClassEnrollmentHandler/*</url-pattern>
   </servlet-mapping>
   
 </web-app>

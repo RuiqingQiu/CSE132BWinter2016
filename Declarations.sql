@@ -204,13 +204,14 @@ Create table HasMinor(
 Create table StudentEnrollment(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
+	Units int NOT NULL,
 	PRIMARY KEY(StudentID, SectionID)
 );
 
 Create table AcademicHistory(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
-	Grade varchar(255),
+	Units int NOT NULL,
 	PRIMARY KEY(StudentID, SectionID)
 );
 
