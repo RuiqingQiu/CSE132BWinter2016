@@ -64,6 +64,9 @@
 			</select>
 			<br><br>
 			<a href="graduate_department.jsp">Link to Graduate Department Form</a><br>
+			<a href="has_major.jsp">Apply for your major Here</a><br>
+			<a href="has_minor.jsp">Apply for your minor Here</a><br>
+			
 			<div id="form">
 				<!-- Default form is undergraduate -->
 				<h3>Undergraduate Student Form</h3><br>

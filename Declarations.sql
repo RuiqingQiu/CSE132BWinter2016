@@ -190,13 +190,13 @@ CREATE TABLE FacultyDepartment(
 );
 
 CREATE TABLE HasMajor(
-	StudentID varchar(10) references Undergraduate(StudentID),
+	StudentID varchar(10) references Student(StudentID),
 	MajorName varchar(255) references Major(MajorName),
 	PRIMARY KEY(StudentID, MajorName)
  );
 
 Create table HasMinor(
-	StudentID varchar(10) references Undergraduate(StudentID),
+	StudentID varchar(10) references Student(StudentID),
 	MinorName varchar(255) references Minor(MinorName),
 	PRIMARY KEY(StudentID, MinorName)
 );
