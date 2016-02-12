@@ -264,6 +264,7 @@ CREATE TABLE ClassMeeting(
 );
 
 CREATE TABLE ClassReview(
+	CR_ID Serial Primary Key,
 	SectionID varchar(255) references Classes(SectionID),
 	ReviewID varchar(255) references ReviewSession(ReviewID)
 );

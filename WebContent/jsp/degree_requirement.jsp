@@ -413,7 +413,7 @@ CREATE TABLE DegreeDetailedCourseRequirement(
                             <input type="hidden" value="delete" name="action">
                             
                             <input type="hidden" 
-                                value="<%= rs.getInt("DDUR_ID") %>" name="DDUR_ID">
+                                value="<%= rs.getString("DDUR_ID") %>" name="DDUR_ID">
 							<input type="hidden" value="DegreeDetailedUnitRequirement" name="FormType">
                                 
                             <%-- Button --%>
@@ -452,17 +452,6 @@ CREATE TABLE DegreeDetailedCourseRequirement(
                     rs = statement.executeQuery
                         ("SELECT * FROM DegreeDetailedCourseRequirement");
             %>
-<!-- CREATE TABLE DegreeDetailedUnitRequirement(
-	DDUR_ID Serial Primary Key,
-	DegreeName varchar(255) references Degree(DegreeName),
-	RequirementDescription varchar(255),
-	UnitsRequired int,
-);
-CREATE TABLE DegreeDetailedCourseRequirement(
-	DDCR_ID Serial Primary Key,
-	DegreeName varchar(255) references Degree(DegreeName),
-	CourseName varchar(255) references Course(CourseName),
-); -->
             <!-- Add an HTML table header row to format the results -->
             <div id="DegreeDetailedCourseRequirementTable">
             <h2>Degree Detailed Course Requirement</h2>	
