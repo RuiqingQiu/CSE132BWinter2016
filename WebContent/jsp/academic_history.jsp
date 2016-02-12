@@ -127,9 +127,7 @@
             		String studentID = "";
                     // Handle input Year selection
                    if (action != null && action.equals("Search")) {
-                	  System.out.println("Enter Search");
                 	  studentID = request.getParameter("StudentID");
-                	  System.out.println("Student ID is " + studentID);
                 	  PreparedStatement ps = null;
                 	  String sql = "SELECT * FROM Classes WHERE Year= ? and Quarter = ?";
                 	  
@@ -145,8 +143,6 @@
                        }      
              		   while ( rs_year.next() ) {
                     	 int id_selected=0;
-                    	 System.out.println(rs_year.getString("Title"));
-                    	 System.out.println(request.getParameter("StudentID"));
             %>
                    <tr>
                         <form action="academic_history.jsp" method="get">

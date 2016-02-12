@@ -127,9 +127,7 @@
             		String studentID = "";
                     // Handle input Year selection
                    if (action != null && action.equals("Search")) {
-                	  System.out.println("Enter Search");
                 	  studentID = request.getParameter("StudentID");
-                	  System.out.println("Student ID is " + studentID);
                 	  PreparedStatement ps = null;
                 	  String sql = "SELECT * FROM Classes WHERE Year= ? and Quarter = ?";
                 	  
@@ -145,8 +143,6 @@
                        }      
              		   while ( rs_year.next() ) {
                     	 int id_selected=0;
-                    	 System.out.println(rs_year.getString("Title"));
-                    	 System.out.println(request.getParameter("StudentID"));
             %>
                    <tr>
                         <form action="course_enrollment.jsp" method="get">
@@ -285,7 +281,6 @@
            <%
                     // Iterate over the ResultSet
                	  	studentID = request.getParameter("StudentID");
-               	  	System.out.println("Student ID is " + studentID);
                	  	ps = null;
                	  	sql = "SELECT * FROM StudentEnrollment WHERE StudentID = ?";
                	  
@@ -304,6 +299,25 @@
                   		
                   		<%= rs.getString("SectionID") %>
                   	</td>
+                  	<td>
+                  		<%
+                  		studentID = request.getParameter("StudentID");
+                   	  	PreparedStatement ps1 = null;
+                   	  	String sql1 = "SELECT * FROM CourseHasClass WHERE SectionID = ?";
+                   	  
+                   	  	ps1 = conn.prepareStatement(sql1);
+                   	  	ps1.setString(1, rs.getString("SectionID"));
+                   	    ResultSet rs1 = ps1.executeQuery();
+                   	    while(rs1.next()){
+                  		%>
+                  			<%= rs1.getString("CourseName") %>
+                  		<%
+                   	    }
+                  		%>
+                  	</td>
+                  	
+                  	
+                  	
                   	<td>
                   		<input value="<%= rs.getString("Units") %>" name="Units">
                   	</td>
@@ -334,7 +348,6 @@
             <%-- -------- INSERT Code -------- --%>
             <%
                 	if(action != null && action.equals("enroll")){
-                		System.out.println("Enter enroll");
                 			PreparedStatement pstmt = conn.prepareStatement(
                                 "INSERT INTO StudentEnrollment VALUES (?, ?, ?)");
                      	
