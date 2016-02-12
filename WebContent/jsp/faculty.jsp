@@ -6,14 +6,7 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/faculty_menu.html" />
-                
-            </td>
-            <td>
+	<h2>Faculty Entry Form</h2>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -204,9 +197,6 @@
                 }
             %>
                 </table>
-            </td>
-        </tr>
-    </table>
 </body>
 
 </html>

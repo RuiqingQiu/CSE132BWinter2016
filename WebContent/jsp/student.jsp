@@ -8,9 +8,6 @@
         </script>
         <script>
             $(document).ready(function() { 
-            	 $("#ddl").change(function () {
-                     alert($(this).val());
-                 });
                 $('#StudentType').change(function() {  
                     var username=$(this).val();
                  	$.get('../StudentTypeSelectServlet',{StudentType:username},function(responseText) { 
@@ -18,17 +15,7 @@
                     });
                 });
                 $('#show_student').click(function(){
-                	console.log($('#student_table').style.visibility);
-                	if($('#student_table').is(':visible')){
-                		$("#student_table").attr("style", "visibility: hidden")
-                	}
-                	else{
-                		$("#student_table").attr("style", "visibility: visible")
-
-                    	$('#student_table').style.visibility = "visible";
-
-                		//$('#student_table').show();
-                	}
+                	$("#student_table").toggle();
                 });
             });
     </script>
@@ -46,19 +33,19 @@
 			<option value="PhDCandidates">PhD Candidates</option>
 			</select>
 			<div id="form">
-			<!-- Default form is undergraduate -->
-			<h3>Undergraduate Student Form</h3><br>
-			<form action="student.jsp" method="get">
-			<input type="hidden" value="insert" name="action">
-			<input type="hidden" value="Undergraduate" name="StudentType">
-            Name: <input value="" name="Name" size="10"><br>
-            SSN: <input value="" name="SSN" size="10"><br>
-            StudentID: <input value="" name="StudentID" size="10"><br>
-            Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
-            Academic Level: <input value="" name="AcademicLevel" size="10"><br>
-            College: <input value="" name="College" size="10"><br>
-            <input class="btn btn-default" type="submit" value="Insert">
-            </form>
+				<!-- Default form is undergraduate -->
+				<h3>Undergraduate Student Form</h3><br>
+				<form action="student.jsp" method="get">
+				<input type="hidden" value="insert" name="action">
+				<input type="hidden" value="Undergraduate" name="StudentType">
+	            Name: <input value="" name="Name" size="10"><br>
+	            SSN: <input value="" name="SSN" size="10"><br>
+	            StudentID: <input value="" name="StudentID" size="10"><br>
+	            Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
+	            Academic Level: <input value="" name="AcademicLevel" size="10"><br>
+	            College: <input value="" name="College" size="10"><br>
+	            <input class="btn btn-default" type="submit" value="Insert">
+	            </form>
 			</div>
 			<br>
             <%@ page language="java" import="CSE132B.*" %>
@@ -188,7 +175,7 @@
 			
 			<h2>Student Data</h2>
 			<button id="show_student">Show Student Data</button>
-            <table border="1" class="table table-bordered" style="visibility:hidden">
+            <table id="student_table" border="1" class="table table-bordered">
 				<tr>
                    	<th>Name</th>
                    	<th>SSN</th>

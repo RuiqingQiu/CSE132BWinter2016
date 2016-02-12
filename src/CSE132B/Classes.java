@@ -14,4 +14,5 @@ public class Classes {
 		this.year = year;
 		this.MaxEnrollment = MaxEnrollment;
 	}
+	
 }

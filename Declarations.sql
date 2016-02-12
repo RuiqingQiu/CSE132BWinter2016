@@ -130,6 +130,7 @@ CREATE TABLE PhDCandidates(
 );
 
 
+
 CREATE TABLE Department(
 	DepartmentName varchar(255) NOT NULL PRIMARY KEY
 );
@@ -209,7 +210,6 @@ Create table StudentEnrollment(
 Create table AcademicHistory(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
-	Grade varchar(255),
 	PRIMARY KEY(StudentID, SectionID)
 );
 
@@ -264,6 +264,7 @@ CREATE TABLE ClassMeeting(
 );
 
 CREATE TABLE ClassReview(
+	CR_ID Serial Primary Key,
 	SectionID varchar(255) references Classes(SectionID),
 	ReviewID varchar(255) references ReviewSession(ReviewID)
 );
@@ -282,21 +283,21 @@ CREATE TABLE CourseHasClass(
 
 
 CREATE TABLE DegreeDetailedUnitRequirement(
+	DDUR_ID Serial Primary Key,
 	DegreeName varchar(255) references Degree(DegreeName),
 	RequirementDescription varchar(255),
-	UnitsRequired int,
-	PRIMARY KEY (DegreeName,RequirementDescription)
+	UnitsRequired int
 );
 CREATE TABLE DegreeDetailedCourseRequirement(
+	DDCR_ID Serial Primary Key,
 	DegreeName varchar(255) references Degree(DegreeName),
-	CourseName varchar(255) references Course(CourseName),
-	PRIMARY KEY (DegreeName,CourseName)
+	CourseName varchar(255) references Course(CourseName)
 );
 
 CREATE TABLE DegreeOffer(
+	DegreeOfferID Serial Primary Key,
 	DepartmentName varchar(255) references Department(DepartmentName),
-	DegreeName varchar(255) references Degree(DegreeName),
-	PRIMARY KEY(DepartmentName, DegreeName)
+	DegreeName varchar(255) references Degree(DegreeName)
 );
 
 CREATE TABLE StudentPursueDegree(
