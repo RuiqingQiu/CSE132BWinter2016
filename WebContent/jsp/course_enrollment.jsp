@@ -7,13 +7,18 @@
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	
 	<script>
-	 $(document).ready(function(eve) { 
+	 /* $(document).ready(function(eve) { 
 		 //eve.preventDefault();
-		
+		 if(localStorage['YearSelection'] == 'Hide'){
+			console.log("enter local");
+	  		//$('#YearSelection').hide();
+  			//$('#QuarterSelection').show();
+		 }
 
   		 $('#YearSelection').submit(function (e){
-  			$('#YearSelection').hide();
-  			$('#QuarterSelection').show();
+  			localStorage['YearSelection'] = 'Hide';
+  			//$('#YearSelection').hide();
+  			//$('#QuarterSelection').show();
   			console.log("enter submit");
             //$("this").hide(); 
             //$("this").toggle();
@@ -27,23 +32,14 @@
           
             
          });    
-     });
+     }); */
   </script>
 	
 
 </head>
 <body>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/course_enrollment_menu.html" />
-                
-            </td>
-            
-            <td>
-
-            <%-- Set the scripting language to Java and --%>
+	<h3>Course Enrollment Form</h3>
+ <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <%@ page language="java" import="CSE132B.*" %>
             
@@ -75,6 +71,65 @@
 					}
                 	Connection conn = DriverManager.getConnection(url, user, password);
             %>
+            <!-- Make the input box vertically listed -->
+            <form action="course_enrollment.jsp" method="get" id="YearSelection">
+				<input type="hidden" value="SelectYear" name="action">
+				<%-- 
+				<%
+					if(form1Done == false){
+				%> --%>
+            		StudentID: <input value="" name="StudentID" size="10"><br>
+            	<%-- <% 
+					}else{
+            	%>
+            		StudentID: <%= StudentIDEntered %><br>
+            	<%
+					} // end of checking form1Done
+            	%> --%>
+            	
+            	<!-- Need to choose quarter and year first  -->
+      			
+      			<%
+            		/* if(form1Done == false){ */
+            	
+                		Statement p_statement = conn.createStatement();
+                		ResultSet rs_classes = p_statement.executeQuery("SELECT DISTINCT Year FROM Classes"); 
+               	%> 
+            			Year: <select name="Year">
+            			<%
+            				// if there is no entry in the Course table
+							if (!rs_classes.isBeforeFirst() ) {    
+						%>
+							<option value="no classes" name="Year" > There are no classes </option>
+						<% 
+						}
+						else{
+						%>
+							<option value=""></option>
+						<% 
+							while(rs_classes.next()){
+						%>	
+								<option value="<%= rs_classes.getString("Year") %>" name ="Year" > <%= rs_classes.getString("Year") %> </option>
+            			<%
+							} // close of while loop
+						}// close of checking result set statement
+					%>
+						</select> <!-- end of select Year  -->
+					 <input class="btn btn-default" type="submit" value="ShowQuarter" id="ShowQuarterButton">
+           			
+					<%-- <% 
+            		}
+      				// else form1Done
+      				else{
+      			   %>
+      			   		Year:<%= YearSelected %><br>
+      			   <%
+      				}
+      			   %> --%>
+										
+				</form>
+
+           
  			<%-- -------- Handle Input Selection Code -------- --%>
             <%
                		String action = request.getParameter("action");
@@ -100,10 +155,7 @@
             %>
                     <!-- form asking for input quarter -->   
                     <form action="course_enrollment.jsp" method="get" id="QuarterSelection">
-       					<input type="hidden" value="SelectQuarter" name="action">
-                   		StudentID: <%= StudentIDEntered %><br>
-                   		Year:<%= YearSelected %><br>
-                   	
+       					<input type="hidden" value="SelectQuarter" name="action">                   	
                   	 	<!-- Need to choose Quarter now  -->
              			
                    		Quarter: <select name="Quarter">
@@ -222,62 +274,7 @@
                 
             %>
             
-            <!-- Make the input box vertically listed -->
-            <form action="course_enrollment.jsp" method="get" id="YearSelection">
-				<input type="hidden" value="SelectYear" name="action">
-				<%-- 
-				<%
-					if(form1Done == false){
-				%> --%>
-            		StudentID: <input value="" name="StudentID" size="10"><br>
-            	<%-- <% 
-					}else{
-            	%>
-            		StudentID: <%= StudentIDEntered %><br>
-            	<%
-					} // end of checking form1Done
-            	%> --%>
-            	
-            	<!-- Need to choose quarter and year first  -->
-      			
-      			<%
-            		/* if(form1Done == false){ */
-                		statement = conn.createStatement();
-                		ResultSet rs_classes = statement.executeQuery("SELECT DISTINCT Year FROM Classes"); 
-               	%> 
-            			Year: <select name="Year">
-            			<%
-            				// if there is no entry in the Course table
-							if (!rs_classes.isBeforeFirst() ) {    
-						%>
-							<option value="no classes" name="Year" > There are no classes </option>
-						<% 
-						}
-						else{
-						%>
-							<option value=""></option>
-						<% 
-							while(rs_classes.next()){
-						%>	
-								<option value="<%= rs_classes.getString("Year") %>" name ="Year" > <%= rs_classes.getString("Year") %> </option>
-            			<%
-							} // close of while loop
-						}// close of checking result set statement
-					%>
-						</select> <!-- end of select Year  -->
-					 <input class="btn btn-default" type="submit" value="ShowQuarter" id="ShowQuarterButton">
-           			
-					<%-- <% 
-            		}
-      				// else form1Done
-      				else{
-      			   %>
-      			   		Year:<%= YearSelected %><br>
-      			   <%
-      				}
-      			   %> --%>
-										
-				</form>
+
 				
 			
 				
@@ -454,9 +451,6 @@
                 }
             %>
                 </table>
-            </td>
-        </tr>
-    </table>
 </body>
 
 </html>
