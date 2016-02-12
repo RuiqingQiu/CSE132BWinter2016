@@ -1,7 +1,6 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<title>Probation Entry Form</title>
+	<title>Education History Entry Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -37,14 +36,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/probation_menu.html" />
-               
-            </td>
-            <td>
+	<h2>Education History Entry Form</h2>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -56,11 +48,11 @@
             <%
                 try {
                 	Class.forName("org.postgresql.Driver");
-                	//Ruiqing Setup
-					String url;
+                	String url;
                 	String user;
                 	String password;
-					if(CSE132B.NUM == 1){
+                	
+                	if(CSE132B.NUM == 1){
 		               	//Mingshan Setup
 		               	url = "jdbc:postgresql://127.0.0.1:5432/postgres";
 		               	user = "postgres";
@@ -76,24 +68,26 @@
 
             <%-- -------- INSERT Code -------- --%>
             <%
+            		// request is a implicit object
                     String action = request.getParameter("action");
+            		
+            				
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
 
-                        // Begin transaction
+                    	// Begin transaction
                         conn.setAutoCommit(false);
                         
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Probation(StudentID, StartTime, EndTime) VALUES (?, ?, ?)");
-						pstmt.setString(1, request.getParameter("StudentID"));
-						pstmt.setString(2, request.getParameter("StartTime"));
-						pstmt.setString(3, request.getParameter("EndTime"));
+                            "INSERT INTO EducationHistory VALUES (?, ?, ?)");
+                        pstmt.setString(1, request.getParameter("StudentID")); 
+                        pstmt.setString(2, request.getParameter("Degree")); 	
+                        pstmt.setString(3, request.getParameter("University")); 		
 
-                        int rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
+ 						// Commit transaction
+ 						int rowCount = pstmt.executeUpdate();
                         conn.commit();
                         conn.setAutoCommit(true);
                     }
@@ -103,24 +97,6 @@
             <%
                     // Check if an update is requested
                     if (action != null && action.equals("update")) {
-
-                        // Begin transaction
-                        conn.setAutoCommit(false);
-                        
-                        // Create the prepared statement and use it to
-                        // UPDATE the student attributes in the Student table.
-                        PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Probation SET StudentID = ?, StartTime = ?, EndTime = ?  WHERE ProbationID = ?");
-
-                        pstmt.setString(1, request.getParameter("StudentID"));
-						pstmt.setString(2, request.getParameter("StartTime"));
-						pstmt.setString(3, request.getParameter("EndTime")); 
-						pstmt.setInt(4, Integer.parseInt(request.getParameter("ProbationID"))); 
-                        int rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                         conn.commit();
-                        conn.setAutoCommit(true);
                     }
             %>
 
@@ -135,10 +111,12 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM Probation WHERE ProbationID = ?");
+                            "DELETE FROM EducationHistory WHERE StudentID = ? and Degree = ? and University = ?");
 
-                        pstmt.setInt(
-                            1, Integer.parseInt(request.getParameter("ProbationID")));
+                        pstmt.setString(1, request.getParameter("StudentID")); 
+                        pstmt.setString(2, request.getParameter("Degree")); 	
+                        pstmt.setString(3, request.getParameter("University")); 		
+
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -155,26 +133,22 @@
                     // Use the created statement to SELECT
                     // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Probation");
+                        ("SELECT * FROM EducationHistory");
             %>
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
-                        <th>ProbationID</th>
                         <th>StudentID</th>
-                     	<th>StartTime</th>
-                     	<th>EndTime</th>
-                        <th>Action</th>
+                        <th>Degree</th>
+                     	<th>University</th>
                     </tr>
                     <tr>
-                        <form action="probation.jsp" method="get">
+                        <form action="education_history.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
-                            <th></th>
                             <th><input value="" name="StudentID" size="10"></th>
-                            <th><input value="" type="date" name="StartTime" size="10"></th>
-                            <th><input value="" type="date" name="EndTime" size="10"></th>
-                            
+                            <th><input value="" name="Degree" size="10"></th>
+                            <th><input value="" name="University" size="10"></th>
                             <th><input class="btn btn-default" type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -182,51 +156,41 @@
             <%-- -------- Iteration Code -------- --%>
             <%
                     // Iterate over the ResultSet
-        
                     while ( rs.next() ) {
-        
             %>
 
                     <tr>
-                        <form action="probation.jsp" method="get">
-                            <input type="hidden" value="update" name="action">
+                    	<%--need to update person table if faculty name changes --%>
+                        
+                        <%-- GET method read form data --%>
+                        <form action="education_history.jsp" method="get">
+                            <input type="hidden" value="delete" name="action">
 
-                            <%-- Get the Name --%>
-                            <td>
-                                <input type="hidden" value="<%= rs.getInt("ProbationID") %>" 
-                                    name="ProbationID" size="10">
-                                 <%= rs.getInt("ProbationID") %> 
-                            </td>
-    
                             <%-- Get the SSN --%>
                             <td>
                                 <input value="<%= rs.getString("StudentID") %>" 
                                     name="StudentID" size="10">
                             </td>
-							<td>
-                                <input type="date" value="<%= rs.getString("StartTime") %>" 
-                                    name="StartTime" size="10">
-                            </td>
+    
+                            <%-- Get the Name --%>
                             <td>
-                                <input type="date" value="<%= rs.getString("EndTime") %>" 
-                                    name="EndTime" size="10">
+                                <input value="<%= rs.getString("Degree") %>" 
+                                    name="Degree" size="10">
                             </td>
-
-                            <%-- Button --%>
+                            
+                            <%-- Get the Title --%>
                             <td>
-                                <input class="btn btn-default" type="submit" value="Update">
-                            </td>
-                        </form>
-                        <form action="probation.jsp" method="get">
-                            <input type="hidden" value="delete" name="action">
-                            <input type="hidden" 
-                                value="<%= rs.getInt("ProbationID") %>" name="ProbationID">
+                                <input value="<%= rs.getString("University") %>" 
+                                    name="University" size="10">
+                            </td>                            
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">
                             </td>
                         </form>
+                        
                     </tr>
+                    
             <%
                     }
             %>
@@ -248,9 +212,6 @@
                 }
             %>
                 </table>
-            </td>
-        </tr>
-    </table>
 </body>
 
 </html>

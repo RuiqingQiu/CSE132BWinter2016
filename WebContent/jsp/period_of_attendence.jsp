@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Probation Entry Form</title>
+	<title>Period of Attendance Entry Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -37,13 +37,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/probation_menu.html" />
-               
-            </td>
+    <h2>Period of Attendance</h2>
             <td>
 
             <%-- Set the scripting language to Java and --%>
@@ -86,7 +80,7 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Probation(StudentID, StartTime, EndTime) VALUES (?, ?, ?)");
+                            "INSERT INTO PeriodOfAttendence(StudentID, StartTime, EndTime) VALUES (?, ?, ?)");
 						pstmt.setString(1, request.getParameter("StudentID"));
 						pstmt.setString(2, request.getParameter("StartTime"));
 						pstmt.setString(3, request.getParameter("EndTime"));
@@ -110,12 +104,12 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Probation SET StudentID = ?, StartTime = ?, EndTime = ?  WHERE ProbationID = ?");
+                            "UPDATE PeriodOfAttendence SET StudentID = ?, StartTime = ?, EndTime = ?  WHERE ID = ?");
 
                         pstmt.setString(1, request.getParameter("StudentID"));
 						pstmt.setString(2, request.getParameter("StartTime"));
 						pstmt.setString(3, request.getParameter("EndTime")); 
-						pstmt.setInt(4, Integer.parseInt(request.getParameter("ProbationID"))); 
+						pstmt.setInt(4, Integer.parseInt(request.getParameter("ID"))); 
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -135,10 +129,10 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM Probation WHERE ProbationID = ?");
+                            "DELETE FROM PeriodOfAttendence WHERE ID = ?");
 
                         pstmt.setInt(
-                            1, Integer.parseInt(request.getParameter("ProbationID")));
+                            1, Integer.parseInt(request.getParameter("ID")));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -155,20 +149,20 @@
                     // Use the created statement to SELECT
                     // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Probation");
+                        ("SELECT * FROM PeriodOfAttendence");
             %>
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
-                        <th>ProbationID</th>
+                        <th>ID</th>
                         <th>StudentID</th>
                      	<th>StartTime</th>
                      	<th>EndTime</th>
                         <th>Action</th>
                     </tr>
                     <tr>
-                        <form action="probation.jsp" method="get">
+                        <form action="period_of_attendence.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th></th>
                             <th><input value="" name="StudentID" size="10"></th>
@@ -188,14 +182,14 @@
             %>
 
                     <tr>
-                        <form action="probation.jsp" method="get">
+                        <form action="period_of_attendence.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
                             <%-- Get the Name --%>
                             <td>
-                                <input type="hidden" value="<%= rs.getInt("ProbationID") %>" 
-                                    name="ProbationID" size="10">
-                                 <%= rs.getInt("ProbationID") %> 
+                                <input type="hidden" value="<%= rs.getInt("ID") %>" 
+                                    name="ID" size="10">
+                                 <%= rs.getInt("ID") %> 
                             </td>
     
                             <%-- Get the SSN --%>
@@ -217,10 +211,10 @@
                                 <input class="btn btn-default" type="submit" value="Update">
                             </td>
                         </form>
-                        <form action="probation.jsp" method="get">
+                        <form action="period_of_attendence.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
-                                value="<%= rs.getInt("ProbationID") %>" name="ProbationID">
+                                value="<%= rs.getInt("ID") %>" name="ID">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">

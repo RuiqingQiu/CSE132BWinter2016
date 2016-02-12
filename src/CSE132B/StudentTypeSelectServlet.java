@@ -17,58 +17,58 @@ public class StudentTypeSelectServlet extends HttpServlet {
 								"<form action=\"student.jsp\" method=\"get\">"+ 
 								"<input type=\"hidden\" value=\"insert\" name=\"action\">" +
 								"<input type=\"hidden\" value=\"Undergraduate\" name=\"StudentType\">" +
-								"Name: <input value=\"\" name=\"Name\" size=\"10\"><br>"+
-								"SSN: <input value=\"\" name=\"SSN\" size=\"10\"><br>" +
-								"StudentID: <input value=\"\" name=\"StudentID\" size=\"10\"><br>" +
-								"Residence Status:<input value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
-								"Academic Level: <input value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
-								"College: <input value=\"\" name=\"College\" size=\"10\"><br>" +
+								"Name: <input class=\"form-control\" value=\"\" name=\"Name\" size=\"10\"><br>"+
+								"SSN: <input class=\"form-control\" value=\"\" name=\"SSN\" size=\"10\"><br>" +
+								"StudentID: <input class=\"form-control\" value=\"\" name=\"StudentID\" size=\"10\"><br>" +
+								"Residence Status:<input class=\"form-control\" value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
+								"Academic Level: <input class=\"form-control\" value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
+								"College: <input class=\"form-control\" value=\"\" name=\"College\" size=\"10\"><br>" +
 								"<input class=\"btn btn-default\" type=\"submit\" value=\"Insert\"></form>";
 	
 	public String MasterForm = "<h3>Master Student Form</h3><br>" +
 			"<form action=\"student.jsp\" method=\"get\">"+ 
 			"<input type=\"hidden\" value=\"insert\" name=\"action\">" +
 			"<input type=\"hidden\" value=\"Master\" name=\"StudentType\">" +
-			"Name: <input value=\"\" name=\"Name\" size=\"10\"><br>"+
-			"SSN: <input value=\"\" name=\"SSN\" size=\"10\"><br>" +
-			"StudentID: <input value=\"\" name=\"StudentID\" size=\"10\"><br>" +
-			"Residence Status:<input value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
-			"Academic Level: <input value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
+			"Name: <input class=\"form-control\" value=\"\" name=\"Name\" size=\"10\"><br>"+
+			"SSN: <input class=\"form-control\" value=\"\" name=\"SSN\" size=\"10\"><br>" +
+			"StudentID: <input class=\"form-control\" value=\"\" name=\"StudentID\" size=\"10\"><br>" +
+			"Residence Status:<input class=\"form-control\" value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
+			"Academic Level: <input class=\"form-control\" value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
 			"<input class=\"btn btn-default\" type=\"submit\" value=\"Insert\"></form>";
 	public String BSMSForm = 
 			"<h3>BS/MS Student Form</h3><br>" +
 			"<form action=\"student.jsp\" method=\"get\">"+ 
 			"<input type=\"hidden\" value=\"insert\" name=\"action\">" +
 			"<input type=\"hidden\" value=\"BSMS\" name=\"StudentType\">" +
-			"Name: <input value=\"\" name=\"Name\" size=\"10\"><br>"+
-			"SSN: <input value=\"\" name=\"SSN\" size=\"10\"><br>" +
-			"StudentID: <input value=\"\" name=\"StudentID\" size=\"10\"><br>" +
-			"Residence Status:<input value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
-			"Academic Level: <input value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
-			"College: <input value=\"\" name=\"College\" size=\"10\"><br>" +
-			"Expected Date to Enter Graduate Program: <input value=\"\" type=\"date\" name=\"ExpectedGraduateDate\" size=\"10\"><br>" + 
+			"Name: <input class=\"form-control\" value=\"\" name=\"Name\" size=\"10\"><br>"+
+			"SSN: <input class=\"form-control\" value=\"\" name=\"SSN\" size=\"10\"><br>" +
+			"StudentID: <input class=\"form-control\" value=\"\" name=\"StudentID\" size=\"10\"><br>" +
+			"Residence Status:<input class=\"form-control\" value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
+			"Academic Level: <input class=\"form-control\" value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
+			"College: <input class=\"form-control\" value=\"\" name=\"College\" size=\"10\"><br>" +
+			"Expected Date to Enter Graduate Program: <input class=\"form-control\" value=\"\" type=\"date\" name=\"ExpectedGraduateDate\" size=\"10\"><br>" + 
 			"<input class=\"btn btn-default\" type=\"submit\" value=\"Insert\"></form>";
 	public String PhdPreCandidacyForm = 
 			"<h3>PhD Pre-Candidacy Student Form</h3><br>" +
 			"<form action=\"student.jsp\" method=\"get\">"+ 
 			"<input type=\"hidden\" value=\"insert\" name=\"action\">" +
 			"<input type=\"hidden\" value=\"PhdPreCandidacy\" name=\"StudentType\">" +
-			"Name: <input value=\"\" name=\"Name\" size=\"10\"><br>"+
-			"SSN: <input value=\"\" name=\"SSN\" size=\"10\"><br>" +
-			"StudentID: <input value=\"\" name=\"StudentID\" size=\"10\"><br>" +
-			"Residence Status:<input value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
-			"Academic Level: <input value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
+			"Name: <input class=\"form-control\" value=\"\" name=\"Name\" size=\"10\"><br>"+
+			"SSN: <input class=\"form-control\" value=\"\" name=\"SSN\" size=\"10\"><br>" +
+			"StudentID: <input class=\"form-control\" value=\"\" name=\"StudentID\" size=\"10\"><br>" +
+			"Residence Status:<input class=\"form-control\" value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
+			"Academic Level: <input class=\"form-control\" value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
 			"<input class=\"btn btn-default\" type=\"submit\" value=\"Insert\"></form>";
 	public String PhDCandidatesForm = 
 			"<h3>PhD Candidates Student Form</h3><br>" +
 			"<form action=\"student.jsp\" method=\"get\">"+ 
 			"<input type=\"hidden\" value=\"insert\" name=\"action\">" +
 			"<input type=\"hidden\" value=\"PhDCandidates\" name=\"StudentType\">" +
-			"Name: <input value=\"\" name=\"Name\" size=\"10\"><br>"+
-			"SSN: <input value=\"\" name=\"SSN\" size=\"10\"><br>" +
-			"StudentID: <input value=\"\" name=\"StudentID\" size=\"10\"><br>" +
-			"Residence Status:<input value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
-			"Academic Level: <input value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
+			"Name: <input class=\"form-control\" value=\"\" name=\"Name\" size=\"10\"><br>"+
+			"SSN: <input class=\"form-control\" value=\"\" name=\"SSN\" size=\"10\"><br>" +
+			"StudentID: <input class=\"form-control\" value=\"\" name=\"StudentID\" size=\"10\"><br>" +
+			"Residence Status:<input class=\"form-control\" value=\"\" name=\"ResidenceStatus\" size=\"10\"><br>" +
+			"Academic Level: <input class=\"form-control\" value=\"\" name=\"AcademicLevel\" size=\"10\"><br>"+
 			"<input class=\"btn btn-default\" type=\"submit\" value=\"Insert\"></form>";
 
     public StudentTypeSelectServlet() {

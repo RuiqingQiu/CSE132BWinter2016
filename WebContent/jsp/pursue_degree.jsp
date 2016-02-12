@@ -1,7 +1,6 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<title>Probation Entry Form</title>
+	<title>Pursue Degree Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -37,14 +36,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/probation_menu.html" />
-               
-            </td>
-            <td>
+	<h2>Pursue Degree Form</h2>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -56,11 +48,11 @@
             <%
                 try {
                 	Class.forName("org.postgresql.Driver");
-                	//Ruiqing Setup
-					String url;
+                	String url;
                 	String user;
                 	String password;
-					if(CSE132B.NUM == 1){
+                	
+                	if(CSE132B.NUM == 1){
 		               	//Mingshan Setup
 		               	url = "jdbc:postgresql://127.0.0.1:5432/postgres";
 		               	user = "postgres";
@@ -76,24 +68,24 @@
 
             <%-- -------- INSERT Code -------- --%>
             <%
+            		// request is a implicit object
                     String action = request.getParameter("action");
+            		
+            				
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
 
-                        // Begin transaction
                         conn.setAutoCommit(false);
                         
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Probation(StudentID, StartTime, EndTime) VALUES (?, ?, ?)");
-						pstmt.setString(1, request.getParameter("StudentID"));
-						pstmt.setString(2, request.getParameter("StartTime"));
-						pstmt.setString(3, request.getParameter("EndTime"));
-
-                        int rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
+                            "INSERT INTO StudentPursueDegree VALUES (?, ?)");
+                        pstmt.setString(1, request.getParameter("StudentID")); 
+                        pstmt.setString(2, request.getParameter("DegreeName")); 		
+ 						
+ 						// Commit transaction
+ 						int rowCount = pstmt.executeUpdate();
                         conn.commit();
                         conn.setAutoCommit(true);
                     }
@@ -104,23 +96,6 @@
                     // Check if an update is requested
                     if (action != null && action.equals("update")) {
 
-                        // Begin transaction
-                        conn.setAutoCommit(false);
-                        
-                        // Create the prepared statement and use it to
-                        // UPDATE the student attributes in the Student table.
-                        PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Probation SET StudentID = ?, StartTime = ?, EndTime = ?  WHERE ProbationID = ?");
-
-                        pstmt.setString(1, request.getParameter("StudentID"));
-						pstmt.setString(2, request.getParameter("StartTime"));
-						pstmt.setString(3, request.getParameter("EndTime")); 
-						pstmt.setInt(4, Integer.parseInt(request.getParameter("ProbationID"))); 
-                        int rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                         conn.commit();
-                        conn.setAutoCommit(true);
                     }
             %>
 
@@ -135,10 +110,11 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM Probation WHERE ProbationID = ?");
+                            "DELETE FROM StudentPursueDegree WHERE StudentID = ? and DegreeName = ?");
 
-                        pstmt.setInt(
-                            1, Integer.parseInt(request.getParameter("ProbationID")));
+                        pstmt.setString(1, request.getParameter("StudentID")); 
+                        pstmt.setString(2, request.getParameter("DegreeName")); 		
+
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -147,34 +123,75 @@
                     }
             %>
 
-            <%-- -------- SELECT Statement Code -------- --%>
-            <%
-                    // Create the statement
-                    Statement statement = conn.createStatement();
-
-                    // Use the created statement to SELECT
-                    // the student attributes FROM the Student table.
-                    ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Probation");
-            %>
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
-                        <th>ProbationID</th>
+                        <th>DegreeName</th>
                         <th>StudentID</th>
-                     	<th>StartTime</th>
-                     	<th>EndTime</th>
-                        <th>Action</th>
                     </tr>
                     <tr>
-                        <form action="probation.jsp" method="get">
+                        <form action="pursue_degree.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
-                            <th></th>
-                            <th><input value="" name="StudentID" size="10"></th>
-                            <th><input value="" type="date" name="StartTime" size="10"></th>
-                            <th><input value="" type="date" name="EndTime" size="10"></th>
+                            <th>
+                            <%
+							Statement departmentStatement = conn.createStatement();
+							ResultSet rs_department = departmentStatement.executeQuery
+									("SELECT * FROM Degree");
+							%>
+			                <select name="DegreeName">
+			            	
+			            	<%
+			            		// if there is no entry in the Department table
+								if (!rs_department.isBeforeFirst() ) {    
+							%>
+								<option value="no degree" name="DegreeName" > There are no degrees </option>
+							<% 
+							}
+							else{
+							%>
+								
+								<option value="" ></option>
+							<% 	
+								while(rs_department.next()){
+							%>	
+							<option value="<%= rs_department.getString("DegreeName") %>" name="DegreeName" > <%= rs_department.getString("DegreeName") %> </option>
+			            	<%
+								} // close of while loop
+							}// close of else statement
+							%>
+							</select>
                             
+                            </th>
+                            <th>
+                            <%
+							departmentStatement = conn.createStatement();
+							rs_department = departmentStatement.executeQuery
+									("SELECT * FROM Student");
+							%>
+			                <select name="StudentID">
+			            	
+			            	<%
+			            		// if there is no entry in the Department table
+								if (!rs_department.isBeforeFirst() ) {    
+							%>
+								<option value="no studentid" name="StudentID" > There are no students </option>
+							<% 
+							}
+							else{
+							%>
+								
+								<option value="" ></option>
+							<% 	
+								while(rs_department.next()){
+							%>	
+							<option value="<%= rs_department.getString("StudentID") %>" name="StudentID" > <%= rs_department.getString("StudentID") %> </option>
+			            	<%
+								} // close of while loop
+							}// close of else statement
+							%>
+							</select>
+                            </th> 
                             <th><input class="btn btn-default" type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -182,51 +199,79 @@
             <%-- -------- Iteration Code -------- --%>
             <%
                     // Iterate over the ResultSet
-        
-                    while ( rs.next() ) {
-        
+                     // Create the statement
+                    Statement statement = conn.createStatement();
+
+                    // Use the created statement to SELECT
+                    // the student attributes FROM the Student table.
+                    ResultSet rs = statement.executeQuery
+                        ("SELECT * FROM StudentPursueDegree");
+                    while (rs.next() ) {
             %>
 
                     <tr>
-                        <form action="probation.jsp" method="get">
-                            <input type="hidden" value="update" name="action">
+                    	<%--need to update person table if faculty name changes --%>
+                        
+                        <%-- GET method read form data --%>
+                        <form action="pursue_degree.jsp" method="get">
+                            <input type="hidden" value="delete" name="action">
 
-                            <%-- Get the Name --%>
-                            <td>
-                                <input type="hidden" value="<%= rs.getInt("ProbationID") %>" 
-                                    name="ProbationID" size="10">
-                                 <%= rs.getInt("ProbationID") %> 
-                            </td>
-    
                             <%-- Get the SSN --%>
                             <td>
-                                <input value="<%= rs.getString("StudentID") %>" 
-                                    name="StudentID" size="10">
+                                <select name="DegreeName">
+            	
+            					<%
+            						Statement department_Statement = conn.createStatement();
+                        			rs_department = department_Statement.executeQuery("SELECT * FROM Degree");
+                        			
+  
+                            		while (rs_department.next() ) {
+											if(rs_department.getString("DegreeName").equals(rs.getString("DegreeName"))){
+									%>
+									<option value="<%= rs_department.getString("DegreeName") %>" name="DegreeName" selected> <%= rs_department.getString("DegreeName") %> </option>
+									<% 			
+											}
+											else{
+									%>
+									<option value="<%= rs_department.getString("DegreeName") %>" name="DegreeName" > <%= rs_department.getString("DegreeName") %> </option>
+									<%
+											}
+									} // close of while loop
+                        
+								%>
                             </td>
-							<td>
-                                <input type="date" value="<%= rs.getString("StartTime") %>" 
-                                    name="StartTime" size="10">
-                            </td>
+    
                             <td>
-                                <input type="date" value="<%= rs.getString("EndTime") %>" 
-                                    name="EndTime" size="10">
+                            	<select name="StudentID">
+            	
+            					<%
+            						department_Statement = conn.createStatement();
+                        			rs_department = department_Statement.executeQuery("SELECT * FROM Student");
+                        			
+  
+                            		while (rs_department.next() ) {
+											if(rs_department.getString("StudentID").equals(rs.getString("StudentID"))){
+									%>
+									<option value="<%= rs_department.getString("StudentID") %>" name="StudentID" selected> <%= rs_department.getString("StudentID") %> </option>
+									<% 			
+											}
+											else{
+									%>
+									<option value="<%= rs_department.getString("StudentID") %>" name="StudentID" > <%= rs_department.getString("StudentID") %> </option>
+									<%
+											}
+									} // close of while loop
+                        
+								%>
+								</select>
                             </td>
-
-                            <%-- Button --%>
-                            <td>
-                                <input class="btn btn-default" type="submit" value="Update">
-                            </td>
-                        </form>
-                        <form action="probation.jsp" method="get">
-                            <input type="hidden" value="delete" name="action">
-                            <input type="hidden" 
-                                value="<%= rs.getInt("ProbationID") %>" name="ProbationID">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">
                             </td>
                         </form>
                     </tr>
+                    
             <%
                     }
             %>
@@ -248,9 +293,6 @@
                 }
             %>
                 </table>
-            </td>
-        </tr>
-    </table>
 </body>
 
 </html>

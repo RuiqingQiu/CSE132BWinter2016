@@ -224,10 +224,10 @@ CREATE TABLE EducationHistory(
 
 
 CREATE TABLE PeriodOfAttendence(
+	ID Serial Primary key,
 	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
 	StartTime varchar(255),
-    	EndTime varchar(255),
-	PRIMARY KEY (StudentID,StartTime,EndTime)
+    	EndTime varchar(255)
 );
      
 CREATE TABLE Probation(
@@ -261,8 +261,8 @@ CREATE TABLE ReviewSession(
 );
 
 CREATE TABLE ClassMeeting(
-	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
-	MeetingID varchar(255) references WeeklyMeeting(MeetingID) ON DELETE CASCADE
+	SectionID varchar(255) references Classes(SectionID),
+	MeetingID varchar(255) references WeeklyMeeting(MeetingID)
 );
 
 CREATE TABLE ClassReview(
@@ -304,7 +304,8 @@ CREATE TABLE DegreeOffer(
 
 CREATE TABLE StudentPursueDegree(
 	StudentID varchar(10) references Student(StudentID),
-	DegreeName varchar(255) references Degree(DegreeName)
+	DegreeName varchar(255) references Degree(DegreeName),
+	Primary key (StudentID, DegreeName)
 );
 
 CREATE TABLE ThesisCommittee(

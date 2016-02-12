@@ -4,6 +4,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css">
+	<script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -37,7 +40,6 @@
   </div><!-- /.container-fluid -->
 </nav>
 	<h3>Course Entry Form</h3>
-
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <%@ page language="java" import="CSE132B.*" %>
@@ -191,11 +193,11 @@
             
             <!-- Make the input box vertically listed -->
             <form action="course.jsp" method="get">
-				<input type="hidden" value="insert" name="action">
-            	CourseName: <input value="" name="CourseName" size="10"><br>
+				<input type="hidden" value="insert" name="action">            	
+            	<label>Course Name: </label><input value="" name="CourseName" size="10"><br>
             	
             	<!-- Create a drop down for all department -->
-            	DepartmentName: <select name="DepartmentName">
+            	<label>Department Name: </label><select name="DepartmentName">
             	
             	<%
             		// if there is no entry in the Department table
@@ -216,18 +218,19 @@
 					} // close of while loop
 				}// close of else statement
 				%>
-				</select><br> <!-- end of select department  -->
+				</select><br>
 			
-            	MaxUnits: <input value="" name="MaxUnits" size="10"><br>
-            	MinUnits:<input value="" name="MinUnits" size="10"><br>
+            	<label>MaxUnits: </label><input value="" name="MaxUnits" size="10"><br>
+            	<label>MinUnits: </label><input value="" name="MinUnits" size="10"><br>
             	
-            	RequireLabWorks:<select name="RequireLabWorks"> 
+            	<label>RequireLabWorks: </label>
+            	<select name="RequireLabWorks"> 
             		<option value="" ></option>
   					<option value="Yes" >Yes</option>
   					<option value="No" >No</option>	
 				</select><br>
             	
-            	GradeOption: 
+            	<label>GradeOption: </label>
             	<select name="GradeOption">
             		<option value=""></option>
             		<option value="Letter Grade Only">Letter Grade Only</option>
@@ -235,16 +238,20 @@
             		<option value="Letter Grade & Pass/No pass">Letter Grade & Pass/No pass</option>
             	</select><br>
             	
-            	RequireConsentOfInstructor: 
+            	<label>RequireConsentOfInstructor: </label>
             	<select name="RequireConsentOfInstructor">
             		<option value=""></option>
             		<option value="Yes">Yes</option>
             		<option value="No">No</option>
             	</select><br>
+<<<<<<< HEAD
+=======
+            	
+>>>>>>> b112f64a33a1af669da98ec91083d9493fc069cb
             	<input class="btn btn-default" type="submit" value="Insert">
             
             </form>
-
+			</div>
             <!-- Add an HTML table header row to format the results -->
                 
                 <table border="1" class="table table-bordered">
