@@ -210,6 +210,7 @@ Create table StudentEnrollment(
 Create table AcademicHistory(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
+	Grade varchar(255),
 	PRIMARY KEY(StudentID, SectionID)
 );
 
