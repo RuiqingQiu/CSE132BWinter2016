@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS StudentEnrollment CASCADE;
 DROP TABLE IF EXISTS EducationHistory CASCADE;
 DROP TABLE IF EXISTS AcademicHistory CASCADE;
 DROP TABLE IF EXISTS PhD_Advisor CASCADE;
-DROP TABLE IF EXISTS Faculty_Department CASCADE;
+DROP TABLE IF EXISTS FacultyDepartment CASCADE;
 DROP TABLE IF EXISTS StudentPursueDegree CASCADE;
 DROP TABLE IF EXISTS HasMajor CASCADE;
 DROP TABLE IF EXISTS HasMinor CASCADE;
@@ -183,10 +183,10 @@ CREATE TABLE PhD_Advisor(
 	PRIMARY KEY(StudentID, FacultyName)
 );
 
-CREATE TABLE Faculty_Department(
+CREATE TABLE FacultyDepartment(
+	FD_ID Serial Primary Key,
 	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
-	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE,
-	PRIMARY KEY(FacultyName,DepartmentName)
+	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE
 );
 
 CREATE TABLE HasMajor(

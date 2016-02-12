@@ -77,6 +77,21 @@
                     	Faculty f = new Faculty(request.getParameter("Name"), request.getParameter("SSN"),
     							request.getParameter("Title"));
                     	f.insert(conn);
+                    	// Begin transaction
+                        conn.setAutoCommit(false);
+                        
+                        // Create the prepared statement and use it to
+                        // INSERT the student attributes INTO the Student table.
+                        PreparedStatement pstmt = conn.prepareStatement(
+                            "INSERT INTO FacultyDepartment (FacultyName, DepartmentName) VALUES (?, ?)");
+                        pstmt.setString(1, f.Name); 
+                        pstmt.setString(2, request.getParameter("DepartmentName")); 		
+
+ 						
+ 						// Commit transaction
+ 						int rowCount = pstmt.executeUpdate();
+                        conn.commit();
+                        conn.setAutoCommit(true);
                     }
             %>
 
@@ -91,9 +106,9 @@
                         // Create the prepared statement and use it to
                         // UPDATE the student attributes in the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Person SET SSN = ? WHERE Name = ?");
+                            "UPDATE Faculty SET Title = ? WHERE Name = ?");
 
-                        pstmt.setString(1, request.getParameter("SSN"));
+                        pstmt.setString(1, request.getParameter("Title"));
                         pstmt.setString(2, request.getParameter("Name"));
                                          
 
@@ -102,6 +117,26 @@
                         // Commit transaction
                         conn.commit();
                         conn.setAutoCommit(true);
+                        
+                     // Begin transaction
+                        conn.setAutoCommit(false);
+                       
+                       // Create the prepared statement and use it to
+                       // UPDATE the student attributes in the Student table.
+                       pstmt = conn.prepareStatement(
+                           "UPDATE FacultyDepartment SET DepartmentName = ?, FacultyName = ? WHERE FD_ID = ?");
+
+                       pstmt.setString(1, request.getParameter("DepartmentName"));
+                       pstmt.setString(2, request.getParameter("Name"));
+                       pstmt.setInt(3, Integer.parseInt(request.getParameter("FD_ID")));
+
+                                        
+
+                       rowCount = pstmt.executeUpdate();
+
+                       // Commit transaction
+                       conn.commit();
+                       conn.setAutoCommit(true);
 
                     }
             %>
@@ -146,13 +181,43 @@
                         <th>SSN</th>
                         <th>Name</th>
                      	<th>Title</th>
+                     	<th>Department</th>
                     </tr>
                     <tr>
                         <form action="faculty.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
                             <th><input value="" name="SSN" size="10"></th>
                             <th><input value="" name="Name" size="10"></th>
-                            <th><input value="" name="Title" size="10"></th> 
+                            <th><input value="" name="Title" size="10"></th>
+                            <th>
+                            <%
+							Statement departmentStatement = conn.createStatement();
+							ResultSet rs_department = departmentStatement.executeQuery
+									("SELECT * FROM Department");
+							%>
+			                <select name="DepartmentName">
+			            	
+			            	<%
+			            		// if there is no entry in the Department table
+								if (!rs_department.isBeforeFirst() ) {    
+							%>
+								<option value="no department" name="DepartmentName" > There are no departments </option>
+							<% 
+							}
+							else{
+							%>
+								
+								<option value="" ></option>
+							<% 	
+								while(rs_department.next()){
+							%>	
+							<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
+			            	<%
+								} // close of while loop
+							}// close of else statement
+							%>
+							</select>
+                            </th> 
                             <th><input class="btn btn-default" type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -187,7 +252,56 @@
                                 <input value="<%= rs.getString("Title") %>" 
                                     name="Title" size="10">
                             </td>
-                             
+                            
+                            <td>
+                            <select name="DepartmentName">
+            	
+            					<%
+            						Statement department_Statement = conn.createStatement();
+                        			rs_department = department_Statement.executeQuery("SELECT * FROM Department");
+                        			
+                        			PreparedStatement ps = null;
+                               	  	String sql = "SELECT * FROM FacultyDepartment WHERE FacultyName = ?";
+                               	  
+                               	  	ps = conn.prepareStatement(sql);
+                               	  	ps.setString(1, rs.getString("Name")); 
+                               	  	ResultSet rs_year = ps.executeQuery();
+									int ID = -1;
+
+                                    if(!rs_year.isBeforeFirst()){
+                                   	   System.out.println("selection failed");
+                                    }else{
+                                   	   //System.out.println("selection success");
+                                    }      
+                            		while (rs_year.next() ) {
+										// if there is no entry in the Department table
+										if (!rs_department.isBeforeFirst() ) {    
+									%>
+												<option value="no department" name="DepartmentName" > There are no departments </option>
+									<% 
+										}
+										else{
+											
+											while(rs_department.next()){
+	
+												if(rs_department.getString("DepartmentName").equals(rs_year.getString("DepartmentName"))){
+									%>
+									<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" selected> <%= rs_department.getString("DepartmentName") %> </option>
+									<% 			
+													ID = rs_year.getInt("FD_ID");
+												}
+												else{
+													%>
+													<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
+													<%
+												}
+											} // close of while loop
+										}// close of else statement
+                            		}
+								%>
+								</select>
+                            </td>
+                             	<input type="hidden" value="<%= ID %>" name="FD_ID">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Update">
@@ -198,7 +312,7 @@
                             <input type="hidden" value="delete" name="action">
                             
                             <input type="hidden" 
-                                value="<%= rs.getString("SSN") %>" name="SSN">
+                                value="<%= rs.getString("Name") %>" name="Name">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">
