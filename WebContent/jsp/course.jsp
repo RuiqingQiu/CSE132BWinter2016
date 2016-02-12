@@ -76,7 +76,7 @@
                   				request.getParameter("CourseName"),
                   				request.getParameter("DepartmentName"), 
                   				Integer.parseInt(request.getParameter("MaxUnits")), 
-                  				Integer.parseInt(request.getParameter("MaxUnits")),
+                  				Integer.parseInt(request.getParameter("MinUnits")),
                   				request.getParameter("RequireLabWorks"),
                    				request.getParameter("GradeOption"),
                    				request.getParameter("RequireConsentOfInstructor"));
@@ -110,7 +110,7 @@
 						}
 						
                         int rowCount = pstmt.executeUpdate();
-
+                     	// seperate form to enter prereq
                         // Commit transaction
                         conn.commit();
                         conn.setAutoCommit(true);
@@ -240,8 +240,7 @@
             		<option value=""></option>
             		<option value="Yes">Yes</option>
             		<option value="No">No</option>
-            	</select>
-            	
+            	</select><br>
             	<input class="btn btn-default" type="submit" value="Insert">
             
             </form>
@@ -252,6 +251,7 @@
                     <tr>
                         <th>CourseName</th>
                         <th>DepartmentName</th>
+                        <th>Prereq</th>
                         <th>MaxUnits</th>
                         <th>MinUnits</th>
                         <th>RequireLabWorks</th>
@@ -271,9 +271,7 @@
                         ("SELECT * FROM Course"); 
         
                     while ( rs.next() ) {
-        
             %>
-
                   <tr>
                         <form action="course.jsp" method="get">
                             <input type="hidden" value="update" name="action">
@@ -306,7 +304,7 @@
 										while(rs_department.next()){
 											if(rs_department.getString("DepartmentName").equals(rs.getString("DepartmentName"))){
 								%>
-								<option value="<%= rs_department.getString("DepartmentName") %>" selected> <%= rs_department.getString("DepartmentName") %> </option>
+											<option value="<%= rs_department.getString("DepartmentName") %>"> <%= rs_department.getString("DepartmentName") %> </option>
 								<% 
 											}
 											else{
@@ -321,6 +319,36 @@
 				%>
 				</select>
                      
+                            </td> 
+                            
+                            <td>
+                            	<!--  Get the prereq for the course -->
+    							<%
+    								PreparedStatement ps = null;
+                   	  				String sql = "SELECT * FROM Prereq WHERE CourseName = ?";
+                   	  
+                   	  				ps = conn.prepareStatement(sql);
+                   	  				ps.setString(1, rs.getString("CourseName"));
+                 		   
+                   	  				// retrieve all the valid meetingID for that seciondID
+                   	  				ResultSet rs_prereq = ps.executeQuery();
+                   	  						
+                   	  				if(!rs_prereq.isBeforeFirst()){
+								%>
+									<option value="No prereq for this course" name="Prereq" > There are no prereq entered for this course </option>
+								
+                            	<!--  Each course will be a selection -->
+            					<%
+                   	  				}else{
+                   	  					
+										while(rs_prereq.next()){	
+								%>
+										 <input value="<%= rs_prereq.getString("PrereqCourseName") %>" 
+                                    name="Prereq" size="10">
+								<%
+										}// end of else no more elements in result set
+                   	  				}// end of else not empty prereq sets
+								%>		
                             </td> 
                             
                             <%-- Get the MaxUnits --%>

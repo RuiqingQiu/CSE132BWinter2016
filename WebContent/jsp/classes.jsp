@@ -356,6 +356,7 @@
   					<br>
   				Time:<input value="" type="time" name="Time" size="10"><br>
             	<input class="btn btn-default" type="submit" value="Insert">
+            	<input class="btn btn-default" type="submit" value="Add Meeting Time">
             </form>
             <a href="instructor.jsp">Click here to Add an Instructor</a>
             
