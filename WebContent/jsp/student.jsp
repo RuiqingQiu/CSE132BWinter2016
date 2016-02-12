@@ -62,6 +62,8 @@
 			<option value="PhdPreCandidacy">Pre-Candidacy PhD</option>
 			<option value="PhDCandidates">PhD Candidates</option>
 			</select>
+			<br><br>
+			<a href="graduate_department.jsp">Link to Graduate Department Form</a><br>
 			<div id="form">
 				<!-- Default form is undergraduate -->
 				<h3>Undergraduate Student Form</h3><br>

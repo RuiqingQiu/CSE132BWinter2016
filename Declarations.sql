@@ -172,9 +172,9 @@ CREATE TABLE StudentOrganization(
 
 /* Relationship Table begins */
 CREATE TABLE GraduateDepartment(
+	GD_ID Serial Primary Key,
 	StudentID varchar(10) references Graduate(StudentID),
-	DepartmentName varchar(255) references Department(DepartmentName),
-	PRIMARY KEY(StudentID,DepartmentName)
+	DepartmentName varchar(255) references Department(DepartmentName)
 ); 
 
 CREATE TABLE PhD_Advisor(
