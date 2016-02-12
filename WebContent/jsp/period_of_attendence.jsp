@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Period of Attendence Entry Form</title>
+	<title>Period of Attendance Entry Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -37,7 +37,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-    <h2>Period of Attendence</h2>
+    <h2>Period of Attendance</h2>
             <td>
 
             <%-- Set the scripting language to Java and --%>

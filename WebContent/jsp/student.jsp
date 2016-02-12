@@ -47,7 +47,7 @@
         <li><a href="probation.jsp">Probation</a></li>
         <li><a href="review_session.jsp">Review</a></li>
         <li><a href="degree_requirement.jsp">Degree</a></li>
-      </ul>   
+      </ul> 
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -66,23 +66,27 @@
 			<a href="graduate_department.jsp">Link to Graduate Department Form</a><br>
 			<a href="has_major.jsp">Apply for your major Here</a><br>
 			<a href="has_minor.jsp">Apply for your minor Here</a><br>
+			<a href="pursue_degree.jsp">Enter Your Pursuing Degree Here</a><br>
 			
-			<div id="form">
+			<div id="form" class="form-group">
 				<!-- Default form is undergraduate -->
 				<h3>Undergraduate Student Form</h3><br>
 				<form action="student.jsp" method="get">
 				<input type="hidden" value="insert" name="action">
 				<input type="hidden" value="Undergraduate" name="StudentType">
-	            Name: <input value="" name="Name" size="10"><br>
-	            SSN: <input value="" name="SSN" size="10"><br>
-	            StudentID: <input value="" name="StudentID" size="10"><br>
-	            Residence Status:<input value="" name="ResidenceStatus" size="10"><br>
-	            Academic Level: <input value="" name="AcademicLevel" size="10"><br>
-	            College: <input value="" name="College" size="10"><br>
+	            Name: <input class="form-control" value="" name="Name" size="10"><br>
+	            SSN: <input class="form-control" value="" name="SSN" size="10"><br>
+	            StudentID: <input class="form-control" value="" name="StudentID" size="10"><br>
+	            Residence Status:<input class="form-control" value="" name="ResidenceStatus" size="10"><br>
+	            Academic Level: <input class="form-control" value="" name="AcademicLevel" size="10"><br>
+	            College: <input class="form-control" value="" name="College" size="10"><br>
 	            <input class="btn btn-default" type="submit" value="Insert">
 	            </form>
 			</div>
 			<br>
+			<a href="education_history.jsp">Enter your Education History here</a><br>
+			<a href="period_of_attendence.jsp">Enter Your Period of Attendance</a><br>			
+			<a href="phd_advisor.jsp">PhD Students, Enter your PhD Advisor Here</a><br>
             <%@ page language="java" import="CSE132B.*" %>
             
             <%@ page language="java" import="java.sql.*" %>
@@ -209,7 +213,7 @@
             %>
 			
 			<h2>Student Data</h2>
-			<button id="show_student">Show Student Data</button>
+			<button class="btn btn-default" id="show_student">Show Student Data</button><br>
             <table id="student_table" border="1" class="table table-bordered">
 				<tr>
                    	<th>Name</th>
