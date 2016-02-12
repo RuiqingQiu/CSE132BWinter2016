@@ -244,10 +244,7 @@
             		<option value="Yes">Yes</option>
             		<option value="No">No</option>
             	</select><br>
-<<<<<<< HEAD
-=======
-            	
->>>>>>> b112f64a33a1af669da98ec91083d9493fc069cb
+
             	<input class="btn btn-default" type="submit" value="Insert">
             
             </form>

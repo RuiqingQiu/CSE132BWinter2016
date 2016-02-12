@@ -238,9 +238,9 @@ CREATE TABLE Probation(
 );
 
 CREATE TABLE Prereq(
-	PreqID Serial PRIMARY KEY,
 	CourseName varchar(255) references Course(CourseName) ON DELETE CASCADE,
-	PrereqCourseName varchar(255) references Course(CourseName) ON DELETE CASCADE
+	PrereqCourseName varchar(255) references Course(CourseName) ON DELETE CASCADE,
+	PRIMARY KEY(CourseName,PrereqCourseName)
 );
 
 CREATE TABLE WeeklyMeeting(
