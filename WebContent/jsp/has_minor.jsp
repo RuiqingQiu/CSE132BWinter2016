@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Faculty Entry Form</title>
+	<title>Minor Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -36,7 +36,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-	<h2>Faculty Entry Form</h2>
+	<h2>Minor Form</h2>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -74,18 +74,15 @@
             				
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
-                    	Faculty f = new Faculty(request.getParameter("Name"), request.getParameter("SSN"),
-    							request.getParameter("Title"));
-                    	f.insert(conn);
-                    	// Begin transaction
+
                         conn.setAutoCommit(false);
                         
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO FacultyDepartment (FacultyName, DepartmentName) VALUES (?, ?)");
-                        pstmt.setString(1, f.Name); 
-                        pstmt.setString(2, request.getParameter("DepartmentName")); 		
+                            "INSERT INTO HasMinor VALUES (?, ?)");
+                        pstmt.setString(1, request.getParameter("StudentID")); 
+                        pstmt.setString(2, request.getParameter("MinorName")); 		
 
  						
  						// Commit transaction
@@ -99,44 +96,6 @@
             <%
                     // Check if an update is requested
                     if (action != null && action.equals("update")) {
-
-                        // Begin transaction
-                         conn.setAutoCommit(false);
-                        
-                        // Create the prepared statement and use it to
-                        // UPDATE the student attributes in the Student table.
-                        PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Faculty SET Title = ? WHERE Name = ?");
-
-                        pstmt.setString(1, request.getParameter("Title"));
-                        pstmt.setString(2, request.getParameter("Name"));
-                                         
-
-                        int rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                        conn.commit();
-                        conn.setAutoCommit(true);
-                        
-                     // Begin transaction
-                        conn.setAutoCommit(false);
-                       
-                       // Create the prepared statement and use it to
-                       // UPDATE the student attributes in the Student table.
-                       pstmt = conn.prepareStatement(
-                           "UPDATE FacultyDepartment SET DepartmentName = ?, FacultyName = ? WHERE FD_ID = ?");
-
-                       pstmt.setString(1, request.getParameter("DepartmentName"));
-                       pstmt.setString(2, request.getParameter("Name"));
-                       pstmt.setInt(3, Integer.parseInt(request.getParameter("FD_ID")));
-
-                                        
-
-                       rowCount = pstmt.executeUpdate();
-
-                       // Commit transaction
-                       conn.commit();
-                       conn.setAutoCommit(true);
 
                     }
             %>
@@ -152,10 +111,11 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM Faculty WHERE Name = ?");
+                            "DELETE FROM HasMinor WHERE StudentID = ? and MinorName = ?");
 
-                        pstmt.setString(
-                            1, request.getParameter("Name"));
+                        pstmt.setString(1, request.getParameter("StudentID")); 
+                        pstmt.setString(2, request.getParameter("MinorName")); 		
+
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -164,44 +124,30 @@
                     }
             %>
 
-            <%-- -------- SELECT Statement Code -------- --%>
-            <%
-                    // Create the statement
-                    Statement statement = conn.createStatement();
-
-                    // Use the created statement to SELECT
-                    // the student attributes FROM the Student table.
-                    ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Faculty");
-            %>
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
-                        <th>SSN</th>
-                        <th>Name</th>
-                     	<th>Title</th>
-                     	<th>Department</th>
+                        <th>StudentID</th>
+                        <th>Minor</th>
                     </tr>
                     <tr>
-                        <form action="faculty.jsp" method="get">
+                        <form action="has_minor.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
-                            <th><input value="" name="SSN" size="10"></th>
-                            <th><input value="" name="Name" size="10"></th>
-                            <th><input value="" name="Title" size="10"></th>
+                            <th><input value="" name="StudentID" size="10"></th>
                             <th>
                             <%
 							Statement departmentStatement = conn.createStatement();
 							ResultSet rs_department = departmentStatement.executeQuery
-									("SELECT * FROM Department");
+									("SELECT * FROM Minor");
 							%>
-			                <select name="DepartmentName">
+			                <select name="MinorName">
 			            	
 			            	<%
 			            		// if there is no entry in the Department table
 								if (!rs_department.isBeforeFirst() ) {    
 							%>
-								<option value="no department" name="DepartmentName" > There are no departments </option>
+								<option value="no minor" name="MinorName" > There are no minors </option>
 							<% 
 							}
 							else{
@@ -211,7 +157,7 @@
 							<% 	
 								while(rs_department.next()){
 							%>	
-							<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
+							<option value="<%= rs_department.getString("MinorName") %>" name="MinorName" > <%= rs_department.getString("MinorName") %> </option>
 			            	<%
 								} // close of while loop
 							}// close of else statement
@@ -225,94 +171,53 @@
             <%-- -------- Iteration Code -------- --%>
             <%
                     // Iterate over the ResultSet
-                    while ( rs.next() ) {
+                     // Create the statement
+                    Statement statement = conn.createStatement();
+
+                    // Use the created statement to SELECT
+                    // the student attributes FROM the Student table.
+                    ResultSet rs = statement.executeQuery
+                        ("SELECT * FROM HasMinor");
+                    while (rs.next() ) {
             %>
 
                     <tr>
                     	<%--need to update person table if faculty name changes --%>
                         
                         <%-- GET method read form data --%>
-                        <form action="faculty.jsp" method="get">
-                            <input type="hidden" value="update" name="action">
+                        <form action=""has_minor.jsp" method="get">
+                            <input type="hidden" value="delete" name="action">
 
                             <%-- Get the SSN --%>
                             <td>
-                                <input value="<%= rs.getString("SSN") %>" 
-                                    name="SSN" size="10">
+                                <input value="<%= rs.getString("StudentID") %>" 
+                                    name="StudentID" size="10">
                             </td>
     
-                            <%-- Get the Name --%>
                             <td>
-                                <input value="<%= rs.getString("Name") %>" 
-                                    name="Name" size="10">
-                            </td>
-                            
-                            <%-- Get the Title --%>
-                            <td>
-                                <input value="<%= rs.getString("Title") %>" 
-                                    name="Title" size="10">
-                            </td>
-                            
-                            <td>
-                            <select name="DepartmentName">
+                            	<select name="MinorName">
             	
             					<%
             						Statement department_Statement = conn.createStatement();
-                        			rs_department = department_Statement.executeQuery("SELECT * FROM Department");
+                        			rs_department = department_Statement.executeQuery("SELECT * FROM Minor");
                         			
-                        			PreparedStatement ps = null;
-                               	  	String sql = "SELECT * FROM FacultyDepartment WHERE FacultyName = ?";
-                               	  
-                               	  	ps = conn.prepareStatement(sql);
-                               	  	ps.setString(1, rs.getString("Name")); 
-                               	  	ResultSet rs_year = ps.executeQuery();
-									int ID = -1;
-
-                                    if(!rs_year.isBeforeFirst()){
-                                   	   System.out.println("selection failed");
-                                    }else{
-                                   	   //System.out.println("selection success");
-                                    }      
-                            		while (rs_year.next() ) {
-										// if there is no entry in the Department table
-										if (!rs_department.isBeforeFirst() ) {    
+  
+                            		while (rs_department.next() ) {
+											if(rs_department.getString("MinorName").equals(rs.getString("MinorName"))){
 									%>
-												<option value="no department" name="DepartmentName" > There are no departments </option>
-									<% 
-										}
-										else{
-											
-											while(rs_department.next()){
-	
-												if(rs_department.getString("DepartmentName").equals(rs_year.getString("DepartmentName"))){
-									%>
-									<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" selected> <%= rs_department.getString("DepartmentName") %> </option>
+									<option value="<%= rs_department.getString("MinorName") %>" name="MinorName" selected> <%= rs_department.getString("MinorName") %> </option>
 									<% 			
-													ID = rs_year.getInt("FD_ID");
-												}
-												else{
-													%>
-													<option value="<%= rs_department.getString("DepartmentName") %>" name="DepartmentName" > <%= rs_department.getString("DepartmentName") %> </option>
-													<%
-												}
-											} // close of while loop
-										}// close of else statement
-                            		}
+											}
+											else{
+									%>
+									<option value="<%= rs_department.getString("MinorName") %>" name="MinorName" > <%= rs_department.getString("MinorName") %> </option>
+									<%
+											}
+									} // close of while loop
+                        
 								%>
 								</select>
                             </td>
-                             	<input type="hidden" value="<%= ID %>" name="FD_ID">
-                            <%-- Button --%>
-                            <td>
-                                <input class="btn btn-default" type="submit" value="Update">
-                            </td>
-                        </form>
-                        
-                        <form action="faculty.jsp" method="get">
-                            <input type="hidden" value="delete" name="action">
-                            
-                            <input type="hidden" 
-                                value="<%= rs.getString("Name") %>" name="Name">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">

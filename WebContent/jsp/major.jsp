@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Person Entry Form</title>
+	<title>Major Entry Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -36,14 +36,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-    <table border="1" class="table table-bordered">
-        <tr>
-            <td>
-                <%-- -------- Include menu HTML code -------- --%>
-                <jsp:include page="../form_html/person_menu.html" />
-                
-            </td>
-            <td>
+<h3>Major Entry Form</h3>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -76,7 +69,6 @@
             <%-- -------- INSERT Code -------- --%>
             <%
                     String action = request.getParameter("action");
-            		Person p = new Person(request.getParameter("Name"), request.getParameter("SSN"));
                     // Check if an insertion is requested
                     if (action != null && action.equals("insert")) {
 
@@ -86,9 +78,8 @@
                         // Create the prepared statement and use it to
                         // INSERT the student attributes INTO the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "INSERT INTO Person VALUES (?, ?)");
-						pstmt.setString(1, p.Name);
-						pstmt.setString(2, p.SSN);
+                            "INSERT INTO Major VALUES (?)");
+						pstmt.setString(1, request.getParameter("MajorName"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -102,21 +93,6 @@
                     // Check if an update is requested
                     if (action != null && action.equals("update")) {
 
-                        // Begin transaction
-                        conn.setAutoCommit(false);
-                        
-                        // Create the prepared statement and use it to
-                        // UPDATE the student attributes in the Student table.
-                        PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE Person SET Name = ? WHERE SSN = ?");
-
-                        pstmt.setString(1, request.getParameter("Name"));
-                        pstmt.setString(2, request.getParameter("SSN"));                        
-                        int rowCount = pstmt.executeUpdate();
-
-                        // Commit transaction
-                         conn.commit();
-                        conn.setAutoCommit(true);
                     }
             %>
 
@@ -131,10 +107,10 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM Person WHERE SSN = ?");
+                            "DELETE FROM Major WHERE MajorName = ?");
 
                         pstmt.setString(
-                            1, request.getParameter("SSN"));
+                            1, request.getParameter("MajorName"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -151,23 +127,19 @@
                     // Use the created statement to SELECT
                     // the student attributes FROM the Student table.
                     ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM Person");
+                        ("SELECT * FROM Major");
             %>
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
-                        <th>Name</th>
-                        <th>SSN</th>
-                     
+                        <th>Major Name</th>                     
                         <th>Action</th>
                     </tr>
                     <tr>
-                        <form action="person.jsp" method="get">
+                        <form action="major.jsp" method="get">
                             <input type="hidden" value="insert" name="action">
-                            <th><input value="" name="Name" size="10"></th>
-                            <th><input value="" name="SSN" size="10"></th>
-                            
+                            <th><input value="" name="MajorName" size="10"></th>                            
                             <th><input class="btn btn-default" type="submit" value="Insert"></th>
                         </form>
                     </tr>
@@ -181,30 +153,19 @@
             %>
 
                     <tr>
-                        <form action="person.jsp" method="get">
+                        <form action="major.jsp" method="get">
                             <input type="hidden" value="update" name="action">
 
                             <%-- Get the Name --%>
                             <td>
-                                <input value="<%= rs.getString("Name") %>" 
-                                    name="Name" size="10">
-                            </td>
-    
-                            <%-- Get the SSN --%>
-                            <td>
-                                <input value="<%= rs.getString("SSN") %>" 
-                                    name="SSN" size="10">
-                            </td>
-
-                            <%-- Button --%>
-                            <td>
-                                <input class="btn btn-default" type="submit" value="Update">
+                                <input value="<%= rs.getString("MajorName") %>" 
+                                    name="MajorName" size="10">
                             </td>
                         </form>
-                        <form action="person.jsp" method="get">
+                        <form action="major.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
-                                value="<%= rs.getString("SSN") %>" name="SSN">
+                                value="<%= rs.getString("MajorName") %>" name="MajorName">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Delete">
@@ -232,9 +193,6 @@
                 }
             %>
                 </table>
-            </td>
-        </tr>
-    </table>
 </body>
 
 </html>

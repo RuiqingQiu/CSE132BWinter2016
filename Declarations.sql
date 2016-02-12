@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS StudentEnrollment CASCADE;
 DROP TABLE IF EXISTS EducationHistory CASCADE;
 DROP TABLE IF EXISTS AcademicHistory CASCADE;
 DROP TABLE IF EXISTS PhD_Advisor CASCADE;
-DROP TABLE IF EXISTS Faculty_Department CASCADE;
+DROP TABLE IF EXISTS FacultyDepartment CASCADE;
 DROP TABLE IF EXISTS StudentPursueDegree CASCADE;
 DROP TABLE IF EXISTS HasMajor CASCADE;
 DROP TABLE IF EXISTS HasMinor CASCADE;
@@ -172,9 +172,9 @@ CREATE TABLE StudentOrganization(
 
 /* Relationship Table begins */
 CREATE TABLE GraduateDepartment(
+	GD_ID Serial Primary Key,
 	StudentID varchar(10) references Graduate(StudentID),
-	DepartmentName varchar(255) references Department(DepartmentName),
-	PRIMARY KEY(StudentID,DepartmentName)
+	DepartmentName varchar(255) references Department(DepartmentName)
 ); 
 
 CREATE TABLE PhD_Advisor(
@@ -183,20 +183,20 @@ CREATE TABLE PhD_Advisor(
 	PRIMARY KEY(StudentID, FacultyName)
 );
 
-CREATE TABLE Faculty_Department(
+CREATE TABLE FacultyDepartment(
+	FD_ID Serial Primary Key,
 	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
-	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE,
-	PRIMARY KEY(FacultyName,DepartmentName)
+	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE
 );
 
 CREATE TABLE HasMajor(
-	StudentID varchar(10) references Undergraduate(StudentID),
+	StudentID varchar(10) references Student(StudentID),
 	MajorName varchar(255) references Major(MajorName),
 	PRIMARY KEY(StudentID, MajorName)
  );
 
 Create table HasMinor(
-	StudentID varchar(10) references Undergraduate(StudentID),
+	StudentID varchar(10) references Student(StudentID),
 	MinorName varchar(255) references Minor(MinorName),
 	PRIMARY KEY(StudentID, MinorName)
 );
@@ -204,13 +204,14 @@ Create table HasMinor(
 Create table StudentEnrollment(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
+	Units int NOT NULL,
 	PRIMARY KEY(StudentID, SectionID)
 );
 
 Create table AcademicHistory(
 	StudentID varchar(10) references Student(StudentID),
 	SectionID varchar(255) references Classes(SectionID),
-	Grade varchar(255),
+	Units int NOT NULL,
 	PRIMARY KEY(StudentID, SectionID)
 );
 

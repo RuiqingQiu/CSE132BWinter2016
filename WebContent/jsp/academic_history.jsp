@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Course Enrollment Entry Form</title>
+	<title>Academic History Entry Form</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-	<h3>Course Enrollment Form</h3>
+	<h3>Academic History Form</h3>
  <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <%@ page language="java" import="CSE132B.*" %>
@@ -81,7 +81,7 @@
                 	Connection conn = DriverManager.getConnection(url, user, password);
             %>
             <!-- Make the input box vertically listed -->
-            	<form action="course_enrollment.jsp" method="get" id="YearSelection">
+            	<form action="academic_history.jsp" method="get" id="YearSelection">
 					<input type="hidden" value="Search" name="action">
 				
             			StudentID: <input value="" name="StudentID" size="10"><br>
@@ -175,7 +175,7 @@
                     	 int id_selected=0;
             %>
                    <tr>
-                        <form action="course_enrollment.jsp" method="get">
+                        <form action="academic_history.jsp" method="get">
                             <input type="hidden" value="enroll" name="action">
                             
                         	<input type="hidden" value="<%= request.getParameter("StudentID") %>" name="StudentID">
@@ -288,7 +288,7 @@
                 
                             <%-- Button --%>
                             <td>
-                                <input class="btn btn-default" type="submit" value="Enroll">
+                                <input class="btn btn-default" type="submit" value="Add to History">
                             </td>
                         </form>
                     </tr> 
@@ -299,10 +299,11 @@
            
 				
             <!-- Add an HTML table header row to format the results -->
-            <h2>Enrolled Class</h2>
+            <h2>Academic History</h2>
                 <table border="1" class="table table-bordered">
                     <tr>
                     	<th>SectionID</th>
+                    	<th>Course Name</th>
                     	<th>Units</th>
 						<th>Action</th>
 					</tr>
@@ -312,7 +313,7 @@
                     // Iterate over the ResultSet
                	  	studentID = request.getParameter("StudentID");
                	  	ps = null;
-               	  	sql = "SELECT * FROM StudentEnrollment WHERE StudentID = ?";
+               	  	sql = "SELECT * FROM AcademicHistory WHERE StudentID = ?";
                	  
                	  	ps = conn.prepareStatement(sql);
                	  	ps.setString(1, request.getParameter("StudentID")); 
@@ -320,7 +321,7 @@
                     while ( rs.next() ) {
             %>
                   <tr>
-                    <form action="course_enrollment.jsp" method="get">
+                    <form action="academic_history.jsp" method="get">
                     <input type="hidden" value="update" name="action">
                     
                   	<td>
@@ -345,9 +346,6 @@
                    	    }
                   		%>
                   	</td>
-                  	
-                  	
-                  	
                   	<td>
                   		<input value="<%= rs.getString("Units") %>" name="Units">
                   	</td>
@@ -355,7 +353,7 @@
                   		<input class="btn btn-default" type="submit" value="Update">
                   	</td>
                   	</form>
-                  	<form action="course_enrollment.jsp" method="get">
+                  	<form action="academic_history.jsp" method="get">
                             <input type="hidden" value="drop" name="action">
                             
                             <input type="hidden" 
@@ -365,7 +363,7 @@
                                 
                             <%-- Button --%>
                             <td>
-                  				<input class="btn btn-default" type="submit" value="Drop">
+                  				<input class="btn btn-default" type="submit" value="Remove">
                             </td>
                         </form>
                   </tr>
@@ -379,7 +377,7 @@
             <%
                 	if(action != null && action.equals("enroll")){
                 			PreparedStatement pstmt = conn.prepareStatement(
-                                "INSERT INTO StudentEnrollment VALUES (?, ?, ?)");
+                                "INSERT INTO AcademicHistory VALUES (?, ?, ?)");
                      	
                              // Begin transaction
                              conn.setAutoCommit(false);
@@ -395,27 +393,7 @@
                              conn.commit();
                              conn.setAutoCommit(true);
                 	}
-                    // Check if an insertion is requested
-                   if (action != null && action.equals("insert")) {
-               
-                       // Create the prepared statement and use it to
-                       // INSERT the student selected section INTO the StudentEnrollment table.
-                       PreparedStatement pstmt = conn.prepareStatement(
-                           "INSERT INTO StudentEnrollment VALUES (?, ?)");
-                	
-                        // Begin transaction
-                        conn.setAutoCommit(false);
-                        
-                        // StudentID is the PK
-                        pstmt.setString(1, request.getParameter("StudentID"));
-						pstmt.setString(2,request.getParameter("SectionID"));
-	
-                        int rowCount = pstmt.executeUpdate();
-   
-                        // Commit transaction
-                        conn.commit();
-                        conn.setAutoCommit(true);
-                    }
+                   
             %>
 
             <%-- -------- UPDATE Code -------- --%>
@@ -431,7 +409,7 @@
                         // Can't update SectionID because it is PK
 
                        PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE StudentEnrollment SET Units = ? WHERE StudentID = ? and SectionID = ?"); 
+                            "UPDATE AcademicHistory SET Units = ? WHERE StudentID = ? and SectionID = ?"); 
                         
                         pstmt.setString(3, request.getParameter("SectionID"));
                         pstmt.setString(2,request.getParameter("StudentID"));  
@@ -458,7 +436,7 @@
                         
                         // Delete from CourseHasClass table first because FK constraint
                         PreparedStatement pstmt = conn.prepareStatement(
-                                 "DELETE FROM StudentEnrollment WHERE StudentID = ? and SectionID = ?");
+                                 "DELETE FROM AcademicHistory WHERE StudentID = ? and SectionID = ?");
                         
                         pstmt.setString(
                                  1, request.getParameter("StudentID"));
