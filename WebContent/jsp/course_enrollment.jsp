@@ -4,6 +4,33 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	
+	<script>
+	 $(document).ready(function(eve) { 
+		 //eve.preventDefault();
+		
+
+  		 $('#YearSelection').submit(function (e){
+  			$('#YearSelection').hide();
+  			$('#QuarterSelection').show();
+  			console.log("enter submit");
+            //$("this").hide(); 
+            //$("this").toggle();
+            //$("this").show();
+            e.preventDefault();
+      
+            //$("#QuarterSelection").toggle();
+            
+            //e.preventDefault();
+            
+          
+            
+         });    
+     });
+  </script>
+	
+
 </head>
 <body>
     <table border="1" class="table table-bordered">
@@ -24,6 +51,11 @@
     
             <%-- -------- Open Connection Code -------- --%>
             <%
+            	String StudentIDEntered = ""; // global variable to record studentID entered
+            	String YearSelected = "";
+            	Boolean form1Done = false;
+            	Boolean form2Done = false;
+         
                 try {
                 	Class.forName("org.postgresql.Driver");
                 	//Ruiqing Setup
@@ -43,10 +75,67 @@
 					}
                 	Connection conn = DriverManager.getConnection(url, user, password);
             %>
-
+ 			<%-- -------- Handle Input Selection Code -------- --%>
+            <%
+               		String action = request.getParameter("action");
+         
+                    // Handle input Year selection
+                   if (action != null && action.equals("SelectYear")) {
+                	  StudentIDEntered= request.getParameter("StudentID");
+                	  YearSelected=request.getParameter("Year");
+                	
+                	  PreparedStatement ps = null;
+                	  String sql = "SELECT DISTINCT Quarter FROM Classes WHERE Year= ?";
+                	  
+                	  ps = conn.prepareStatement(sql);
+                	  ps.setString(1, YearSelected);
+              		
+                	  ResultSet rs_year = ps.executeQuery();
+                   
+                       if(!rs_year.isBeforeFirst()){
+                    	   System.out.println("selection failed");
+                       }else{
+                    	   //System.out.println("selection success");
+                       }
+            %>
+                    <!-- form asking for input quarter -->   
+                    <form action="course_enrollment.jsp" method="get" id="QuarterSelection">
+       					<input type="hidden" value="SelectQuarter" name="action">
+                   		StudentID: <%= StudentIDEntered %><br>
+                   		Year:<%= YearSelected %><br>
+                   	
+                  	 	<!-- Need to choose Quarter now  -->
+             			
+                   		Quarter: <select name="Quarter">
+                   		<%
+                   			// if there is no entry in the Course table
+       						if (!rs_year.isBeforeFirst() ) {    
+       					%>
+       						<option value="no classes" name="Quarter" > There are no classes </option>
+       					<% 
+       					}else{
+       					%>
+       						<option value=""></option>
+       					<% 
+       					while(rs_year.next()){
+       					%>	
+       						<option value="<%= rs_year.getString("Quarter") %>" name ="Quarter" > <%= rs_year.getString("Quarter") %> </option>
+                   		<%
+       					} // close of while loop
+       					}// close of else statement
+       					%>
+       					</select> <!-- end of select Quarter  -->
+   
+       				<input class="btn btn-default" type="submit" value="ShowCourse" id="ShowCourseButton">
+              
+                   </form>
+            <% 
+            	}// end of if action is select year
+            %>
+   
             <%-- -------- INSERT Code -------- --%>
             <%
-                  String action = request.getParameter("action");
+                 action = request.getParameter("action");
             
      
                     // Check if an insertion is requested
@@ -127,58 +216,71 @@
             <%
                  // Create the statement
                 Statement statement = conn.createStatement();
-            
                 // the student attributes FROM the Student table.
                 ResultSet rs = statement.executeQuery
-                        ("SELECT * FROM StudentEnrollment"); 
+                        ("SELECT * FROM StudentEnrollment");  
                 
-               /*  // Select from CourseHasClass Table
-                statement = conn.createStatement();
-                ResultSet rs_cc = statement.executeQuery("SELECT * FROM CourseHasClass"); */
-                
-                // Select from Course Table
-                statement = conn.createStatement();
-                ResultSet rs_c = statement.executeQuery("SELECT * FROM Course"); 
-                   
             %>
             
             <!-- Make the input box vertically listed -->
-            <form action="course_enrollment.jsp" method="get">
-				<input type="hidden" value="insert" name="action">
+            <form action="course_enrollment.jsp" method="get" id="YearSelection">
+				<input type="hidden" value="SelectYear" name="action">
+				<%-- 
+				<%
+					if(form1Done == false){
+				%> --%>
+            		StudentID: <input value="" name="StudentID" size="10"><br>
+            	<%-- <% 
+					}else{
+            	%>
+            		StudentID: <%= StudentIDEntered %><br>
+            	<%
+					} // end of checking form1Done
+            	%> --%>
+            	
+            	<!-- Need to choose quarter and year first  -->
+      			
+      			<%
+            		/* if(form1Done == false){ */
+                		statement = conn.createStatement();
+                		ResultSet rs_classes = statement.executeQuery("SELECT DISTINCT Year FROM Classes"); 
+               	%> 
+            			Year: <select name="Year">
+            			<%
+            				// if there is no entry in the Course table
+							if (!rs_classes.isBeforeFirst() ) {    
+						%>
+							<option value="no classes" name="Year" > There are no classes </option>
+						<% 
+						}
+						else{
+						%>
+							<option value=""></option>
+						<% 
+							while(rs_classes.next()){
+						%>	
+								<option value="<%= rs_classes.getString("Year") %>" name ="Year" > <%= rs_classes.getString("Year") %> </option>
+            			<%
+							} // close of while loop
+						}// close of checking result set statement
+					%>
+						</select> <!-- end of select Year  -->
+					 <input class="btn btn-default" type="submit" value="ShowQuarter" id="ShowQuarterButton">
+           			
+					<%-- <% 
+            		}
+      				// else form1Done
+      				else{
+      			   %>
+      			   		Year:<%= YearSelected %><br>
+      			   <%
+      				}
+      			   %> --%>
+										
+				</form>
 				
-            	StudentID: <input value="" name="StudentID" size="10"><br>
-            	
-            	<!-- Need to choose quarter first  -->
-            	
-            	<!-- Create a drop down for selecting course -->
-            	CourseName: <select name="CourseName">
-            	<%
-            		// if there is no entry in the Course table
-					if (!rs_c.isBeforeFirst() ) {    
-				%>
-					<option value="no course" name="CourseName" > There are no courses </option>
-				<% 
-				}
-				else{
-				%>
-					<option value=""></option>
-				<% 
-					while(rs_c.next()){
-				%>	
-						<option value="<%= rs_c.getString("CourseName") %>" name ="CourseName" > <%= rs_c.getString("CourseName") %> </option>
-            	<%
-					} // close of while loop
-				}// close of else statement
-				%>
-				</select><br> <!-- end of select course  -->
 			
-            	Title: <input value="" name="Title" size="10"><br>
-            	Quarter: <input value="" name="Quarter" size="10"><br>
-            	Year:<input value="" name="Year" size="10"><br>
-            	MaxEnrollment:<input value="" name="MaxEnrollment" size="10"><br>
-            	<input class="btn btn-default" type="submit" value="Insert">
-            </form>
-
+				
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
@@ -192,7 +294,7 @@
 						<th>Action</th>
    
             <%-- -------- Iteration Code for displaying the result -------- --%>
-            <%
+           <%--  <%
                     // Iterate over the ResultSet
                     statement = conn.createStatement();
                     rs = statement.executeQuery
@@ -205,16 +307,16 @@
                         <form action="classes.jsp" method="get">
                             <input type="hidden" value="update" name="action">
                             
-                            <%--Display the CourseHasClass ID column in the table --%>
+                            Display the CourseHasClass ID column in the table
                             <!-- <td style="visibility:collapse;"> -->
                             <td>
                             	 <%
                         			// Select from CourseHasClass Table
                          			statement = conn.createStatement();
-                         			rs_cc = statement.executeQuery("SELECT * FROM CourseHasClass");   
+                         			/* rs_cc = statement.executeQuery("SELECT * FROM CourseHasClass");    */
                           
                             		// if there is no entry in the Department table
-									if (!rs_cc.isBeforeFirst() ) {   
+									 if (!rs_cc.isBeforeFirst() ) {    
                             	%>
                             		<option value="no id" name="ID" > There are no IDs in the CourseHasClass table</option>
                             	<% 
@@ -236,7 +338,7 @@
 					%>
                             </td>
                              
-                             <%-- Get the SectionID, which is the PK --%>
+                             Get the SectionID, which is the PK
                             <td>
               				 	<input type="hidden" value="<%= rs.getString("SectionID") %>" name="SectionID" size="10">
                                 <%= rs.getString("SectionID") %>
@@ -288,31 +390,31 @@
 					%>
 					</select>             
         		 </td>
-                            <%-- Get the title --%>
+                            Get the title
                             <td>
                               <input value="<%= rs.getString("Title") %>" 
                                     name="Title" size="10">
                             </td> 
                             
-                            <%-- Get the Quarter --%>
+                            Get the Quarter
                             <td>
                                 <input value="<%= rs.getString("Quarter") %>" 
                                     name="Quarter" size="10">
                             </td>
                            
-                            <%-- Get the Year --%>
+                            Get the Year
                            <td>
                                 <input value="<%= rs.getString("Year") %>" 
                                     name="Year" size="10">
                             </td> 
                             
-                            <%-- Get the MaxEnrollment --%>
+                            Get the MaxEnrollment
                            <td>
                                 <input value="<%= rs.getInt("MaxEnrollment") %>" 
                                     name="MaxEnrollment" size="10">
                             </td> 
                 
-                            <%-- Button --%>
+                            Button
                             <td>
                                 <input class="btn btn-default" type="submit" value="Update">
                             </td>
@@ -325,7 +427,7 @@
                             <input type="hidden" 
                                 value="<%= id_selected %>" name="ID">
                                 
-                            <%-- Button --%>
+                            Button
                            <td>
                                 <input class="btn btn-default" type="submit" value="Delete">
                             </td>
@@ -333,7 +435,7 @@
                     </tr> 
             <%
                     }
-            %>
+            %> --%>
 
             <%-- -------- Close Connection Code -------- --%>
             <%
