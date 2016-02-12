@@ -98,7 +98,7 @@
                         PreparedStatement pstmt = conn.prepareStatement(
                             "UPDATE Degree SET TotalUnitsRequired = ? WHERE DegreeName = ?");
 
-                        pstmt.setString(1, request.getParameter("TotalUnitsRequired"));
+                        pstmt.setInt(1, Integer.parseInt(request.getParameter("TotalUnitsRequired")));
                         pstmt.setString(2, request.getParameter("DegreeName"));
                                          
 
@@ -141,10 +141,10 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM DegreeOffer WHERE DegreeName = ?");
+                            "DELETE FROM DegreeOffer WHERE DegreeOfferID = ?");
 
-                        pstmt.setString(
-                            1, request.getParameter("DegreeName"));
+                        pstmt.setInt(
+                            1, Integer.parseInt(request.getParameter("DegreeOfferID")));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
@@ -232,8 +232,9 @@
 
                             <%-- Get the SSN --%>
                             <td>
-                                <input value="<%= rs.getString("DegreeName") %>" 
+                                <input type="hidden" value="<%= rs.getString("DegreeName") %>" 
                                     name="DegreeName" size="10">
+                                <%= rs.getString("DegreeName") %>
                             </td>
     
                             <%-- Get the Name --%>
@@ -241,40 +242,57 @@
                                 <input value="<%= rs.getInt("TotalUnitsRequired") %>" 
                                     name="TotalUnitsRequired" size="10">
                             </td>
-                                <td>
+                            <td>
                             	
                             	
                             	<!-- <select name="DepartmentName">-->
-            					<select name="DepartmentName" class="form-control">
-			
-								<%									
-									department_statement = conn.createStatement();
-									rs_department = department_statement.executeQuery("SELECT * FROM Department");
-									Statement degree_offer_statement = conn.createStatement();
+                            	<%
+                            		Statement degree_offer_statement = conn.createStatement();
 									ResultSet degree_offer = degree_offer_statement.executeQuery("SELECT * FROM DegreeOffer");
-									if (!rs_department.isBeforeFirst() ) {    
+									int ID = -1;
 								%>
-									<option value="no department" name="DepartmentName" > There are no departments </option>
-								<% 
-									}
-									else{
-										while(rs_department.next()){
-											//if(rs_department.getString("DepartmentName").equals(rs.getString("DepartmentName"))){
-								%>
-												<option value="<%= rs_department.getString("DepartmentName") %>" selected> <%= rs_department.getString("DepartmentName") %> </option>
-								<%	
-											//}else{
-								%>
-												<!--  <option value="<%= rs_department.getString("DepartmentName") %>"> <%= rs_department.getString("DepartmentName") %> </option>
-												-->
-								<%	
-											//}
-										}
-									}
-								%>	
-								</select>
+								<select name="DepartmentName" class="form-control">
+								<%
+									while(degree_offer.next()){
+										//Find the entry with the same degree name
+										if(degree_offer.getString("DegreeName").equals(rs.getString("DegreeName"))){
+											String dep = degree_offer.getString("DepartmentName");											
+											%>
+						
+											<%									
+												department_statement = conn.createStatement();
+												rs_department = department_statement.executeQuery("SELECT * FROM Department");
+												
+												if (!rs_department.isBeforeFirst() ) {    
+											%>
+												<option value="no department" name="DepartmentName" > There are no departments </option>
+											<% 
+												}
+												else{
+													while(rs_department.next()){
+														if(rs_department.getString("DepartmentName").equals(dep)){
+												%>
+															<option value="<%= rs_department.getString("DepartmentName") %>" selected> <%= rs_department.getString("DepartmentName") %> </option>
+												<% 
+														}
+														else{
+												%>
+															<option value="<%= rs_department.getString("DepartmentName") %>"> <%= rs_department.getString("DepartmentName") %> </option>
+												<%			
+														}
+													}
+												}
+											
+												ID = degree_offer.getInt("DegreeOfferID");
+												System.out.println("DegreeOfferID is " + ID);
+												break;
+											}
+										}//End of while
+								
+                            	%>
+                            	</select>
                             </td> 
-                            
+                            	<input type="hidden" value="<%= ID %>" name="DegreeOfferID">
                             <%-- Button --%>
                             <td>
                                 <input class="btn btn-default" type="submit" value="Update">
@@ -285,6 +303,8 @@
                             <input type="hidden" value="delete" name="action">
                             
                             <input type="hidden" 
+                                value="<%= ID %>" name="DegreeOfferID">
+                             <input type="hidden" 
                                 value="<%= rs.getString("DegreeName") %>" name="DegreeName">
                             <%-- Button --%>
                             <td>
@@ -294,7 +314,7 @@
                     </tr>
                     
             <%
-                    }
+                    }//End of rs while loop
             %>
 
             <%-- -------- Close Connection Code -------- --%>

@@ -130,6 +130,7 @@ CREATE TABLE PhDCandidates(
 );
 
 
+
 CREATE TABLE Department(
 	DepartmentName varchar(255) NOT NULL PRIMARY KEY
 );

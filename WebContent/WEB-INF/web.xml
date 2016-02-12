@@ -4,6 +4,7 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+  
   <servlet>
     <servlet-name>ActionServlet</servlet-name>
     <servlet-class>CSE132B.ActionServlet</servlet-class>
