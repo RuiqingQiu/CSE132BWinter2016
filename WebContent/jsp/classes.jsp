@@ -19,6 +19,7 @@
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <%@ page language="java" import="CSE132B.*" %>
+            <%@ page language="java" import="java.io.*" %>
             
             <%@ page language="java" import="java.sql.*" %>
     
@@ -82,8 +83,39 @@
                             pstmt.setString(2,c.SectionID);
     					
     				   rowCount = pstmt.executeUpdate();
-                        
-
+    				   
+    				   // INSERT into Weekly Meeting Table
+    				    pstmt = conn.prepareStatement(
+                         "INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES (?, ?, ?, ?, ?, ?)");
+    				   pstmt.setString(1,request.getParameter("MeetingID"));
+    				   pstmt.setString(2,request.getParameter("MeetingType"));
+    				   pstmt.setString(3,request.getParameter("Location"));
+    				   if(request.getParameter("IsMandatory").equals("Yes")){
+    					   pstmt.setBoolean(4,true);
+    				   }else{
+    					   pstmt.setBoolean(4,false);
+    				   }
+    				   
+    				   // get all the values where name = DaysOfTheWeek
+    				   String[] daysSelected = request.getParameterValues("DayOfTheWeek");
+    				   String finalResult = "";
+    				   for(int i = 0;i<daysSelected.length;i++){
+    					   finalResult = finalResult.concat(daysSelected[i].substring(0,3));
+    					   finalResult = finalResult.concat(" ");
+    				   }
+    				   pstmt.setString(5,finalResult);
+    				   pstmt.setString(6,request.getParameter("Time"));
+    				 
+    				   rowCount = pstmt.executeUpdate();
+    				   
+    					// INSERT into Weekly Meeting Table	
+   				    	pstmt = conn.prepareStatement(
+                        	"INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES (?, ?)");
+   				  	 	pstmt.setString(1,request.getParameter("SectionID"));
+   				   		pstmt.setString(2,request.getParameter("MeetingID"));
+   				   		
+   				   		rowCount = pstmt.executeUpdate();
+   				   	
                         // Commit transaction
                         conn.commit();
                         conn.setAutoCommit(true);
@@ -123,9 +155,34 @@
                         pstmt.setString(2, request.getParameter("SectionID"));
                         pstmt.setInt(3,Integer.parseInt(request.getParameter("ID")));  
                         
-                        rowCount = pstmt.executeUpdate(); 
+                        rowCount = pstmt.executeUpdate();
                         
-            
+                        // Update WeeklyMeeting Table, MeetingID is PK
+                     	pstmt = conn.prepareStatement(
+                                "UPDATE WeeklyMeeting SET Type = ?, Location = ?, IsMandatory = ?, DayOfTheWeek = ?, Time = ? WHERE MeetingID = ?"); 
+                        
+                        pstmt.setString(1, request.getParameter("MeetingType"));
+                        System.out.println("update state " + request.getParameter("MeetingType"));
+                        pstmt.setString(2, request.getParameter("Location"));
+                        System.out.println("manda " + request.getParameter("IsMandatory"));
+                        if(request.getParameter("IsMandatory").equals("Yes")){
+                        	 pstmt.setBoolean(3,true);  
+                        }else{
+                        	 pstmt.setBoolean(3,false); 
+                        }
+                        // get all the values where name = DaysOfTheWeek
+     				   String[] daysUpdated = request.getParameterValues("DayOfTheWeek");
+     				   String result = "";
+     				   for(int i = 0;i<daysUpdated.length;i++){
+     					   result = result.concat(daysUpdated[i].substring(0,3));
+     					   result = result.concat(" ");
+     				   }
+     				   pstmt.setString(4,result);
+     				   pstmt.setString(5,request.getParameter("Time"));
+     				   pstmt.setString(6,request.getParameter("MeetingID"));
+                    
+                       rowCount = pstmt.executeUpdate();
+                       
                         // Commit transaction
                         conn.commit();
                         conn.setAutoCommit(true); 
@@ -149,13 +206,40 @@
                                  1, Integer.parseInt(request.getParameter("ID")));
                              
                        int rowCount = pstmt.executeUpdate();
-                        
+                       
+                      PreparedStatement ps_delete = null;
+                      // select all the meetingID where seciondID is being deleted
+              	  	  String stat_delete = "SELECT * FROM ClassMeeting WHERE SectionID = ?";
+              	  
+              	  	  ps_delete = conn.prepareStatement(stat_delete);
+              	  	  ps_delete.setString(1, request.getParameter("SectionID"));
+            		  // retrieve all the valid meetingID for that seciondID
+              	  	  ResultSet meeting_to_delete = ps_delete.executeQuery();
+              		
+                       // Delete from WeeklyMeeting table
+                       while(meeting_to_delete.next()){
+                    	   pstmt = conn.prepareStatement(
+                                   "DELETE FROM ClassMeeting WHERE MeetingID = ? and SectionID = ?");
+                    	   pstmt.setString(1,meeting_to_delete.getString("MeetingID"));
+                    	   pstmt.setString(2,request.getParameter("MeetingID"));
+                    	   rowCount = pstmt.executeUpdate();
+                       }
+                       
+                       // Delete from WeeklyMeeting table
+                       while(meeting_to_delete.next()){
+                           pstmt = conn.prepareStatement(
+                                   "DELETE FROM WeeklyMeeting WHERE MeetingID = ?");
+                    	   pstmt.setString(1,meeting_to_delete.getString("MeetingID"));
+                    	   rowCount = pstmt.executeUpdate();
+                       }
+                       
+                   
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                        pstmt = conn.prepareStatement(
                             "DELETE FROM Classes WHERE SectionID = ?");
 
-                        pstmt.setString(
+                       pstmt.setString(
                             1, request.getParameter("SectionID"));
                         
                         rowCount = pstmt.executeUpdate();
@@ -217,6 +301,27 @@
             	Quarter: <input value="" name="Quarter" size="10"><br>
             	Year:<input value="" name="Year" size="10"><br>
             	MaxEnrollment:<input value="" name="MaxEnrollment" size="10"><br>
+            	
+            	MeetingID: <input value="" name="MeetingID" size="10"><br>
+            	MeetingType:<select name = "MeetingType">
+            					<option value = ""></option>
+            					<option value="Lecture">Lecture</option>
+								<option value="Discussion">Discussion</option>
+							</select><br>
+				Location: <input value="" name="Location" size=10><br>
+				IsMandatory:<select name="IsMandatory">
+							<option value=""></option>
+							<option>Yes</option>
+							<option>No</option>
+						</select><br>
+				DayOfWeek:  
+					<input type="checkbox" name="DayOfTheWeek" value="Monday">Monday
+  					<input type="checkbox" name="DayOfTheWeek" value="Tuesday">Tuesday
+  					<input type="checkbox" name="DayOfTheWeek" value="Wednesday">Wednesday
+  					<input type="checkbox" name="DayOfTheWeek" value="Thursday">Thursday
+  					<input type="checkbox" name="DayOfTheWeek" value="Friday">Friday
+  					<br>
+  				Time:<input value="" type="time" name="Time" size="10"><br>
             	<input class="btn btn-default" type="submit" value="Insert">
             </form>
 
@@ -224,6 +329,13 @@
                 <table border="1" class="table table-bordered">
                     <tr>
                     	<th></th>
+                    	<th>MeetingID</th>
+                    	<th>TypeOfMeeting</th>
+                    	<th>MeetingLocation</th>
+                    	<th>MeetingMandatory</th>
+                    	<th width="100px">Which
+                    	 Day Of The Week</th>
+                    	<th>MeetingTime</th>
                         <th>SectionID</th>
                         <th>CourseName</th>
                         <th>Title</th>
@@ -247,7 +359,6 @@
                             <input type="hidden" value="update" name="action">
                             
                             <%--Display the CourseHasClass ID column in the table --%>
-                            <!-- <td style="visibility:collapse;"> -->
                             <td>
                             	 <%
                         			// Select from CourseHasClass Table
@@ -275,7 +386,178 @@
 						} // close of while loop
 					}// close of else statement
 					%>
-                            </td>
+                    </td><!-- End of display CC ID -->
+                           
+                           		 <% 
+                           	  		PreparedStatement ps = null;
+                           	  		String sql = "SELECT * FROM ClassMeeting WHERE SectionID = ?";
+                           	  
+                           	  		ps = conn.prepareStatement(sql);
+                           	  		ps.setString(1, rs.getString("SectionID"));
+                         		   // retrieve all the valid meetingID for that seciondID
+                           	  		ResultSet rs_cm = ps.executeQuery();
+                           		
+                           	  		// No meeting created yet for that class section
+                           	  		// display six columns of empty info
+                         			if(!rs_cm.isBeforeFirst()){
+                         		
+                         		%>
+                         			<td><input type="hidden" value="<%= "No Meeting ID" %>" name="MeetingID" size="10"><%= "No Meeting ID" %></td>
+                         			<td><input value="<%= "No MeetingType" %>" name="MeetingType" size="10"></td>
+                         			<td><input value="<%= "No MeetingLocation" %>" name="Location" size="10"></td>
+                         			<td><input value="<%= "No Info" %>" name="IsMandatory" size="10"></td>
+                         			<td><input value="<%= "No DayOfTheWeek" %>" name="DayOfTheWeek" size="10"></td>
+                         			<td><input value="<%= "No MeetingTime" %>" name="Time" size="10"></td>
+                                <%    
+                                	// else there has meeting session created for the class section
+                         			}else{
+                         				// rs_cm has all the meetingID mapping the sectionID
+                         				while(rs_cm.next()){	
+                         					ps = null;
+                               	  			sql = "SELECT * FROM WeeklyMeeting WHERE MeetingID = ?";
+                                     	  
+                               	  			ps = conn.prepareStatement(sql);
+                               	  			ps.setString(1, rs_cm.getString("MeetingID"));
+                             		
+                               	  			// should be one because MeetingID is the primary key of WeeklyMeeting table
+                               	  			ResultSet rs_wm = ps.executeQuery();	
+                               	  			while(rs_wm.next()){
+                         		%>
+                         				<td>
+                         					<input type="hidden" value="<%= rs_wm.getString("MeetingID") %>" 
+                          						name="MeetingID" size="10"><%= rs_wm.getString("MeetingID") %>
+                          				</td>
+                          				<td>
+                          						<%
+                          							String typeSelected = rs_wm.getString("Type");
+                          							System.out.println("meeting type is " + rs_wm.getString("Type"));
+                          						%>
+                            			  		<select name="MeetingType">
+                            			  			<%
+                            			  				if(typeSelected.equals("Lecture")){
+                            			  			 %>
+                            			  			 	<option value="Lecture" selected>Lecture</option>
+                            			  			 	<option value="Discussion">Discussion</option>
+                            			  			 <%
+                            			  				}else{
+                            			  			 %>
+                            			  			 	<option value="Lecture">Lecture</option>
+                            			  			 	<option value="Discussion" selected>Discussion</option>
+                            			  			 <%
+                            			  			 	}
+                            			  			 %>
+                            			  		</select>
+                          					</td>
+                          					
+                          					<td>
+                            			  		<input value="<%= rs_wm.getString("Location") %>" 
+                          						name="Location" size="10">
+                          					</td>
+                          					
+                          					<td>
+                          						<select name="IsMandatory">
+                          							<%
+                          							  if(rs_wm.getBoolean("IsMandatory") == true){
+                          							%>
+                          							   <option value= "Yes" selected>Yes</option>
+                          							   <option value= "No">No</option>
+                          							<%
+                          							  }else{
+                          							%>
+                          								<option value= "No" selected>No</option>
+                          								<option value= "Yes">Yes</option>
+                          							<%
+                          							  }
+                          							%>
+                          						</select>	
+                          					</td>
+                          			
+                          				<td class="span4">
+                          				<% 
+                          				 	String dayOfWeek = rs_wm.getString("DayOfTheWeek");
+                          					String split[]= dayOfWeek.split("\\s+");
+                          					Boolean mon = false;
+                          					Boolean tue = false;
+                          					Boolean wed = false;
+                          					Boolean thu = false;
+                          					Boolean fri = false;
+                          					
+                          					for(int j = 0;j<split.length;j++){
+                          						switch(split[j]){
+                          							case "Mon": mon = true;break;
+                          							case "Tue": tue = true;break;
+                          							case "Wed": wed = true;break;
+                          							case "Thu": thu = true;break;
+                          							case "Fri": fri = true;break;
+                          							default: 
+                          								System.out.println("DefaultCase " + split[j]);
+                          								break;	
+                          						}// end of switch statement
+                          					}// end of for loop	
+                          					
+                          					if(mon){
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Monday" checked>Monday<br>
+                          					
+                          				<%
+                          					}else{
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Monday">Monday<br>
+                          				<%
+                          					}
+                          					
+                          					if(tue){
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Tuesday" checked>Tuesday<br>
+                          				<%
+                          					}else{
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Tuesday">Tuesday<br>
+                          				<%
+                          					}
+                          					
+                          					if(wed){
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Wednesday" checked>Wednesday<br>
+                          				<%
+                          					}else{
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Wednesday">Wednesday<br>
+                          				<%
+                          					}
+                          					
+                          					if(thu){
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Thursday" checked>Thursday<br>
+                          				<%
+                          					}else{
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Thursday">Thursday<br>
+                          				<%
+                          					}
+                          					
+                          					if(fri){
+                          				%>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Friday" checked>Friday<br>
+                          				<%
+                          					}else{
+                          				%>	
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Friday">Friday<br>
+                          				<%
+                          					}
+                          				%>      	
+                          				</td>
+                          				<td>
+                          					 <input type="time" value="<%= rs_wm.getString("Time") %>" 
+                                    		name="Time" size="10">		
+                          				</td>		
+            		<%
+                               	  			}// end of while rs_wm has next
+						} // close of while loop
+					}// close of else statement
+					%>   	
+                    <!-- End of displaying Meeting info-->
+                            
                              
                              <%-- Get the SectionID, which is the PK --%>
                             <td>
@@ -311,7 +593,7 @@
 							// if there is no entry in the Course table
 							if (!rs_c.isBeforeFirst() ) {  
 					%>
-								<option value="no course" name="CourseName"> There are no course</option>
+								<input value="no course" name="CourseName"> There are no course</option>
 					<% 
 							} // end of if checking empty result set
 							while(rs_c.next()){
@@ -359,12 +641,14 @@
                             </td>
                         </form>
                         
+                        <!--  Begin delete form here -->
                         <form action="classes.jsp" method="get">
                             <input type="hidden" value="delete" name="action">
                             <input type="hidden" 
                                 value="<%= rs.getString("SectionID") %>" name="SectionID"> 
                             <input type="hidden" 
                                 value="<%= id_selected %>" name="ID">
+                          
                                 
                             <%-- Button --%>
                            <td>
