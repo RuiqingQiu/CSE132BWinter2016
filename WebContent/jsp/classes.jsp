@@ -45,7 +45,6 @@
             </td>
             
             <td>
-
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
             <%@ page language="java" import="CSE132B.*" %>
@@ -358,6 +357,8 @@
   				Time:<input value="" type="time" name="Time" size="10"><br>
             	<input class="btn btn-default" type="submit" value="Insert">
             </form>
+            <a href="instructor.jsp">Click here to Add an Instructor</a>
+            
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
@@ -690,6 +691,7 @@
                             </td>
                         </form>
                     </tr> 
+                    
             <%
                     }
             %>
@@ -711,6 +713,7 @@
                 }
             %>
                 </table>
+                
             </td>
         </tr>
     </table>
