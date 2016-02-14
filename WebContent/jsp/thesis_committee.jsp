@@ -129,26 +129,23 @@
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                         PreparedStatement pstmt = conn.prepareStatement(
-                            "DELETE FROM ThesisCommittee WHERE StudentID = ? and DepartmentName = ? and FacultyName = ?");
-
-                        pstmt.setInt(
-                            1, Integer.parseInt(request.getParameter("StudentID")));
-                        pstmt.setInt(
-                                2, Integer.parseInt(request.getParameter("DepartmantName")));
-                        pstmt.setInt(
-                                3, Integer.parseInt(request.getParameter("FacultyName")));
+                            "DELETE FROM ThesisCommittee WHERE StudentID = ? AND FacultyName = ? AND DepartmentName = ?");
+              
+  
+                        pstmt.setString(
+                            1,request.getParameter("StudentID"));
+                        pstmt.setString(
+                                2, request.getParameter("FacultyName"));
+                        pstmt.setString(
+                                3, request.getParameter("DepartmentName"));
                         int rowCount = pstmt.executeUpdate();
 
                         // Commit transaction
-                         conn.commit();
+                        conn.commit();
                         conn.setAutoCommit(true);
                     }
             %>
-			
-			
-			
-			
-			
+	
 
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">

@@ -65,13 +65,13 @@ CREATE TABLE Student
 );
 
 CREATE TABLE Faculty(
-	SSN varchar(255) references Person(SSN),
+	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	Name varchar(255) Primary Key,
 	Title varchar(255)
 );
 
 CREATE TABLE Undergraduate(
-	StudentID varchar(10) PRIMARY KEY references Student(StudentID),
+	StudentID varchar(10) PRIMARY KEY references Student(StudentID) ON DELETE CASCADE,
 	Name varchar(255),
 	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	ResidenceStatus varchar(255),
@@ -80,7 +80,7 @@ CREATE TABLE Undergraduate(
 );
 
 CREATE TABLE BSMS(
-	StudentID varchar(10) PRIMARY KEY references Undergraduate(StudentID),
+	StudentID varchar(10) PRIMARY KEY references Undergraduate(StudentID) ON DELETE CASCADE,
 	Name varchar(255),
 	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	ResidenceStatus varchar(255),
@@ -90,7 +90,7 @@ CREATE TABLE BSMS(
 );
 
 CREATE TABLE Graduate(
-	StudentID varchar(10) PRIMARY KEY references Student(StudentID),
+	StudentID varchar(10) PRIMARY KEY references Student(StudentID) ON DELETE CASCADE,
 	Name varchar(255),
 	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	ResidenceStatus varchar(255),
@@ -98,7 +98,7 @@ CREATE TABLE Graduate(
 );
 
 CREATE TABLE Master(
-	StudentID varchar(10) PRIMARY KEY references Graduate(StudentID),
+	StudentID varchar(10) PRIMARY KEY references Graduate(StudentID) ON DELETE CASCADE,
 	Name varchar(255),
 	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	ResidenceStatus varchar(255),
@@ -106,7 +106,7 @@ CREATE TABLE Master(
 );
 
 CREATE TABLE PhD(
-	StudentID varchar(10) PRIMARY KEY references Graduate(StudentID),
+	StudentID varchar(10) PRIMARY KEY references Graduate(StudentID) ON DELETE CASCADE,
 	Name varchar(255),
 	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	ResidenceStatus varchar(255),
@@ -114,7 +114,7 @@ CREATE TABLE PhD(
 );
 
 CREATE TABLE PhdPreCandidacy(
-	StudentID varchar(10) PRIMARY KEY references PhD(StudentID),
+	StudentID varchar(10) PRIMARY KEY references PhD(StudentID) ON DELETE CASCADE,
 	Name varchar(255),
 	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	ResidenceStatus varchar(255),
@@ -122,14 +122,12 @@ CREATE TABLE PhdPreCandidacy(
 );
 
 CREATE TABLE PhDCandidates(
-	StudentID varchar(10) PRIMARY KEY references PhD(StudentID),
+	StudentID varchar(10) PRIMARY KEY references PhD(StudentID) ON DELETE CASCADE,
 	Name varchar(255),
 	SSN varchar(255) references Person(SSN) ON DELETE CASCADE,
 	ResidenceStatus varchar(255),
 	AcademicLevel varchar(255)
 );
-
-
 
 CREATE TABLE Department(
 	DepartmentName varchar(255) NOT NULL PRIMARY KEY
@@ -145,7 +143,7 @@ CREATE TABLE Classes(
 
 CREATE TABLE Course(
 	CourseName varchar(255) NOT NULL PRIMARY KEY,
-	DepartmentName varchar(255) references Department(DepartmentName),
+	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE,
 	MaxUnits int,
 	MinUnits int,
 	RequireLabWorks BOOLEAN,
@@ -173,12 +171,12 @@ CREATE TABLE StudentOrganization(
 /* Relationship Table begins */
 CREATE TABLE GraduateDepartment(
 	GD_ID Serial Primary Key,
-	StudentID varchar(10) references Graduate(StudentID),
-	DepartmentName varchar(255) references Department(DepartmentName)
+	StudentID varchar(10) references Graduate(StudentID) ON DELETE CASCADE,
+	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE
 ); 
 
 CREATE TABLE PhD_Advisor(
-	StudentID varchar(10) references PhD(StudentID),
+	StudentID varchar(10) references PhD(StudentID) ON DELETE CASCADE,
 	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
 	PRIMARY KEY(StudentID, FacultyName)
 );
@@ -190,33 +188,33 @@ CREATE TABLE FacultyDepartment(
 );
 
 CREATE TABLE HasMajor(
-	StudentID varchar(10) references Student(StudentID),
-	MajorName varchar(255) references Major(MajorName),
+	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
+	MajorName varchar(255) references Major(MajorName) ON DELETE CASCADE,
 	PRIMARY KEY(StudentID, MajorName)
  );
 
 Create table HasMinor(
-	StudentID varchar(10) references Student(StudentID),
-	MinorName varchar(255) references Minor(MinorName),
+	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
+	MinorName varchar(255) references Minor(MinorName) ON DELETE CASCADE,
 	PRIMARY KEY(StudentID, MinorName)
 );
 
 Create table StudentEnrollment(
-	StudentID varchar(10) references Student(StudentID),
-	SectionID varchar(255) references Classes(SectionID),
+	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
 	Units int NOT NULL,
 	PRIMARY KEY(StudentID, SectionID)
 );
 
 Create table AcademicHistory(
-	StudentID varchar(10) references Student(StudentID),
-	SectionID varchar(255) references Classes(SectionID),
+	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
 	Units int NOT NULL,
 	PRIMARY KEY(StudentID, SectionID)
 );
 
 CREATE TABLE EducationHistory(
-	StudentID varchar(10) references Student(StudentID),
+	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
 	Degree varchar(255),
 	University varchar(255),
 	PRIMARY KEY (StudentID, Degree, University)
@@ -261,68 +259,68 @@ CREATE TABLE ReviewSession(
 );
 
 CREATE TABLE ClassMeeting(
-	SectionID varchar(255) references Classes(SectionID),
-	MeetingID varchar(255) references WeeklyMeeting(MeetingID)
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
+	MeetingID varchar(255) references WeeklyMeeting(MeetingID) ON DELETE CASCADE
 );
 
 CREATE TABLE ClassReview(
 	CR_ID Serial Primary Key,
-	SectionID varchar(255) references Classes(SectionID),
-	ReviewID varchar(255) references ReviewSession(ReviewID)
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
+	ReviewID varchar(255) references ReviewSession(ReviewID) ON DELETE CASCADE
 );
 
 CREATE TABLE Instructor(
-	SectionID varchar(255) references Classes(SectionID),
-	FacultyName varchar(255) references Faculty(Name),
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
+	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
 	PRIMARY KEY(SectionID, FacultyName)
 );
 
 CREATE TABLE CourseHasClass(
 	ID SERIAL PRIMARY KEY, 
-	CourseName varchar(255) references Course(CourseName),
-	SectionID varchar(255) references Classes(SectionID)
+	CourseName varchar(255) references Course(CourseName) ON DELETE CASCADE,
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE
 );
 
 
 CREATE TABLE DegreeDetailedUnitRequirement(
 	DDUR_ID Serial Primary Key,
-	DegreeName varchar(255) references Degree(DegreeName),
+	DegreeName varchar(255) references Degree(DegreeName) ON DELETE CASCADE,
 	RequirementDescription varchar(255),
 	UnitsRequired int
 );
 CREATE TABLE DegreeDetailedCourseRequirement(
 	DDCR_ID Serial Primary Key,
-	DegreeName varchar(255) references Degree(DegreeName),
-	CourseName varchar(255) references Course(CourseName)
+	DegreeName varchar(255) references Degree(DegreeName) ON DELETE CASCADE,
+	CourseName varchar(255) references Course(CourseName) ON DELETE CASCADE
 );
 
 CREATE TABLE DegreeOffer(
 	DegreeOfferID Serial Primary Key,
-	DepartmentName varchar(255) references Department(DepartmentName),
-	DegreeName varchar(255) references Degree(DegreeName)
+	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE,
+	DegreeName varchar(255) references Degree(DegreeName) ON DELETE CASCADE
 );
 
 CREATE TABLE StudentPursueDegree(
-	StudentID varchar(10) references Student(StudentID),
-	DegreeName varchar(255) references Degree(DegreeName),
+	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
+	DegreeName varchar(255) references Degree(DegreeName) ON DELETE CASCADE,
 	Primary key (StudentID, DegreeName)
 );
 
 CREATE TABLE ThesisCommittee(
-	StudentID varchar(10) references Graduate(StudentID),
-	FacultyName varchar(255) references Faculty(Name),
-	DepartmentName varchar(255) references Department(DepartmentName),
+	StudentID varchar(10) references Graduate(StudentID) ON DELETE CASCADE,
+	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
+	DepartmentName varchar(255) references Department(DepartmentName) ON DELETE CASCADE,
 	PRIMARY KEY(StudentID, FacultyName, DepartmentName)
 );
 
 CREATE TABLE OrganizationMember(
-	OrganizationName varchar(255) references StudentOrganization(OrganizationName),
-	StudentID varchar(255) references Student(StudentID),
+	OrganizationName varchar(255) references StudentOrganization(OrganizationName) ON DELETE CASCADE,
+	StudentID varchar(255) references Student(StudentID) ON DELETE CASCADE,
 	PRIMARY KEY(OrganizationName, StudentID)
 );
 
 CREATE TABLE OrganizationFacultyMentor(
-	OrganizationName varchar(255) references StudentOrganization(OrganizationName),
-	FacultyName varchar(255) references Faculty(Name),
+	OrganizationName varchar(255) references StudentOrganization(OrganizationName) ON DELETE CASCADE,
+	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
 	PRIMARY KEY (OrganizationName, FacultyName)
 );
