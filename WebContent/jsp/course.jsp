@@ -247,7 +247,8 @@
 
             	<input class="btn btn-default" type="submit" value="Insert">
             
-            </form>
+            </form><!--  End of insert form -->
+            
 			</div>
             <!-- Add an HTML table header row to format the results -->
                 
@@ -295,7 +296,6 @@
                            <%-- Get the Department --%>
                             <td>
                             	<select name="DepartmentName">
-            	
             					<%
             						// if there is no entry in the Department table
 									if (!rs_department.isBeforeFirst() ) {    
@@ -308,12 +308,12 @@
 										while(rs_department.next()){
 											if(rs_department.getString("DepartmentName").equals(rs.getString("DepartmentName"))){
 								%>
-											<option value="<%= rs_department.getString("DepartmentName") %>"> <%= rs_department.getString("DepartmentName") %> </option>
+												<option value="<%= rs_department.getString("DepartmentName") %>" selected> <%= rs_department.getString("DepartmentName") %> </option>
 								<% 
 											}
 											else{
 								%>
-								<option value="<%= rs_department.getString("DepartmentName") %>" > <%= rs_department.getString("DepartmentName") %> </option>
+											<option value="<%= rs_department.getString("DepartmentName") %>" > <%= rs_department.getString("DepartmentName") %> </option>
 								<%
 											}
 								%>										
