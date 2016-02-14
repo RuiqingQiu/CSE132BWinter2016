@@ -313,7 +313,7 @@
 											}
 											else{
 								%>
-											<option value="<%= rs_department.getString("DepartmentName") %>" > <%= rs_department.getString("DepartmentName") %> </option>
+												<option value="<%= rs_department.getString("DepartmentName") %>" > <%= rs_department.getString("DepartmentName") %> </option>
 								<%
 											}
 								%>										

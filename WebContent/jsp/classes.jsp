@@ -113,7 +113,7 @@
     					
     				   rowCount = pstmt.executeUpdate();
     				   
-    				   // INSERT into Weekly Meeting Table
+    				  /*  // INSERT into Weekly Meeting Table
     				    pstmt = conn.prepareStatement(
                          "INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES (?, ?, ?, ?, ?, ?)");
     				   pstmt.setString(1,request.getParameter("MeetingID"));
@@ -143,7 +143,7 @@
    				  	 	pstmt.setString(1,request.getParameter("SectionID"));
    				   		pstmt.setString(2,request.getParameter("MeetingID"));
    				   		
-   				   		rowCount = pstmt.executeUpdate();
+   				   		rowCount = pstmt.executeUpdate(); */
    				   	
                         // Commit transaction
                         conn.commit();
@@ -177,7 +177,7 @@
                         
                         // update CourseHasClass Table
                      	pstmt = conn.prepareStatement(
-                                "UPDATE CourseHasClass SET CourseName = ?, SectionID = ? WHERE ID = ?"); 
+                              "UPDATE CourseHasClass SET CourseName = ?, SectionID = ? WHERE ID = ?"); 
                         
                        
                         pstmt.setString(1, request.getParameter("CourseName"));
@@ -186,7 +186,7 @@
                         
                         rowCount = pstmt.executeUpdate();
                         
-                        // Update WeeklyMeeting Table, MeetingID is PK
+                      /*   // Update WeeklyMeeting Table, MeetingID is PK
                      	pstmt = conn.prepareStatement(
                                 "UPDATE WeeklyMeeting SET Type = ?, Location = ?, IsMandatory = ?, DayOfTheWeek = ?, Time = ? WHERE MeetingID = ?"); 
                         
@@ -210,7 +210,7 @@
      				   pstmt.setString(5,request.getParameter("Time"));
      				   pstmt.setString(6,request.getParameter("MeetingID"));
                     
-                       rowCount = pstmt.executeUpdate();
+                       rowCount = pstmt.executeUpdate(); */
                        
                         // Commit transaction
                         conn.commit();
@@ -236,37 +236,7 @@
                              
                        int rowCount = pstmt.executeUpdate();
                        
-                      PreparedStatement ps_delete = null;
-                      // select all the meetingID where seciondID is being deleted
-              	  	  String stat_delete = "SELECT * FROM ClassMeeting WHERE SectionID = ?";
-              	  
-              	  	  ps_delete = conn.prepareStatement(stat_delete);
-              	  	  ps_delete.setString(1, request.getParameter("SectionID"));
-            		  // retrieve all the valid meetingID for that seciondID
-              	  	  ResultSet meeting_to_delete = ps_delete.executeQuery();
-            		  ResultSet tmp = meeting_to_delete;
-              		
-                       // Delete from WeeklyMeeting table
-                       while(meeting_to_delete.next()){
-                    	   pstmt = conn.prepareStatement(
-                                   "DELETE FROM ClassMeeting WHERE MeetingID = ? and SectionID = ?");
-                    	   pstmt.setString(1,meeting_to_delete.getString("MeetingID"));
-                    	   pstmt.setString(2,request.getParameter("MeetingID"));
-                    	   rowCount = pstmt.executeUpdate();
-                    	   
-                    	   pstmt = conn.prepareStatement(
-                                   "DELETE FROM WeeklyMeeting WHERE MeetingID = ?");
-                    	   pstmt.setString(1,meeting_to_delete.getString("MeetingID"));
-                    	   rowCount = pstmt.executeUpdate();
-                       }
-                       
-                       // Delete from WeeklyMeeting table
-                       /* 
-                       while(tmp.next()){
-                         
-                       }
-                       */
-                   
+                    
                         // Create the prepared statement and use it to
                         // DELETE the student FROM the Student table.
                        pstmt = conn.prepareStatement(
@@ -335,7 +305,7 @@
             	Year:<input value="" name="Year" size="10"><br>
             	MaxEnrollment:<input value="" name="MaxEnrollment" size="10"><br>
             	
-            	MeetingID: <input value="" name="MeetingID" size="10"><br>
+            	<!-- MeetingID: <input value="" name="MeetingID" size="10"><br>
             	MeetingType:<select name = "MeetingType">
             					<option value = ""></option>
             					<option value="Lecture">Lecture</option>
@@ -354,16 +324,14 @@
   					<input type="checkbox" name="DayOfTheWeek" value="Thursday">Thursday
   					<input type="checkbox" name="DayOfTheWeek" value="Friday">Friday
   					<br>
-  				Time:<input value="" type="time" name="Time" size="10"><br>
+  				Time:<input value="" type="time" name="Time" size="10"><br> -->
   				
             	<input class="btn btn-default" type="submit" value="Insert">
             	
             </form>
             <a href="instructor.jsp">Click here to Add an Instructor</a><br>
-                     <a href="meeting_time.jsp">Click here to Add Extra Weekly Meeting</a>
-            
-            
-
+            <a href="meeting_time.jsp">Click here to Weekly Meeting</a>
+       
             <!-- Add an HTML table header row to format the results -->
                 <table border="1" class="table table-bordered">
                     <tr>
@@ -466,129 +434,41 @@
                          					<input type="hidden" value="<%= rs_wm.getString("MeetingID") %>" 
                           						name="MeetingID" size="10"><%= rs_wm.getString("MeetingID") %>
                           				</td>
+                          				<td>	
+                          					<input type="hidden" value="<%= rs_wm.getString("Type") %>" 
+                          					name="MeetingID" size="10"><%= rs_wm.getString("Type") %>
+                          						
+                          				</td>
+                          					
                           				<td>
-                          						<%
-                          							String typeSelected = rs_wm.getString("Type");
-                          							System.out.println("meeting type is " + rs_wm.getString("Type"));
-                          						%>
-                            			  		<select name="MeetingType">
-                            			  			<%
-                            			  				if(typeSelected.equals("Lecture")){
-                            			  			 %>
-                            			  			 	<option value="Lecture" selected>Lecture</option>
-                            			  			 	<option value="Discussion">Discussion</option>
-                            			  			 <%
-                            			  				}else{
-                            			  			 %>
-                            			  			 	<option value="Lecture">Lecture</option>
-                            			  			 	<option value="Discussion" selected>Discussion</option>
-                            			  			 <%
-                            			  			 	}
-                            			  			 %>
-                            			  		</select>
-                          					</td>
+                            			  	<input type="hidden" value="<%= rs_wm.getString("Location") %>" 
+                          						name="Location" size="10"><%= rs_wm.getString("Location") %>
+                          				</td>
                           					
-                          					<td>
-                            			  		<input value="<%= rs_wm.getString("Location") %>" 
-                          						name="Location" size="10">
-                          					</td>
-                          					
-                          					<td>
-                          						<select name="IsMandatory">
-                          							<%
-                          							  if(rs_wm.getBoolean("IsMandatory") == true){
-                          							%>
-                          							   <option value= "Yes" selected>Yes</option>
-                          							   <option value= "No">No</option>
-                          							<%
-                          							  }else{
-                          							%>
-                          								<option value= "No" selected>No</option>
-                          								<option value= "Yes">Yes</option>
-                          							<%
-                          							  }
-                          							%>
-                          						</select>	
-                          					</td>
-                          			
-                          				<td class="span4">
-                          				<% 
-                          				 	String dayOfWeek = rs_wm.getString("DayOfTheWeek");
-                          					String split[]= dayOfWeek.split("\\s+");
-                          					Boolean mon = false;
-                          					Boolean tue = false;
-                          					Boolean wed = false;
-                          					Boolean thu = false;
-                          					Boolean fri = false;
-                          					
-                          					for(int j = 0;j<split.length;j++){
-                          						switch(split[j]){
-                          							case "Mon": mon = true;break;
-                          							case "Tue": tue = true;break;
-                          							case "Wed": wed = true;break;
-                          							case "Thu": thu = true;break;
-                          							case "Fri": fri = true;break;
-                          							default: 
-                          								System.out.println("DefaultCase " + split[j]);
-                          								break;	
-                          						}// end of switch statement
-                          					}// end of for loop	
-                          					
-                          					if(mon){
+                          				<td>
+                          				<%
+                          					Boolean mandatory = rs_wm.getBoolean("IsMandatory");
+                          					if(mandatory){
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Monday" checked>Monday<br>
-                          					
+                          					<input type="hidden" value="<%= "Yes" %>" 
+                          						name="IsMandatory" size="10"><%= "Yes" %>
                           				<%
                           					}else{
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Monday">Monday<br>
+                          					<input type="hidden" value="<%= "No" %>" 
+                          						name="IsMandatory" size="10"><%= "No" %>
                           				<%
                           					}
-                          					
-                          					if(tue){
-                          				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Tuesday" checked>Tuesday<br>
-                          				<%
-                          					}else{
-                          				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Tuesday">Tuesday<br>
-                          				<%
-                          					}
-                          					
-                          					if(wed){
-                          				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Wednesday" checked>Wednesday<br>
-                          				<%
-                          					}else{
-                          				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Wednesday">Wednesday<br>
-                          				<%
-                          					}
-                          					
-                          					if(thu){
-                          				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Thursday" checked>Thursday<br>
-                          				<%
-                          					}else{
-                          				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Thursday">Thursday<br>
-                          				<%
-                          					}
-                          					
-                          					if(fri){
-                          				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Friday" checked>Friday<br>
-                          				<%
-                          					}else{
                           				%>	
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Friday">Friday<br>
-                          				<%
-                          					}
-                          				%>      	
+                          				</td>
+                          			
+                          				<td>
+                          					<input type="hidden" value="<%= rs_wm.getString("DayOfTheWeek") %>" 
+                          						name="DayOfTheWeek" size="10"><%= rs_wm.getString("DayOfTheWeek") %>
                           				</td>
                           				<td>
-                          					 <input type="time" value="<%= rs_wm.getString("Time") %>" 
-                                    		name="Time" size="10">		
+                          					 <input type="hidden" value="<%= rs_wm.getString("Time") %>" 
+                                    		name="Time" size="10"><%=rs_wm.getString("Time") %>	
                           				</td>		
             		<%
                                	  			}// end of while rs_wm has next
@@ -694,6 +574,8 @@
                                 <input class="btn btn-default" type="submit" value="Delete">
                             </td>
                         </form>
+                  
+                        
                     </tr> 
                     
             <%
