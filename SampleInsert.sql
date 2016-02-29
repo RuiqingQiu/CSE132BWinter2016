@@ -1,4 +1,8 @@
-﻿INSERT INTO Department(DepartmentName) VALUES ('Computer Science');
+﻿INSERT INTO Person VALUES ('Ramen','1');
+INSERT INTO Student VALUES ('A1','Ramen','1','CA','Senior');
+INSERT INTO PeriodOfAttendence(StudentID,StartTime,EndTime) VALUES ('A1','2012-09-20','2016-06-12');
+
+INSERT INTO Department(DepartmentName) VALUES ('Computer Science');
 INSERT INTO Department(DepartmentName) VALUES ('Visual Arts');
 INSERT INTO Department(DepartmentName) VALUES ('Music');
 INSERT INTO Department(DepartmentName) VALUES ('Bioengineering');
