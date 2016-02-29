@@ -43,6 +43,7 @@ DROP TABLE IF EXISTS Graduate CASCADE;
 DROP TABLE IF EXISTS Student CASCADE;
 DROP TABLE IF EXISTS Person CASCADE;
 
+DROP TABLE IF EXISTS GRADE_CONVERSION CASCADE;
 /* CONSTRAINTS: 
 PRIMARY KEY: default not null 
 */
@@ -151,6 +152,12 @@ CREATE TABLE Course(
 	RequireConsentOfInstructor BOOLEAN
 );
 
+CREATE TABLE CourseHasClass(
+	ID SERIAL PRIMARY KEY, 
+	CourseName varchar(255) references Course(CourseName) ON DELETE CASCADE,
+	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE
+);
+
 CREATE TABLE Major(
 	MajorName varchar(255) PRIMARY KEY
 );
@@ -203,6 +210,7 @@ Create table StudentEnrollment(
 	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
 	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
 	Units int NOT NULL,
+	GradeOption varchar(255),
 	PRIMARY KEY(StudentID, SectionID)
 );
 
@@ -210,6 +218,7 @@ Create table AcademicHistory(
 	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
 	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
 	Units int NOT NULL,
+	FinalGrade varchar(255),
 	PRIMARY KEY(StudentID, SectionID)
 );
 
@@ -224,8 +233,11 @@ CREATE TABLE EducationHistory(
 CREATE TABLE PeriodOfAttendence(
 	ID Serial Primary key,
 	StudentID varchar(10) references Student(StudentID) ON DELETE CASCADE,
-	StartTime varchar(255),
-    	EndTime varchar(255)
+	isCurrentStudent boolean,
+	StartYear varchar(255),
+	StartQuarter varchar(255),
+    	EndYear varchar(255),
+    	EndQuarter varchar(255)
 );
      
 CREATE TABLE Probation(
@@ -275,11 +287,7 @@ CREATE TABLE Instructor(
 	PRIMARY KEY(SectionID, FacultyName)
 );
 
-CREATE TABLE CourseHasClass(
-	ID SERIAL PRIMARY KEY, 
-	CourseName varchar(255) references Course(CourseName) ON DELETE CASCADE,
-	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE
-);
+
 
 
 CREATE TABLE DegreeDetailedUnitRequirement(
@@ -324,3 +332,19 @@ CREATE TABLE OrganizationFacultyMentor(
 	FacultyName varchar(255) references Faculty(Name) ON DELETE CASCADE,
 	PRIMARY KEY (OrganizationName, FacultyName)
 );
+
+create table GRADE_CONVERSION
+( 
+	LETTER_GRADE CHAR(2) NOT NULL,
+	NUMBER_GRADE DECIMAL(2,1)
+);
+insert into grade_conversion values('A+', 4.3);
+insert into grade_conversion values('A', 4);
+insert into grade_conversion values('A-', 3.7);
+insert into grade_conversion values('B+', 3.4);
+insert into grade_conversion values('B', 3.1);
+insert into grade_conversion values('B-', 2.8);
+insert into grade_conversion values('C+', 2.5);
+insert into grade_conversion values('C', 2.2);
+insert into grade_conversion values('C-', 1.9);
+insert into grade_conversion values('D', 1.6); 
