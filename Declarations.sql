@@ -23,6 +23,7 @@ DROP TABLE IF EXISTS CourseHasClass CASCADE;
 DROP TABLE IF EXISTS Instructor CASCADE;
 DROP TABLE IF EXISTS OrganizationFacultyMentor CASCADE;
 DROP TABLE IF EXISTS OrganizationMember CASCADE;
+DROP TABLE IF EXISTS CourseCategory CASCADE;
 
 /* Drop Entity Tables */
 DROP TABLE IF EXISTS StudentOrganization;
@@ -42,6 +43,7 @@ DROP TABLE IF EXISTS Undergraduate CASCADE;
 DROP TABLE IF EXISTS Graduate CASCADE;
 DROP TABLE IF EXISTS Student CASCADE;
 DROP TABLE IF EXISTS Person CASCADE;
+DROP TABLE IF EXISTS Category CASCADE;
 
 DROP TABLE IF EXISTS GRADE_CONVERSION CASCADE;
 /* CONSTRAINTS: 
@@ -287,13 +289,21 @@ CREATE TABLE Instructor(
 	PRIMARY KEY(SectionID, FacultyName)
 );
 
+CREATE TABLE Category(
+	CategoryName varchar(255) PRIMARY KEY
+);
+
+CREATE TABLE CourseCategory(
+	CourseName varchar(255) references Course(CourseName) ON DELETE CASCADE,
+	Category varchar(255) references Category(CategoryName) ON DELETE CASCADE
+);
 
 
 
 CREATE TABLE DegreeDetailedUnitRequirement(
 	DDUR_ID Serial Primary Key,
 	DegreeName varchar(255) references Degree(DegreeName) ON DELETE CASCADE,
-	RequirementDescription varchar(255),
+	Category varchar(255) references Category(CategoryName) ON DELETE CASCADE,
 	UnitsRequired int
 );
 CREATE TABLE DegreeDetailedCourseRequirement(
