@@ -298,8 +298,6 @@ CREATE TABLE CourseCategory(
 	Category varchar(255) references Category(CategoryName) ON DELETE CASCADE
 );
 
-
-
 CREATE TABLE DegreeDetailedUnitRequirement(
 	DDUR_ID Serial Primary Key,
 	DegreeName varchar(255) references Degree(DegreeName) ON DELETE CASCADE,
