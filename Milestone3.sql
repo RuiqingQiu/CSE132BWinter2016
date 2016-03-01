@@ -5,6 +5,7 @@ SELECT s.SSN, s.Name
 FROM PeriodOfAttendence p, Student s
 WHERE isCurrentStudent = true and s.StudentID = p.StudentID;
 
+
 SELECT a.SectionID,a.Title,a.Year,a.Quarter,a.MaxEnrollment,b.Units FROM
 	(SELECT c.SectionID,c.Title,c.Quarter,c.Year,c.MaxEnrollment
 	FROM Classes c
