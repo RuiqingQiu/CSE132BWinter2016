@@ -16,7 +16,7 @@ SELECT a.SectionID,a.Title,a.Year,a.Quarter,a.MaxEnrollment,b.Units FROM
 			and c.SectionID in (SELECT a.SectionID
 					    FROM AcademicHistory a
 					    WHERE a.StudentID in 
-						(SELECT StudentID
+					(SELECT StudentID
 						FROM Student
 						WHERE ssn ='1'))) a
 INNER JOIN 
@@ -59,7 +59,7 @@ WHERE s.StudentID in (SELECT p.StudentID
 		      FROM PeriodOfAttendence p);
 
 
-/*CREATE VIEW ClassesTaken AS(
+CREATE OR REPLACE VIEW ClassesTaken AS(
 SELECT a.SectionID,a.Title,a.Quarter,a.Year,a.MaxEnrollment,b.Units,b.FinalGrade FROM 
 (SELECT c.SectionID,c.Title,c.Quarter,c.Year,c.MaxEnrollment
 FROM Classes c
@@ -77,39 +77,44 @@ INNER JOIN
 				WHERE ssn = '1'))) b
 ON a.SectionID = b.SectionID);
 
-SELECT * FROM ClassesTaken;	*/    
+SELECT * FROM ClassesTaken;	 
 
-/* Calculate quarter GPA */
-/* Overall gpa */
-/*
+-- Calculate quarter GPA 
+-- Overall gpa 
+
 Select '1' AS Student_SSN,sum(c.Units * g.NUMBER_GRADE)/(4*count(c.SectionID)) AS Cumulative_GPA
 from ClassesTaken c, Grade_Conversion  g
-Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE;*/
+Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE;
 
-/* Quarter GPA */
-/*
+-- Quarter GPA 
+
 Select c.Year AS Year, c.Quarter AS Quarter, sum(c.Units * g.NUMBER_GRADE) / (4*count(c.SectionID)) AS GPA
 from ClassesTaken c, Grade_Conversion  g
 Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE 
 GROUP BY c.Year, c.Quarter;
-*/
+
 
 /* all enrolled undergraduate student */
+/*
 SELECT u.SSN,u.Name
 FROM Undergraduate u
 WHERE u.StudentID in (Select StudentID FROM PeriodOfAttendence WHERE isCurrentStudent=true);
-
+*/
 /* Select all BSC degree */
+/*
 Select *
 From Degree d
 WHERE d.Type = 'B.S.';
+*/
+-- pass in degree name 
 
-/* pass in degree name */
+/*
 Select *
 From Degree d
 WHERE d.Type = 'B.S.' AND d.DegreeName = 'Computer Science';
 
-/* Calculate how many units the student left to take */
+
+-- Calculate how many units the student left to take 
 Select a.StudentID, d.DegreeName,(d.TotalUnitsRequired-sum(a.Units)) AS UnitsLeftToTake
 From AcademicHistory a, Degree d
 Where a.StudentID in (Select StudentID from Student where SSN = '1') 
@@ -124,7 +129,7 @@ Where a.StudentID = '1'
 		               FROM CourseHasClass h,Course c, CourseCategory g
 				WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName)
 GROUP BY d.Category;
-	
+	*/
 
 
 
