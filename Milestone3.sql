@@ -30,8 +30,11 @@ ON a.SectionID = b.SectionID;
 
 /* Reports I-2*/
 /* Display all classes in the class table */ 
+
+/*
 SELECT *
 FROM Classes c;
+*/
 
 /*
 SELECT h.CourseName, c.SectionID, c.Title, c.Quarter,c.Year, c.MaxEnrollment
@@ -41,48 +44,54 @@ AND c.SectionID = h.SectionID;
 */
 
 /* Passed in class title, display all students taken the class */
+/*
 SELECT s.StudentID, s.Name,s.SSN,s.ResidenceStatus,s.AcademicLevel,e.Units,e.GradeOption
 FROM Classes c, StudentEnrollment e,Student s
 WHERE c.Title = 'Database' AND e.SectionID = c.SectionID 
 AND e.StudentID = s.StudentID;
+*/
 
 /* Report I-3*/
-/*
+/* Display all students ever enrolled */
 SELECT s.SSN,s.Name
 FROM Student s
 WHERE s.StudentID in (SELECT p.StudentID
-						FROM PeriodOfAttendence p)
+		      FROM PeriodOfAttendence p);
 
-CREATE VIEW ClassesTaken AS 
-SELECT *
+
+/*CREATE VIEW ClassesTaken AS(
+SELECT a.SectionID,a.Title,a.Quarter,a.Year,a.MaxEnrollment,b.Units,b.FinalGrade FROM 
+(SELECT c.SectionID,c.Title,c.Quarter,c.Year,c.MaxEnrollment
 FROM Classes c
 WHERE c.SectionID in (SELECT a.SectionID
-						FROM AcademicHistory a
-						WHERE a.StudentID in (SELECT StudentID
-												FROM Student
-											WHERE ssn = input))
-ORDER BY c.Year, c.Quarter
-INNER JOIN 
-(SELECT	a.SectionID, a.Units,a.FinalGrade
-FROM AcademicHistory a
-WHERE a.StudentID in (SELECT StudentID 
-						FROM Student
-						WHERE ssn = input));*/
+		      FROM AcademicHistory a
+		      WHERE a.StudentID in (SELECT StudentID
+					     FROM Student
+					     WHERE ssn = '1'))
+ORDER BY c.Year,c.Quarter) a
+INNER JOIN
+((SELECT a.SectionID, a.Units,a.FinalGrade
+	  FROM AcademicHistory a
+	  WHERE a.StudentID in (SELECT StudentID 
+				FROM Student
+				WHERE ssn = '1'))) b
+ON a.SectionID = b.SectionID);*/
+
+SELECT * FROM ClassesTaken;	    
 
 /* Calculate quarter GPA */
-
-/*Overall gpa */
+/* Overall gpa */
 /*
-Select Sum(c.Units * g.NUMBER_GRADE) / count(c.SectionID)
-from ClassesTaken c, GradeConversion  g
-Where c.FinalGrade <> "IN" and c.FinalGrade = g.LETTER_GRADE */
+Select '1' AS Student_SSN,sum(c.Units * g.NUMBER_GRADE)/(4*count(c.SectionID)) AS Cumulative_GPA
+from ClassesTaken c, Grade_Conversion  g
+Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE;*/
 
 /* Quarter GPA */
-/*
-Select Sum(c.Units * g.NUMBER_GRADE) / count(c.SectionID)
-from ClassesTaken c, GradeConversion  g
-Where c.FinalGrade <> "IN" and c.FinalGrade = g.LETTER_GRADE 
-GROUP BY c.Year, c.Quarter */
+
+Select c.Year AS Year, c.Quarter AS Quarter, sum(c.Units * g.NUMBER_GRADE) / (4*count(c.SectionID)) AS GPA
+from ClassesTaken c, Grade_Conversion  g
+Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE 
+GROUP BY c.Year, c.Quarter;
 
 
 

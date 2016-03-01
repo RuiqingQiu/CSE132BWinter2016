@@ -38,7 +38,9 @@ INSERT INTO CourseHasClass (CourseName,SectionID) VALUES ('CSE 132B: Database Sy
 
 INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','D01',4,'A');
 INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','A01',4,'B');
-INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A2','D01',4,'C');
+INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','A02',4,'A');
+INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','A03',4,'C');
+INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A2','D01',4,'A');
 	
 
 
