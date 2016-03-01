@@ -1,11 +1,14 @@
 ﻿/* Reports I-1*/
 
 /* display current quarter student */
+/*
 SELECT s.SSN, s.Name
 FROM PeriodOfAttendence p, Student s
 WHERE isCurrentStudent = true and s.StudentID = p.StudentID;
+*/
 
-
+/* Display the courses taken by Student X */
+/*
 SELECT a.SectionID,a.Title,a.Year,a.Quarter,a.MaxEnrollment,b.Units FROM
 	(SELECT c.SectionID,c.Title,c.Quarter,c.Year,c.MaxEnrollment
 	FROM Classes c
@@ -23,20 +26,25 @@ INNER JOIN
 			      FROM Student
 			      WHERE ssn = '1')) b
 ON a.SectionID = b.SectionID;
-
+*/
 
 /* Reports I-2*/
-/* Display current quarter classes */ 
+/* Display all classes in the class table */ 
+SELECT *
+FROM Classes c;
+
 /*
 SELECT h.CourseName, c.SectionID, c.Title, c.Quarter,c.Year, c.MaxEnrollment
 FROM Classes c, CourseHasClass h
 WHERE c.Quarter = "Spring" AND c.Year = "2009" 
 AND c.SectionID = h.SectionID;
+*/
 
+/* Passed in class title, display all students taken the class */
 SELECT s.StudentID, s.Name,s.SSN,s.ResidenceStatus,s.AcademicLevel,e.Units,e.GradeOption
 FROM Classes c, StudentEnrollment e,Student s
-WHERE c.Title = input_title AND e.SectionID = c.SectionID 
-AND e.StudentID = s.StudentID;*/
+WHERE c.Title = 'Database' AND e.SectionID = c.SectionID 
+AND e.StudentID = s.StudentID;
 
 /* Report I-3*/
 /*

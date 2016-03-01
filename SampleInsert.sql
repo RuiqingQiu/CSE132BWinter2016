@@ -22,9 +22,19 @@ INSERT INTO Classes(SectionID,Title,Quarter,Year,MaxEnrollment)
 	VALUES ('D01', 'DOC 2','Spring','2009',200);
 INSERT INTO Classes(SectionID,Title,Quarter,Year,MaxEnrollment) 
 	VALUES ('A01', 'Database','Spring','2009',100);
+INSERT INTO Classes(SectionID,Title,Quarter,Year,MaxEnrollment) 
+	VALUES ('A02', 'Database','Fall','2009',100);
+INSERT INTO Classes(SectionID,Title,Quarter,Year,MaxEnrollment) 
+	VALUES ('A03', 'Database','Winter','2011',100);
+
+INSERT INTO StudentEnrollment(StudentID,SectionID,Units,GradeOption) VALUES('A1','D01',4,'Letter');
+INSERT INTO StudentEnrollment(StudentID,SectionID,Units,GradeOption) VALUES('A2','A01',4,'Pass/No pass');
+INSERT INTO StudentEnrollment(StudentID,SectionID,Units,GradeOption) VALUES('A2','D01',4,'Letter');
 
 INSERT INTO CourseHasClass(CourseName,SectionID) VALUES ('CSE 132B: Database System Application', 'A01') ;
 INSERT INTO CourseHasClass (CourseName,SectionID) VALUES ('DOC 2: Justice','D01');
+INSERT INTO CourseHasClass (CourseName,SectionID) VALUES ('CSE 132B: Database System Application','A02');
+INSERT INTO CourseHasClass (CourseName,SectionID) VALUES ('CSE 132B: Database System Application','A03');
 
 INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','D01',4,'A');
 INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','A01',4,'B');
