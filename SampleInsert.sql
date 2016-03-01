@@ -52,6 +52,12 @@ INSERT INTO Degree(DegreeName,Type,TotalUnitsRequired) VALUES ('Computer Science
 INSERT INTO Degree(DegreeName,Type,TotalUnitsRequired) VALUES ('Bioengineering','B.S.',200);
 INSERT INTO Degree(DegreeName,Type,TotalUnitsRequired) VALUES ('Visual Arts','B.A.',110);
 
+INSERT INTO DegreeDetailedUnitRequirement(DegreeName,Category,UnitsRequired) VALUES('Computer Science','LD',100);
+INSERT INTO DegreeDetailedUnitRequirement(DegreeName,Category,UnitsRequired) VALUES('Computer Science','TE',50);
+INSERT INTO DegreeDetailedUnitRequirement(DegreeName,Category,UnitsRequired) VALUES('Computer Science','UD',30);
+
+
+
 
 	
 

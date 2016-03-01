@@ -95,17 +95,17 @@ GROUP BY c.Year, c.Quarter;
 
 
 /* all enrolled undergraduate student */
-
+/*
 SELECT u.SSN,u.Name
 FROM Undergraduate u
 WHERE u.StudentID in (Select StudentID FROM PeriodOfAttendence WHERE isCurrentStudent=true);
-
--- Select all BSC degree 
+*/
+/* Select all BSC degree */
 /*
 Select *
 From Degree d
 WHERE d.Type = 'B.S.';
-
+*/
 -- pass in degree name 
 
 
@@ -121,6 +121,8 @@ Where a.StudentID in (Select StudentID from Student where SSN = '1')
 		AND d.DegreeName = 'Computer Science'
 GROUP BY a.StudentID,d.DegreeName;
 
+-- minimum number of units the student has to take from each category (e.g. lower division units required, technical elective units required, etc.) in degree Y. 
+
 Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft , d.Category
 From AcademicHistory a, DegreeDetailedUnitRequirement d
 Where a.StudentID = '1'
@@ -130,7 +132,7 @@ Where a.StudentID = '1'
 				WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName)
 GROUP BY d.Category;
 	
-*/
+
 
 
 

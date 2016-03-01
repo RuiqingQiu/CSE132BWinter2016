@@ -70,84 +70,39 @@
                     // Check if an insertion is requested
                     if (action != null && action.equals("query")) {
                         
-                    	String ssn = request.getParameter("SSN");
-                    	
-                    	Statement stmt = conn.createStatement();
-                    	stmt.executeUpdate("CREATE OR REPLACE VIEW ClassesTaken AS "+ 
-                				"(SELECT a.SectionID,a.Title,a.Quarter,a.Year,a.MaxEnrollment,b.Units,b.FinalGrade FROM " + 
-                				"(SELECT c.SectionID,c.Title,c.Quarter,c.Year,c.MaxEnrollment " + 
-                				"FROM Classes c "+
-                				"WHERE c.SectionID in (SELECT a.SectionID " + 
-                						      "FROM AcademicHistory a " + 
-                						      "WHERE a.StudentID in (SELECT StudentID " + 
-                									     "FROM Student " + 
-                									     "WHERE SSN = '" + ssn + "')) "+ 
-                				"ORDER BY c.Year,c.Quarter) a " +
-                				"INNER JOIN "+
-                				"((SELECT a.SectionID, a.Units,a.FinalGrade " + 
-                					  "FROM AcademicHistory a "+ 
-                					  "WHERE a.StudentID in (SELECT StudentID "+ 
-                								"FROM Student "+ 
-                								"WHERE SSN = '" + ssn + "'))) b " +
-                				"ON a.SectionID = b.SectionID);");
-                                             
-                        PreparedStatement pstmt = conn.prepareStatement("Select * FROM ClassesTaken");
+                        PreparedStatement pstmt = conn.prepareStatement("Select a.StudentID, d.DegreeName,(d.TotalUnitsRequired-sum(a.Units)) AS UnitsLeftToTake "+ 
+                        		"From AcademicHistory a, Degree d "+
+                        		"Where a.StudentID in (Select StudentID from Student where SSN = ? ) "+ 
+                        				"AND d.DegreeName = ? "+
+                        		"GROUP BY a.StudentID,d.DegreeName;");
+                        
+                        pstmt.setString(1,request.getParameter("SSN"));
+                        pstmt.setString(2,request.getParameter("DegreeName"));
+                        
                         ResultSet rs = pstmt.executeQuery();
  					
  						%>
- 						<h2> Classes taken by student X with SSN : <%= request.getParameter("SSN") %></h2>
+ 						<h2> Total Units Left To Take for Student X with SSN : <%= request.getParameter("SSN") %></h2>
  						<table border="1" class="table table-bordered">
  	                    <tr>
- 	                        <th>SectionID</th>
- 	                        <th>Title</th>
- 	                        <th>Quarter</th>
- 	                        <th>Year</th>
- 	                        <th>MaxEnrollment</th>
- 	                        <th>Units</th>
- 	                        <th>FinalGrade</th>
+ 	                        <th>StudentID</th>
+ 	                        <th>DegreeName</th>
+ 	                        <th>TotalUnitsLeftToTake</th>
  	                    </tr> 
  	                    <% 
  					
  						while(rs.next()){
  						%>
 							<tr>
-								<td><%= rs.getString("SectionID") %></td>
-								<td><%= rs.getString("Title") %></td>
-								<td><%= rs.getString("Quarter") %></td>
-								<td><%= rs.getString("Year") %></td>
-								<td><%= rs.getString("MaxEnrollment") %></td>
-								<td><%= rs.getString("Units") %></td>
-								<td><%= rs.getString("FinalGrade") %></td>
-	
+								<td><%= rs.getString("StudentID") %></td>
+								<td><%= rs.getString("DegreeName") %></td>
+								<td><%= rs.getInt("UnitsLeftToTake") %></td>
 							</tr>
 						<% 
  						}
  	                   %>
  	                   </table>
  	                    
- 	                   <!-- Display cumulative GPA -->
- 	                  <h2> Cumulative GPA for Student X with SSN : <%= request.getParameter("SSN") %></h2>
- 	       				<table border="1" class="table table-bordered">
- 	       	              <tr>
- 	       	                  <th>SSN</th>
- 	       	                  <th>Cumulative_GPA</th>
- 	       	            </tr> 
- 	       	             <% 
- 	       	               pstmt = conn.prepareStatement("Select" + "'"+ ssn + "'"+ "AS SSN,sum(g.NUMBER_GRADE)/(count(c.SectionID)) AS Cumulative_GPA "+
-  	                    		  "from ClassesTaken c, Grade_Conversion  g "+
-  	                    		 "Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE;");
- 	                      	rs = pstmt.executeQuery();
- 	       	                    
- 	       						while(rs.next()){
- 	       						%>
- 	      							<tr>
- 	      								<td><%= rs.getString("SSN") %></td>
- 	      								<td><%= rs.getString("Cumulative_GPA") %></td>
- 	      							</tr>
- 	      						<% 
- 	       						}
- 	       				%>
- 	       				</table>
  	       				
  	       			  <!-- Display Quarter GPA -->
  	                  <h2> Quarter GPA for Student X with SSN : <%= request.getParameter("SSN") %></h2>
