@@ -22,8 +22,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-      	<li><a href="#">Report</a></li>
-     	<li><a href="#">Report</a></li>
+      	<li><a href="report1a.jsp">Report1A</a></li>
+     	<li><a href="report1b.jsp">Report1B</a></li>
      	<li><a href="#">Report</a></li>
      	<li><a href="#">Report</a></li>
      	<li><a href="#">Report</a></li>
