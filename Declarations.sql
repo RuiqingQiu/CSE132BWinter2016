@@ -170,6 +170,7 @@ CREATE TABLE Minor(
 
 CREATE TABLE Degree(
 	DegreeName varchar(255) NOT NULL PRIMARY KEY,
+	Type varchar(255) NOT NULL,
 	TotalUnitsRequired int
 );
 
@@ -230,7 +231,6 @@ CREATE TABLE EducationHistory(
 	University varchar(255),
 	PRIMARY KEY (StudentID, Degree, University)
 );
-
 
 CREATE TABLE PeriodOfAttendence(
 	ID Serial Primary key,

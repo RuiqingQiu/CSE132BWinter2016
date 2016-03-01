@@ -75,9 +75,9 @@ INNER JOIN
 	  WHERE a.StudentID in (SELECT StudentID 
 				FROM Student
 				WHERE ssn = '1'))) b
-ON a.SectionID = b.SectionID);*/
+ON a.SectionID = b.SectionID);
 
-SELECT * FROM ClassesTaken;	    
+SELECT * FROM ClassesTaken;	*/    
 
 /* Calculate quarter GPA */
 /* Overall gpa */
@@ -87,11 +87,48 @@ from ClassesTaken c, Grade_Conversion  g
 Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE;*/
 
 /* Quarter GPA */
-
+/*
 Select c.Year AS Year, c.Quarter AS Quarter, sum(c.Units * g.NUMBER_GRADE) / (4*count(c.SectionID)) AS GPA
 from ClassesTaken c, Grade_Conversion  g
 Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE 
 GROUP BY c.Year, c.Quarter;
+*/
+
+/* all enrolled undergraduate student */
+SELECT u.SSN,u.Name
+FROM Undergraduate u
+WHERE u.StudentID in (Select StudentID FROM PeriodOfAttendence WHERE isCurrentStudent=true);
+
+/* Select all BSC degree */
+Select *
+From Degree d
+WHERE d.Type = 'B.S.';
+
+/* pass in degree name */
+Select *
+From Degree d
+WHERE d.Type = 'B.S.' AND d.DegreeName = 'Computer Science';
+
+/* Calculate how many units the student left to take */
+Select a.StudentID, d.DegreeName,(d.TotalUnitsRequired-sum(a.Units)) AS UnitsLeftToTake
+From AcademicHistory a, Degree d
+Where a.StudentID in (Select StudentID from Student where SSN = '1') 
+		AND d.DegreeName = 'Computer Science'
+GROUP BY a.StudentID,d.DegreeName;
+
+Select d.UnitsRequired-Sum(a.Units) AS UnitsLeft , d.CategoryName
+From AcademicHistory a, DegreeDetailedUnitRequirement d
+Where a.StudentID = '1'
+	AND d.DegreeName = 'Computer Science'
+GROUP BY d.CategoryName
+	
+
+
+
+
+
+
+
 
 
 

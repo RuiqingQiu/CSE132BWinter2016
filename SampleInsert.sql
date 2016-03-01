@@ -1,8 +1,14 @@
 ﻿INSERT INTO Person VALUES ('Ramen','1');
 INSERT INTO Person VALUES ('Muffin','2');
+INSERT INTO Person VALUES ('Raymond','3');
 
 INSERT INTO Student VALUES ('A1','Ramen','1','CA','Senior');
 INSERT INTO Student VALUES ('A2','Muffin','2','CA','Freshman');
+INSERT INTO Student VALUES ('A3','Raymond','3','CA','Master');
+
+INSERT INTO Undergraduate VALUES ('A1','Ramen','1','CA','Senior','Marshall');
+INSERT INTO Undergraduate VALUES ('A2','Muffin','2','CA','Freshman','Warren');
+INSERT INTO Graduate VALUES ('A3','Raymond','3','CA','Master');
 
 INSERT INTO PeriodOfAttendence(StudentID,isCurrentStudent,StartYear,StartQuarter,EndYear,EndQuarter) VALUES ('A1',true,'2005','Fall','2009','Spring');
 INSERT INTO PeriodOfAttendence(StudentID,isCurrentStudent,StartYear,StartQuarter,EndYear,EndQuarter) VALUES ('A2',true,'2009','Fall',NULL,NULL);
@@ -41,6 +47,12 @@ INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','A
 INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','A02',4,'A');
 INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A1','A03',4,'C');
 INSERT INTO AcademicHistory(StudentID,SectionID,Units,FinalGrade) VALUES('A2','D01',4,'A');
+
+INSERT INTO Degree(DegreeName,Type,TotalUnitsRequired) VALUES ('Computer Science','B.S.',180);
+INSERT INTO Degree(DegreeName,Type,TotalUnitsRequired) VALUES ('Bioengineering','B.S.',200);
+INSERT INTO Degree(DegreeName,Type,TotalUnitsRequired) VALUES ('Visual Arts','B.A.',110);
+
+
 	
 
 
