@@ -24,7 +24,7 @@
       <ul class="nav navbar-nav">
       	<li><a href="report1a.jsp">Report1A</a></li>
      	<li><a href="report1b.jsp">Report1B</a></li>
-     	<li><a href="#">Report</a></li>
+     	<li><a href="report1c.jsp">Report1C</a></li>
      	<li><a href="#">Report</a></li>
      	<li><a href="#">Report</a></li>
      	<li><a href="#">Report</a></li>
