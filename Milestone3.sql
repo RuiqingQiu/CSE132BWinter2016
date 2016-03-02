@@ -121,17 +121,20 @@ Where a.StudentID in (Select StudentID from Student where SSN = '1')
 		AND d.DegreeName = 'Computer Science'
 GROUP BY a.StudentID,d.DegreeName;
 
+
 -- minimum number of units the student has to take from each category (e.g. lower division units required, technical elective units required, etc.) in degree Y. 
 
-Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft , d.Category
+Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft, d.Category
+--Select d.UnitsRequired, a.Units, d.Category
 From AcademicHistory a, DegreeDetailedUnitRequirement d
-Where a.StudentID = '1'
+Where a.StudentID = 'A1'
 	AND d.DegreeName = 'Computer Science'
+
 	AND d.Category in (Select g.Category
 		               FROM CourseHasClass h,Course c, CourseCategory g
-				WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName)
-GROUP BY d.Category;
-	
+				WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName)			
+GROUP BY d.Category, d.UnitsRequired;
+
 
 
 

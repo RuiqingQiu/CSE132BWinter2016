@@ -105,27 +105,33 @@
  	                    
  	       				
  	       			  <!-- Display Quarter GPA -->
- 	                  <h2> Quarter GPA for Student X with SSN : <%= request.getParameter("SSN") %></h2>
+ 	                  <h2>Minimum number of units has to take from each category for Student X with SSN : <%= request.getParameter("SSN") %></h2>
  	       				<table border="1" class="table table-bordered">
  	       	              <tr>
- 	       	                  <th>Year</th>
- 	       	                  <th>Quarter</th>
- 	       	                  <th>Quarter_GPA</th>
+ 	       	                  <th>UnitsLeft</th>
+ 	       	                  <th>Category</th>
  	       	            </tr> 
  	       	             <% 
- 	       	               pstmt = conn.prepareStatement("Select c.Year AS Year, c.Quarter AS Quarter, sum(g.NUMBER_GRADE) / (count(c.SectionID)) AS GPA " + 
- 	       	            	"from ClassesTaken c, Grade_Conversion g " + 
- 	       	            	"Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE "+ 
- 	       	            	"GROUP BY c.Year, c.Quarter;");
+ 	       	               pstmt = conn.prepareStatement(
+ 	       	            	
+ 	       	            	"Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft, d.Category " +
+ 	       	            	"From AcademicHistory a, DegreeDetailedUnitRequirement d " +
+ 	       	            	"Where a.StudentID in (Select StudentID from Student where SSN = ? ) " +
+ 	       	            	"AND d.DegreeName = 'Computer Science' " +
+ 	       	            	"AND d.Category in (Select g.Category " +
+ 	       	            			        "FROM CourseHasClass h,Course c, CourseCategory g "+
+ 	       	            					"WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName) "+			
+ 	       	            	"GROUP BY d.Category, d.UnitsRequired;");	   
+							
+ 	       	         		pstmt.setString(1,request.getParameter("SSN"));
  	                      	
  	       	             	rs = pstmt.executeQuery();
  	       	                    
  	       					while(rs.next()){
  	       				  %>
  	      						<tr>
- 	      							<td><%= rs.getString("Year") %></td>
- 	      							<td><%= rs.getString("Quarter") %></td>
- 	      							<td><%= rs.getString("GPA") %></td>
+ 	      							<td><%= rs.getString("UnitsLeft") %></td>
+ 	      							<td><%= rs.getString("Category") %></td>
  	      						</tr>
  	      				<% 
  	       					}
