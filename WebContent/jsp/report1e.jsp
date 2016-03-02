@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Report 1D</title>
+	<title>Report 1e</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
@@ -22,17 +22,17 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-      	<li><a href="report1a.jsp">Report1A</a></li>
-     	<li><a href="report1b.jsp">Report1B</a></li>
-     	<li><a href="report1c.jsp">Report1C</a></li>
-     	<li><a href="report1d.jsp">Report1D</a></li>
-     	<li><a href="#">Report</a></li>
+      	<li><a href="report1a.jsp">Report 1A</a></li>
+     	<li><a href="report1b.jsp">Report 1B</a></li>
+     	<li><a href="report1c.jsp">Report 1C</a></li>
+     	<li><a href="report1d.jsp">Report 1D</a></li>
+     	<li><a href="report1e.jsp">Report 1E</a></li>
      	<li><a href="#">Report</a></li>
       </ul>   
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-	<h2>Report 1D, Undergrad X find remaining degree requirements for a bachelors in Y</h2>
+	<h2>Report 1E, Master Student X find remaining degree requirements for a MS in Y</h2>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -101,67 +101,61 @@
 						<% 
  						}
  	                   %>
- 	                   </table>
+ 	                    </table>
  	                    
- 	       				
- 	       			  <!-- Display Quarter GPA -->
- 	                  <h2>Minimum number of units has to take from each category for Student X with SSN : <%= request.getParameter("SSN") %></h2>
- 	       				<table border="1" class="table table-bordered">
+ 	       			 <h2>Concentrations completed by Student X with SSN: <%= request.getParameter("SSN") %></h2>
+ 	       			 <table border="1" class="table table-bordered">
  	       	              <tr>
- 	       	                  <th>UnitsLeft</th>
- 	       	                  <th>Category</th>
+ 	       	                  <th>Concentration Completed</th>
  	       	            </tr> 
- 	       	             <% 
- 	       	               pstmt = conn.prepareStatement(
- 	       	            	
- 	       	            	"Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft, d.Category " +
- 	       	            	"From AcademicHistory a, DegreeDetailedUnitRequirement d " +
- 	       	            	"Where a.StudentID in (Select StudentID from Student where SSN = ? ) " +
- 	       	            	"AND d.DegreeName = ? " +
- 	       	            	"AND d.Category in (Select g.Category " +
- 	       	            			        "FROM CourseHasClass h,Course c, CourseCategory g "+
- 	       	            					"WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName) "+			
- 	       	            	"GROUP BY d.Category, d.UnitsRequired;");	   
-							
- 	       	         		pstmt.setString(1,request.getParameter("SSN"));
- 	       	         		pstmt.setString(2, request.getParameter("DegreeName"));
+ 	       	            	<%
+ 	       	            	pstmt = conn.prepareStatement(
+ 	       	            		"SELECT c.ConcentrationName " +
+ 	       	            		"FROM Concentration c "+
+ 	       	            		"WHERE " +
+ 	       	            		"NOT EXISTS "+  
+ 	       	            				"(SELECT d1.CourseName " +
+ 	       	            				"FROM ConcentrationCourse d1 " +
+ 	       	            				"WHERE c.ConcentrationName = d1.ConcentrationName " +
+ 	       	            				"and d1.CourseName not in " +
+ 	       	            					"(Select h.CourseName " +
+ 	       	            					"From AcademicHistory a, CourseHasClass h " + 
+ 	       	            					"Where a.StudentID in (Select StudentID from Student where SSN = ? ) and a.SectionID = h.SectionID)) " +
+ 	       	            		"AND " + 
+ 	       	            			"(Select sum(g.NUMBER_GRADE) / count(a.SectionID) AS GPA " +
+ 	       	            			"FROM AcademicHistory a, Grade_Conversion g, CourseHasClass h, ConcentrationCourse cc " +
+ 	       	            			"WHERE a.StudentID in (Select StudentID from Student where SSN = ? ) and a.FinalGrade <> 'IN' and a.FinalGrade = g.LETTER_GRADE and cc.ConcentrationName = c.ConcentrationName " +
+ 	       	            			"and a.SectionID = h.SectionID and h.CourseName = cc.CourseName) > c.MinGPA;" 	       	            			
+ 	       	            			);
+ 	       	           	 	pstmt.setString(1,request.getParameter("SSN"));
+ 	       	            	pstmt.setString(2,request.getParameter("SSN"));
  	       	             	rs = pstmt.executeQuery();
- 	       	                    
- 	       					while(rs.next()){
- 	       				  %>
- 	      						<tr>
- 	      							<td><%= rs.getString("UnitsLeft") %></td>
- 	      							<td><%= rs.getString("Category") %></td>
- 	      						</tr>
- 	      				<% 
- 	       					}
- 	       				%>
- 	       				</table>
- 	       			
+
+ 	       	            	while(rs.next()){
+ 	       	            	%>
+ 	       	            		<tr>
+ 	       	            			<td><%= rs.getString("ConcentrationName") %></td>
+ 	       	            		</tr>
+ 	       	            	<% 
+ 	       	            	}
+ 	       	            	%>
+ 	       	          </table>       			
  	        <%          
                     }// end if action == query
             %>
-            
-            <!-- Add an HTML table header row to format the results 
-                <table border="1" class="table table-bordered">
-                    <tr>
-                        <th>SSN</th>
-                    	<th>BSC_Degree</th>
-                    	
-                    </tr> 
-                    -->                  
+                       
                             <%
-                            PreparedStatement pstmt = conn.prepareStatement("SELECT u.SSN,u.Name " +
-									"FROM Undergraduate u "+
-									"WHERE u.StudentID in (Select StudentID FROM PeriodOfAttendence WHERE isCurrentStudent=true);");
+                            PreparedStatement pstmt = conn.prepareStatement("SELECT m.SSN, m.Name " +
+									"FROM Master m "+
+									"WHERE m.StudentID in (Select StudentID FROM PeriodOfAttendence WHERE isCurrentStudent=true);");
                             ResultSet rs = pstmt.executeQuery();
                             
-                            pstmt = conn.prepareStatement("Select * From Degree d WHERE d.Type = 'B.S.';");
+                            pstmt = conn.prepareStatement("Select * From Degree d WHERE d.Type = 'M.S.';");
                             ResultSet rs1 = pstmt.executeQuery();
 					
 							%>
 								<!-- <tr> -->
-									<form action="report1d.jsp" method="get">
+									<form action="report1e.jsp" method="get">
                       				<input type="hidden" value="query" name="action">
 										<label>SSN : </label><select name="SSN">
 										<%

@@ -24,6 +24,9 @@ DROP TABLE IF EXISTS Instructor CASCADE;
 DROP TABLE IF EXISTS OrganizationFacultyMentor CASCADE;
 DROP TABLE IF EXISTS OrganizationMember CASCADE;
 DROP TABLE IF EXISTS CourseCategory CASCADE;
+DROP TABLE IF EXISTS ConcentrationCourse CASCADE;
+DROP TABLE IF EXISTS DegreeConcentration CASCADE;
+DROP TABLE IF EXISTS Concentration CASCADE;
 
 /* Drop Entity Tables */
 DROP TABLE IF EXISTS StudentOrganization;
@@ -174,6 +177,11 @@ CREATE TABLE Degree(
 	TotalUnitsRequired int
 );
 
+CREATE TABLE Concentration(
+	ConcentrationName varchar(255) PRIMARY KEY,
+	MinGPA FLOAT,
+	MinUnits int
+);
 CREATE TABLE StudentOrganization(
 	OrganizationName varchar(255) PRIMARY KEY
 );
@@ -298,6 +306,14 @@ CREATE TABLE CourseCategory(
 	Category varchar(255) references Category(CategoryName) ON DELETE CASCADE
 );
 
+CREATE TABLE ConcentrationCourse(
+	ConcentrationName varchar(255) references Concentration(ConcentrationName),
+	CourseName varchar(255) references Course(CourseName)
+);
+CREATE TABLE DegreeConcentration(
+	DegreeName varchar(255) references Degree(DegreeName),
+	ConcentrationName varchar(255) references Concentration(ConcentrationName)
+);
 CREATE TABLE DegreeDetailedUnitRequirement(
 	DDUR_ID Serial Primary Key,
 	DegreeName varchar(255) references Degree(DegreeName) ON DELETE CASCADE,
@@ -346,7 +362,7 @@ create table GRADE_CONVERSION
 	LETTER_GRADE CHAR(2) NOT NULL,
 	NUMBER_GRADE DECIMAL(2,1)
 );
-insert into grade_conversion values('A+', 4.3);
+insert into grade_conversion values('A+', 4.0);
 insert into grade_conversion values('A', 4);
 insert into grade_conversion values('A-', 3.7);
 insert into grade_conversion values('B+', 3.4);
