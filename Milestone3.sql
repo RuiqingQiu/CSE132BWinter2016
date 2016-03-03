@@ -143,11 +143,7 @@ union
 (select * from tmp);
 
 
-
-
-
-
-/* Report 1-E */
+-- Report 1E
 /*
 -- Display the NAME of all the concentrations in Y that a student X has completed.
 SELECT c.ConcentrationName
@@ -199,8 +195,21 @@ WHERE d.DegreeName = 'M.S. Computer Science' and d.ConcentrationName not in (sel
 */
 
 
+-- Report 2a
+CREATE OR REPLACE VIEW CurrentSchedule AS(
+	SELECT s.SectionID,w.DayOfTheWeek,w.Time,cl.Title,h.CourseName
+	FROM StudentEnrollment s, ClassMeeting c, WeeklyMeeting w, Classes cl,CourseHasClass h
+	WHERE s.StudentID = 'A16' AND s.SectionID = c.SectionID AND w.MeetingID = c.MeetingID
+	AND cl.SectionID = s.SectionID AND h.SectionID = s.SectionID);
+	
+SELECT * 
+FROM CurrentSchedule;
 
-
+-- Find conflict scheduling
+Select c.SectionID,c.Title,c.CourseName,c.DayOfTheWeek,c.Time,m.SectionID,h.CourseName,s.Title,w.DayOfTheWeek,w.Time
+FROM CurrentSchedule c, ClassMeeting m, WeeklyMeeting w, Classes s,CourseHasClass h
+WHERE c.SectionID <> m.SectionID AND m.MeetingID = w.MeetingID AND w.DayOfTheWeek = c.DayOfTheWeek AND w.Time = c.Time 
+AND s.SectionID = m.SectionID AND h.SectionID = s.SectionID;
 
 
 
