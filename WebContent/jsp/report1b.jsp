@@ -25,8 +25,8 @@
       	<li><a href="report1a.jsp">Report1A</a></li>
      	<li><a href="report1b.jsp">Report1B</a></li>
      	<li><a href="report1c.jsp">Report1C</a></li>
-     	<li><a href="#">Report</a></li>
-     	<li><a href="#">Report</a></li>
+     	<li><a href="report1d.jsp">Report1D</a></li>
+     	<li><a href="report1e.jsp">Report1E</a></li>
      	<li><a href="#">Report</a></li>
       </ul>   
     </div><!-- /.navbar-collapse -->
@@ -74,16 +74,21 @@
                         PreparedStatement pstmt = conn.prepareStatement
                         		("SELECT distinct s.StudentID, s.Name,s.SSN,s.ResidenceStatus,s.AcademicLevel,e.Units,e.GradeOption " +
                         				"FROM Classes c, StudentEnrollment e, Student s " +
-                        				"WHERE e.SectionID = ? " +
-                        				"AND e.StudentID = s.StudentID");
+                        				"WHERE c.Title = ? " +
+                        				"AND e.SectionID = c.SectionID AND e.StudentID = s.StudentID "+ 
+                        				"UNION " +
+                        				"SELECT s.StudentID, s.Name,s.SSN,s.ResidenceStatus,s.AcademicLevel,a.Units,a.FinalGrade "+
+										"FROM Classes c, AcademicHistory a,Student s "+ 
+										"WHERE c.Title = ? AND a.SectionID = c.SectionID AND a.StudentID = s.StudentID;");
                         	
           
-                        pstmt.setString(1, request.getParameter("SectionID")); 
+                        pstmt.setString(1, request.getParameter("Title")); 
+                        pstmt.setString(2, request.getParameter("Title")); 
  						
  						// Commit transaction
  						ResultSet rs = pstmt.executeQuery();
  						%>
- 						<h2> Roster for class Y with SectionID: <%= request.getParameter("SectionID") %></h2>
+ 						<h2> Roster for class Y with Title: <%= request.getParameter("Title") %></h2>
  						<table border="1" class="table table-bordered">
  	                    <tr>
  	                        <th>StudentID</th>
@@ -146,7 +151,7 @@
 										<td><%= rs.getString("Year") %></td>
 										<td><%= rs.getString("MaxEnrollment") %></td>
 							
-										<input type="hidden" value="<%= rs.getString("SectionID") %>" name="SectionID">
+										<input type="hidden" value="<%= rs.getString("Title") %>" name="Title">
 										<td><input class="btn btn-default" type="submit" value="Search"></td>
                         			</form>
 									</tr>

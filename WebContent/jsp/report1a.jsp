@@ -25,8 +25,8 @@
       	<li><a href="report1a.jsp">Report1A</a></li>
      	<li><a href="report1b.jsp">Report1B</a></li>
      	<li><a href="report1c.jsp">Report1C</a></li>
-     	<li><a href="#">Report</a></li>
-     	<li><a href="#">Report</a></li>
+     	<li><a href="report1d.jsp">Report1D</a></li>
+     	<li><a href="report1e.jsp">Report1E</a></li>
      	<li><a href="#">Report</a></li>
       </ul>   
     </div><!-- /.navbar-collapse -->
@@ -75,17 +75,17 @@
                         	"SELECT a.SectionID,a.Title,a.Year,a.Quarter,a.MaxEnrollment,b.Units FROM " +
                             	"(SELECT c.SectionID,c.Title,c.Quarter,c.Year,c.MaxEnrollment " +
                             	"FROM Classes c " +
-                            	"WHERE c.Quarter = 'Spring' and c.Year = '2009' "+
+                            	"WHERE c.Quarter = 'Winter' and c.Year = '2016' "+
                             			"and c.SectionID in " +
                             					"(SELECT a.SectionID " +
-                            					   	"FROM AcademicHistory a " +
+                            					   	"FROM StudentEnrollment a " +
                             					    "WHERE a.StudentID in " +
                             						"(SELECT StudentID " +
                             						"FROM Student " +
                             						"WHERE SSN = ?))) a " +
                             "INNER JOIN " +
                             	"(SELECT a.SectionID, a.Units " +
-                            	"FROM AcademicHistory a " +
+                            	"FROM StudentEnrollment a " +
                             	"WHERE a.StudentID in (SELECT StudentID " +
                             			      "FROM Student " +
                             			      "WHERE SSN = ?)) b " +

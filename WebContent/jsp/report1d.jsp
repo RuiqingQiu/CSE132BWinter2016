@@ -26,7 +26,7 @@
      	<li><a href="report1b.jsp">Report1B</a></li>
      	<li><a href="report1c.jsp">Report1C</a></li>
      	<li><a href="report1d.jsp">Report1D</a></li>
-     	<li><a href="#">Report</a></li>
+     	<li><a href="report1e.jsp">Report1E</a></li>
      	<li><a href="#">Report</a></li>
       </ul>   
     </div><!-- /.navbar-collapse -->
@@ -112,19 +112,33 @@
  	       	                  <th>Category</th>
  	       	            </tr> 
  	       	             <% 
+ 	       	             String SSN = request.getParameter("SSN");
+ 	       	             String DegreeName = request.getParameter("DegreeName");
+ 	       	             Statement stmt = conn.createStatement();
+                     	 stmt.executeUpdate(
+                     			"CREATE OR REPLACE VIEW tmp AS " +
+                     			"Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft, d.Category " +
+                     			"From DegreeDetailedUnitRequirement d, AcademicHistory a " +
+                     			"Where d.DegreeName = '" + DegreeName +"' " +
+                     				"AND a.StudentID in (Select StudentID from Student where SSN = '" + SSN + "' ) " +
+                     				"AND d.Category in (Select g.Category " +
+                     					               "FROM CourseHasClass h,Course c, CourseCategory g " +
+                     									"WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName) " +			
+                     				"GROUP BY d.Category, d.UnitsRequired;"
+                     			 );
+ 	       	             
+ 	       	             
+ 	       	       
+ 	       	             
  	       	               pstmt = conn.prepareStatement(
- 	       	            	
- 	       	            	"Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft, d.Category " +
- 	       	            	"From AcademicHistory a, DegreeDetailedUnitRequirement d " +
- 	       	            	"Where a.StudentID in (Select StudentID from Student where SSN = ? ) " +
- 	       	            	"AND d.DegreeName = ? " +
- 	       	            	"AND d.Category in (Select g.Category " +
- 	       	            			        "FROM CourseHasClass h,Course c, CourseCategory g "+
- 	       	            					"WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName) "+			
- 	       	            	"GROUP BY d.Category, d.UnitsRequired;");	   
+ 	       	            	"select d.UnitsRequired AS UnitsLeft,d.Category " +
+ 	       	            	"From DegreeDetailedUnitRequirement d " +
+ 	       	            	"where d.DegreeName = ? AND d.category not in (select Category from tmp) " +
+ 	       	            	"union " +
+ 	       	            	"(select * from tmp);");	   
 							
- 	       	         		pstmt.setString(1,request.getParameter("SSN"));
- 	       	         		pstmt.setString(2, request.getParameter("DegreeName"));
+
+ 	       	               pstmt.setString(1, request.getParameter("DegreeName"));
  	       	             	rs = pstmt.executeQuery();
  	       	                    
  	       					while(rs.next()){
