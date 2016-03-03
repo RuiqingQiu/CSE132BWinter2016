@@ -70,7 +70,8 @@
                     // Check if an insertion is requested
                     if (action != null && action.equals("query")) {
                         
-                        PreparedStatement pstmt = conn.prepareStatement("Select a.StudentID, d.DegreeName,(d.TotalUnitsRequired-sum(a.Units)) AS UnitsLeftToTake "+ 
+                        PreparedStatement pstmt = conn.prepareStatement(
+                        		"Select a.StudentID, d.DegreeName,(d.TotalUnitsRequired-sum(a.Units)) AS UnitsLeftToTake "+ 
                         		"From AcademicHistory a, Degree d "+
                         		"Where a.StudentID in (Select StudentID from Student where SSN = ? ) "+ 
                         				"AND d.DegreeName = ? "+
@@ -103,33 +104,41 @@
  	                   %>
  	                    </table>
  	                    
- 	       			 <h2>Concentrations completed by Student X with SSN: <%= request.getParameter("SSN") %></h2>
+ 	       			 <h2>Concentrations completed by Student X with SSN: <%= request.getParameter("SSN") %>
+ 	       			 		in Degree: <%= request.getParameter("DegreeName") %>
+ 	       			 </h2>
  	       			 <table border="1" class="table table-bordered">
  	       	              <tr>
  	       	                  <th>Concentration Completed</th>
  	       	            </tr> 
  	       	            	<%
- 	       	            	pstmt = conn.prepareStatement(
- 	       	            		"SELECT c.ConcentrationName " +
- 	       	            		"FROM Concentration c "+
- 	       	            		"WHERE " +
- 	       	            		"NOT EXISTS "+  
- 	       	            				"(SELECT d1.CourseName " +
- 	       	            				"FROM ConcentrationCourse d1 " +
- 	       	            				"WHERE c.ConcentrationName = d1.ConcentrationName " +
- 	       	            				"and d1.CourseName not in " +
- 	       	            					"(Select h.CourseName " +
- 	       	            					"From AcademicHistory a, CourseHasClass h " + 
- 	       	            					"Where a.StudentID in (Select StudentID from Student where SSN = ? ) and a.SectionID = h.SectionID)) " +
- 	       	            		"AND " + 
- 	       	            			"(Select sum(g.NUMBER_GRADE) / count(a.SectionID) AS GPA " +
- 	       	            			"FROM AcademicHistory a, Grade_Conversion g, CourseHasClass h, ConcentrationCourse cc " +
- 	       	            			"WHERE a.StudentID in (Select StudentID from Student where SSN = ? ) and a.FinalGrade <> 'IN' and a.FinalGrade = g.LETTER_GRADE and cc.ConcentrationName = c.ConcentrationName " +
- 	       	            			"and a.SectionID = h.SectionID and h.CourseName = cc.CourseName) > c.MinGPA;" 	       	            			
- 	       	            			);
- 	       	           	 	pstmt.setString(1,request.getParameter("SSN"));
- 	       	            	pstmt.setString(2,request.getParameter("SSN"));
- 	       	             	rs = pstmt.executeQuery();
+ 	       	            	
+ 	       	            	Statement stmt = conn.createStatement();
+ 	       	            	String DegreeName = request.getParameter("DegreeName");
+ 	       	            	String SSN = request.getParameter("SSN");
+ 	                    	stmt.executeUpdate(
+ 	                    			"CREATE OR REPLACE VIEW CompleteConcentration AS (" +
+ 	                    					"SELECT c.ConcentrationName " +
+ 	                    					"FROM DegreeConcentration d, Concentration c " +
+ 	                    					"WHERE " + 
+ 	                    					"d.DegreeName = '" + DegreeName + "' And d.ConcentrationName = c.ConcentrationName " +
+ 	                    					"And NOT EXISTS (SELECT d1.CourseName " +
+ 	                    							"FROM ConcentrationCourse d1 " +
+ 	                    							"WHERE c.ConcentrationName = d1.ConcentrationName " + 
+ 	                    							"and d1.CourseName not in " +
+ 	                    								"(Select h.CourseName " +
+ 	                    								"From AcademicHistory a, CourseHasClass h " +
+ 	                    								"Where a.StudentID in (Select StudentID from Student where SSN = '" + SSN + "' ) and a.SectionID = h.SectionID)) " +
+ 	                    					"AND "+ 
+ 	                    						"(Select sum(g.NUMBER_GRADE) / count(a.SectionID) AS GPA " +
+ 	                    						"FROM AcademicHistory a, Grade_Conversion g, CourseHasClass h, ConcentrationCourse cc " +
+ 	                    						"WHERE a.StudentID in (Select StudentID from Student where SSN = '" + 
+ 	                    						SSN + "') and a.FinalGrade <> 'IN' and a.FinalGrade = g.LETTER_GRADE and cc.ConcentrationName = c.ConcentrationName " +
+ 	                    						"and a.SectionID = h.SectionID and h.CourseName = cc.CourseName) > c.MinGPA);"
+ 	                    			);
+ 	                                             
+ 	                        pstmt = conn.prepareStatement("Select * FROM CompleteConcentration");
+ 	                        rs = pstmt.executeQuery();
 
  	       	            	while(rs.next()){
  	       	            	%>
@@ -139,7 +148,62 @@
  	       	            	<% 
  	       	            	}
  	       	            	%>
- 	       	          </table>       			
+ 	       	          </table> 
+					  
+					<h2>Courses needed to completeConcentrations by Student X with SSN: <%= request.getParameter("SSN") %>
+ 	       			 		in Degree: <%= request.getParameter("DegreeName") %>
+ 	       			 </h2>
+ 	       			 <table border="1" class="table table-bordered">
+ 	       	              <tr>
+ 	       	                  <th>Degree Name</th>
+  	       	                  <th>Concentration Name</th>
+  	       	                  <th>Course Name</th>
+  	       	                  <th>Section ID</th>
+  	       	                  <th>Quarter</th>
+  	       	                  <th>Year</th>
+ 	       	                 
+ 	       	            </tr> 
+ 	       	            	<%
+ 	       	            	
+ 	                                            
+ 	                        pstmt = conn.prepareStatement(
+ 	                        		"Select d.DegreeName, d.ConcentrationName, c.CourseName, h.SectionID, classes.Quarter, classes.Year " +
+ 	                        		"from DegreeConcentration d, StudentPursueDegree s, ConcentrationCourse c, CourseHasClass h, Classes classes " +
+ 	                        		"WHERE d.DegreeName = ? and " +
+ 	                        		"s.StudentID in (Select StudentID from Student where SSN = ? ) and d.DegreeName = s.DegreeName and " + 
+ 	                        		"d.ConcentrationName = c.ConcentrationName " +
+ 	                        		"and d.ConcentrationName not in (Select * from CompleteConcentration) " +
+ 	                        		"and c.CourseName not in " +
+ 	                        			"(Select cc.CourseName From AcademicHistory a, CourseHasClass cc " +
+ 	                        			"Where a.StudentID in (Select StudentID from Student where SSN = ? ) and cc.SectionID = a.SectionID) " +
+ 	                        		"and c.CourseName = h.CourseName " +
+ 	                        		"and h.SectionID = classes.SectionID " +
+ 	                        		"and " +
+ 	                        		"((classes.Year = '2016' and classes.Quarter = 'Fall') or " + 
+ 	                        				"(classes.Year = '2016' and classes.Quarter = 'Spring') or (classes.Year = '2017'));"
+ 	                        		
+ 	                        		);
+ 	       	            	pstmt.setString(1, request.getParameter("DegreeName"));
+ 	       	            	pstmt.setString(2, request.getParameter("SSN"));
+ 	       	            	pstmt.setString(3, request.getParameter("SSN"));
+
+ 	                        rs = pstmt.executeQuery();
+
+ 	       	            	while(rs.next()){
+ 	       	            	%>
+ 	       	            		<tr>
+ 	       	            			<td><%= rs.getString("DegreeName") %></td>
+ 	       	            			<td><%= rs.getString("ConcentrationName") %></td>
+ 	       	            			<td><%= rs.getString("CourseName") %></td>
+ 	       	            			<td><%= rs.getString("SectionID") %></td>
+ 	       	            			<td><%= rs.getString("Quarter") %></td>
+ 	       	            			<td><%= rs.getString("Year") %></td>
+ 	       	            		</tr>
+ 	       	            	<% 
+ 	       	            	}
+ 	       	            	%>
+ 	       	          </table> 
+     			
  	        <%          
                     }// end if action == query
             %>

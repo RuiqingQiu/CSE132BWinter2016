@@ -108,43 +108,33 @@ WHERE d.Type = 'B.S.';
 */
 -- pass in degree name 
 
-
+/*
 Select *
 From Degree d
-WHERE d.Type = 'B.S.' AND d.DegreeName = 'B.S. in Computer Science';
-
-
+WHERE d.Type = 'B.S.' AND d.DegreeName = 'B.S. Computer Science';
 -- Calculate how many units the student left to take 
 Select a.StudentID, d.DegreeName,(d.TotalUnitsRequired-sum(a.Units)) AS UnitsLeftToTake
 From AcademicHistory a, Degree d
 Where a.StudentID in (Select StudentID from Student where SSN = '1') 
-		AND d.DegreeName = 'B.S. in Computer Science'
+		AND d.DegreeName = 'B.S. Computer Science'
 GROUP BY a.StudentID,d.DegreeName;
 -- minimum number of units the student has to take from each category (e.g. lower division units required, technical elective units required, etc.) in degree Y. 
-
-CREATE OR REPLACE VIEW tmp AS
 Select (d.UnitsRequired-sum(a.Units)) AS UnitsLeft, d.Category
 --Select d.UnitsRequired, a.Units, d.Category
-From DegreeDetailedUnitRequirement d, AcademicHistory a 
-Where d.DegreeName = 'B.S. in Mechanical Engineering'
-	AND a.StudentID = 'A2'
+From AcademicHistory a, DegreeDetailedUnitRequirement d
+Where a.StudentID = 'A1'
+	AND d.DegreeName = 'B.S. Computer Science'
 	AND d.Category in (Select g.Category
 		               FROM CourseHasClass h,Course c, CourseCategory g
 				WHERE a.SectionID = h.SectionID AND h.CourseName = c.CourseName AND c.CourseName = g.CourseName)			
 GROUP BY d.Category, d.UnitsRequired;
-
-select * 
-from tmp;
-
-select d.UnitsRequired AS UnitsLeft,d.Category
-From DegreeDetailedUnitRequirement d
-where d.DegreeName = 'B.S. in Mechanical Engineering' AND d.category not in (select Category from tmp)
-union
-(select * from tmp);
+*/
 
 
--- Report 1E
-/*
+
+
+/* Report 1-E */
+
 -- Display the NAME of all the concentrations in Y that a student X has completed.
 SELECT c.ConcentrationName
 FROM Concentration c
@@ -155,44 +145,55 @@ NOT EXISTS (SELECT d1.CourseName
 		and d1.CourseName not in 
 			(Select h.CourseName
 			From AcademicHistory a, CourseHasClass h
-			Where a.StudentID = 'A3' and a.SectionID = h.SectionID))
+			Where a.StudentID = 'A22' and a.SectionID = h.SectionID))
 AND 
 	(Select sum(g.NUMBER_GRADE) / count(a.SectionID) AS GPA 
 	FROM AcademicHistory a, Grade_Conversion g, CourseHasClass h, ConcentrationCourse cc
-	WHERE a.StudentID = 'A3' and a.FinalGrade <> 'IN' and a.FinalGrade = g.LETTER_GRADE and cc.ConcentrationName = c.ConcentrationName
+	WHERE a.StudentID = 'A22' and a.FinalGrade <> 'IN' and a.FinalGrade = g.LETTER_GRADE and cc.ConcentrationName = c.ConcentrationName
 	and a.SectionID = h.SectionID and h.CourseName = cc.CourseName) > c.MinGPA;
-*/
+
 /*Given the student name X and degree name Y, list the set of courses that the student has not yet 
 taken from every concentration C in Y (even for the concentrations C that X has completed). 
 Next to each course display the next time that this course is given (i.e. the earliest time 
 at which a class of this course is given after SPRING 2005).*/
 
-/*
+
 CREATE OR REPLACE VIEW CompleteConcentration AS (
 	SELECT c.ConcentrationName
-	FROM Concentration c
+	FROM DegreeConcentration d, Concentration c
 	WHERE 
+	d.DegreeName = 'M.S. in Computer Science' And d.ConcentrationName = c.ConcentrationName
+	And
 	NOT EXISTS (SELECT d1.CourseName
 			FROM ConcentrationCourse d1
 			WHERE c.ConcentrationName = d1.ConcentrationName 
 			and d1.CourseName not in 
 				(Select h.CourseName
 				From AcademicHistory a, CourseHasClass h
-				Where a.StudentID = 'A3' and a.SectionID = h.SectionID))
+				Where a.StudentID = 'A22' and a.SectionID = h.SectionID))
 	AND 
 		(Select sum(g.NUMBER_GRADE) / count(a.SectionID) AS GPA 
 		FROM AcademicHistory a, Grade_Conversion g, CourseHasClass h, ConcentrationCourse cc
-		WHERE a.StudentID = 'A3' and a.FinalGrade <> 'IN' and a.FinalGrade = g.LETTER_GRADE and cc.ConcentrationName = c.ConcentrationName
+		WHERE a.StudentID = 'A22' and a.FinalGrade <> 'IN' and a.FinalGrade = g.LETTER_GRADE and cc.ConcentrationName = c.ConcentrationName
 		and a.SectionID = h.SectionID and h.CourseName = cc.CourseName) > c.MinGPA
 );
---SELECT * 
---FROM CompleteConcentration;
+SELECT * 
+FROM CompleteConcentration;
 
-SELECT *
-FROM DegreeConcentration d
-WHERE d.DegreeName = 'M.S. Computer Science' and d.ConcentrationName not in (select * from CompleteConcentration);
-
-*/
+-- Get all the incomplete concentration
+Select d.DegreeName, d.ConcentrationName, c.CourseName, h.SectionID, classes.Quarter, classes.Year
+from DegreeConcentration d, StudentPursueDegree s, ConcentrationCourse c, CourseHasClass h, Classes classes
+WHERE s.StudentID = 'A22' and d.DegreeName = s.DegreeName and 
+d.ConcentrationName = c.ConcentrationName 
+and d.ConcentrationName not in (Select * from CompleteConcentration)
+and c.CourseName not in 
+	(Select cc.CourseName From AcademicHistory a, CourseHasClass cc 
+	Where a.StudentID = 'A22' and cc.SectionID = a.SectionID)
+and c.CourseName = h.CourseName
+and h.SectionID = classes.SectionID
+and 
+((classes.Year = '2016' and classes.Quarter = 'Fall') or (classes.Year = '2016' and classes.Quarter = 'Spring') or (classes.Year = '2017'))
+;
 
 
 -- Report 2a
