@@ -343,6 +343,7 @@
                         <th>Quarter</th>
                         <th>Year</th>
                         <th>MaxEnrollment</th>
+                        <th>Faculty</th>
                         <th>Action</th>
                     </tr>                   
                             <%
