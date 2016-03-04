@@ -198,7 +198,7 @@
 										<!-- </td> -->
 										
 										<!-- <td> -->
-											<label>DegreeName : </label><select name="DegreeName">
+										<label>DegreeName : </label><select name="DegreeName">
 											<%
 												// if there is no entry in the Department table
 												if (!rs1.isBeforeFirst() ) {    
@@ -220,6 +220,7 @@
 										<%-- <input type="hidden" value="<%= rs.getString("SSN") %>" name="SSN">
 										<input type="hidden" value="<%= rs.getString("DegreeName") %>" name="DegreeName"> --%>
 										<input class="btn btn-default" type="submit" value="Search">
+										
                         			</form>
 								
                             

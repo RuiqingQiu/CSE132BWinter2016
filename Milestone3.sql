@@ -235,12 +235,133 @@ WHERE e.StudentID = s.StudentID AND c.SectionID = s.SectionID AND c.MeetingID = 
 
 
 
+/*Given a course id (CID) X, a professor Y, and a quarter Z produce the count of "A", "B", "C", "D", and "other" grades 
+that professor Y gave at quarter Z to the students taking course X. Note that course X may have had more than one 
+corresponding sections in the quarter Z. Accumulate the counts of all sections given by professor Y.
+*/
+
+CREATE OR REPLACE VIEW GradeDistribution AS 
+Select a.FinalGrade
+From Course c, CourseHasClass cc, Instructor l, Classes classes, AcademicHistory a
+Where c.CourseName = 'CSE8A' and 
+cc.CourseName = c.CourseName 
+and l.SectionID = cc.SectionID
+and l.FacultyName = 'Justin Bieber'
+and classes.SectionID = cc.SectionID
+and classes.Quarter = 'Fall'
+and classes.Year = '2014'
+and a.SectionID = l.SectionID;
+
+Select * from GradeDistribution;
+
+Select count(FinalGrade) AS counts, 'A' AS Letter
+From GradeDistribution
+Where FinalGrade = 'A' or FinalGrade = 'A-' or FinalGrade = 'A+'
+Union
+Select count(FinalGrade) AS counts, 'B' AS Letter
+From GradeDistribution
+Where FinalGrade = 'B' or FinalGrade = 'B-' or FinalGrade = 'B+'
+Union
+Select count(FinalGrade) AS counts, 'C' AS Letter
+From GradeDistribution
+Where FinalGrade = 'C' or FinalGrade = 'C-' or FinalGrade = 'C+'
+Union
+Select count(FinalGrade) AS counts, 'D' AS Letter
+From GradeDistribution
+Where FinalGrade = 'D' or FinalGrade = 'D-' or FinalGrade = 'D+'
+Union
+Select count(FinalGrade) AS counts, 'Other' AS Letter
+From GradeDistribution
+Where FinalGrade = 'F'
+Order by Letter
+;
+/*
+Given a course id X and a professor Y produce the count of "A", "B", "C", "D", and "other" grades professor Y has given over the years.
+*/
+
+CREATE OR REPLACE VIEW GradeCounts AS 
+Select a.FinalGrade
+From Course c, CourseHasClass cc, Instructor l, Classes classes, AcademicHistory a
+Where c.CourseName = 'CSE250A' and 
+cc.CourseName = c.CourseName 
+and l.SectionID = cc.SectionID
+and l.FacultyName = 'Bjork'
+and classes.SectionID = cc.SectionID
+and a.SectionID = l.SectionID;
 
 
+Select * From GradeCounts;
+
+Select count(FinalGrade) AS counts, 'A' AS Letter
+From GradeCounts
+Where FinalGrade = 'A' or FinalGrade = 'A-' or FinalGrade = 'A+'
+Union
+Select count(FinalGrade) AS counts, 'B' AS Letter
+From GradeCounts
+Where FinalGrade = 'B' or FinalGrade = 'B-' or FinalGrade = 'B+'
+Union
+Select count(FinalGrade) AS counts, 'C' AS Letter
+From GradeCounts
+Where FinalGrade = 'C' or FinalGrade = 'C-' or FinalGrade = 'C+'
+Union
+Select count(FinalGrade) AS counts, 'D' AS Letter
+From GradeCounts
+Where FinalGrade = 'D' or FinalGrade = 'D-' or FinalGrade = 'D+'
+Union
+Select count(FinalGrade) AS counts, 'Other' AS Letter
+From GradeCounts
+Where FinalGrade = 'F'
+Order by Letter
+;
+/*
+Given a course id X produce the count of "A", "B", "C", "D", and "other" grades given to students in X over the years.
+*/
+CREATE OR REPLACE VIEW CourseGrade AS 
+Select a.FinalGrade
+From Course c, CourseHasClass cc, AcademicHistory a
+Where c.CourseName = 'CSE255' and 
+cc.CourseName = c.CourseName 
+and a.SectionID = cc.SectionID;
+
+Select * from CourseGrade;
+
+Select count(FinalGrade) AS counts, 'A' AS Letter
+From CourseGrade
+Where FinalGrade = 'A' or FinalGrade = 'A-' or FinalGrade = 'A+'
+Union
+Select count(FinalGrade) AS counts, 'B' AS Letter
+From CourseGrade
+Where FinalGrade = 'B' or FinalGrade = 'B-' or FinalGrade = 'B+'
+Union
+Select count(FinalGrade) AS counts, 'C' AS Letter
+From CourseGrade
+Where FinalGrade = 'C' or FinalGrade = 'C-' or FinalGrade = 'C+'
+Union
+Select count(FinalGrade) AS counts, 'D' AS Letter
+From CourseGrade
+Where FinalGrade = 'D' or FinalGrade = 'D-' or FinalGrade = 'D+'
+Union
+Select count(FinalGrade) AS counts, 'Other' AS Letter
+From CourseGrade
+Where FinalGrade = 'F'
+Order by Letter
+;
+
+/*
+Given a course id X and a professor Y produce the grade point average that professor Y has given at course X over the years. 
+*/
+CREATE OR REPLACE VIEW GradeCounts2 AS 
+Select a.FinalGrade
+From Course c, CourseHasClass cc, Instructor l, AcademicHistory a
+Where c.CourseName = 'CSE8A' and 
+cc.CourseName = c.CourseName 
+and l.SectionID = cc.SectionID
+and l.FacultyName = 'Justin Bieber'
+and a.SectionID = l.SectionID;
+
+Select * from GradeCounts2;
 
 
-
-
-
-
-
+Select sum(g.NUMBER_GRADE)/(count(c.FinalGrade)) AS Cumulative_GPA
+from GradeCounts2 c, Grade_Conversion  g
+Where c.FinalGrade <> 'IN' and c.FinalGrade = g.LETTER_GRADE;
