@@ -74,7 +74,36 @@
                     	 Statement stmt = conn.createStatement();
                     	 String SectionID = request.getParameter("SectionID");
                     	 String FacultyName = request.getParameter("FacultyName");
-                     	 stmt.executeUpdate(
+                    	 
+                    	 String[] daysPreferred = request.getParameterValues("DayOfTheWeek");
+                    	 int mon_selected = 0;
+                    	 int tue_selected = 0;
+                    	 int wed_selected = 0;
+                    	 int thu_selected = 0;
+                    	 int fri_selected = 0;
+                    	 
+                    	 for(int i = 0;i<daysPreferred.length;i++){
+                    		 switch(daysPreferred[i]){
+                    		 case "Monday":
+                    			 mon_selected = 1;
+                    			 break;
+                    		 case "Tuesday":
+                    			 tue_selected = 1;
+                    			 break;
+                    		 case "Wednesday":
+                    			 wed_selected = 1;
+                    			 break;
+                    		 case "Thursday":
+                    			 thu_selected = 1;
+                    			 break;
+                    		 case "Friday":
+                    			 fri_selected = 1;
+                    			 break;
+                    		 default:
+                    			 System.out.println("Enter default");
+                    		 }
+                    	 }
+      					 stmt.executeUpdate(
                      			"CREATE OR REPLACE VIEW EnrolledStudent AS( " +
 											"SELECT s.StudentID "+
 											"FROM StudentEnrollment s "+
@@ -168,8 +197,10 @@
  	                        <th>DayOfTheWeek</th>
  	                        <th>Time</th>
  	                    </tr> 
- 	                    <% 
- 	                    for(int i = 0;i< mon.length;i++){
+ 	                    
+ 	                    <%
+ 	                    if(mon_selected == 1){
+ 	                   	for(int i = 0;i< mon.length;i++){
  	                    	// nothing scheduled
  	                    	if(mon[i] ==0){
  	       
@@ -203,7 +234,9 @@
 						<% 
  	                    	}
  	                    }
-
+ 	                    }
+ 	                    
+					   if(tue_selected == 1){
  	                   for(int i = 0;i< tue.length;i++){
 	                    	// nothing scheduled
 	                    	if(tue[i] ==0){
@@ -234,7 +267,9 @@
 	                    <% 
 	                  		}
 	                    }
+					   }
  	                   
+					  if(wed_selected == 1){
  	                  for(int i = 0;i< wed.length;i++){
 	                    	// nothing scheduled
 	                    	if(wed[i] ==0){
@@ -265,7 +300,9 @@
 		                  <% 
 	                    	}
  	                  }
+					  }
  	                  
+					 if(thu_selected == 1){
  	                 for(int i = 0;i< thu.length;i++){
 	                    	// nothing scheduled
 	                    	if(thu[i] ==0){
@@ -296,6 +333,9 @@
 						<% 
 	                    	}
  	                 }
+					 }
+					 
+					if(fri_selected == 1){
  	                for(int i = 0;i< fri.length;i++){
                     	// nothing scheduled
                     	if(fri[i] ==0){
@@ -326,6 +366,7 @@
 					<% 
                     	}
  	                }
+					}
  	              
  	          } // end of it query
  	        %>
@@ -344,6 +385,7 @@
                         <th>Year</th>
                         <th>MaxEnrollment</th>
                         <th>Faculty</th>
+                        <th>PreferedDayOfTheWeek</th>
                         <th>Action</th>
                     </tr>                   
                             <%
@@ -395,10 +437,16 @@
 											}// end of else 
 										%>	
 										</select><br></td>
-										<input type="hidden" value="<%= rs.getString("SectionID") %>" name="SectionID">
 										
+										<td>
+											<input type="checkbox" name="DayOfTheWeek" value="Monday">Monday
+  											<input type="checkbox" name="DayOfTheWeek" value="Tuesday">Tuesday
+  											<input type="checkbox" name="DayOfTheWeek" value="Wednesday">Wednesday
+  											<input type="checkbox" name="DayOfTheWeek" value="Thursday">Thursday
+  											<input type="checkbox" name="DayOfTheWeek" value="Friday">Friday 
+  										</td>
+										<input type="hidden" value="<%= rs.getString("SectionID") %>" name="SectionID">
 										<td><input class="btn btn-default" type="submit" value="Search"></td>
-									
                         			</form>
 									</tr>
 									<% 
