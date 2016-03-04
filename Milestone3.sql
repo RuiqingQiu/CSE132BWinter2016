@@ -212,6 +212,28 @@ FROM CurrentSchedule c, ClassMeeting m, WeeklyMeeting w, Classes s,CourseHasClas
 WHERE c.SectionID <> m.SectionID AND m.MeetingID = w.MeetingID AND w.DayOfTheWeek = c.DayOfTheWeek AND w.Time = c.Time 
 AND s.SectionID = m.SectionID AND h.SectionID = s.SectionID;
 
+-- Report 2b
+-- Display all the sections in the current quarter
+Select c.SectionID,h.CourseName,c.Title,c.Quarter,c.Year,c.MaxEnrollment
+From Classes c, CourseHasClass h
+WHERE c.Quarter='Winter' AND c.Year='2016' AND h.SectionID = c.SectionID;
+
+
+-- For selected section, find all the enrolled students
+CREATE OR REPLACE VIEW EnrolledStudent AS(
+SELECT s.StudentID
+FROM StudentEnrollment s
+WHERE s.SectionID = '2');
+Select * from EnrolledStudent;
+
+-- Find enrolled students schedule
+
+Select s.StudentID,s.SectionID,w.DayOfTheWeek,w.Time
+From EnrolledStudent e, StudentEnrollment s,ClassMeeting c,WeeklyMeeting w
+WHERE e.StudentID = s.StudentID AND c.SectionID = s.SectionID AND c.MeetingID = w.MeetingID;
+
+
+
 
 
 
