@@ -82,7 +82,8 @@
                         PreparedStatement pstmt = conn.prepareStatement(
                         		"Select c.SectionID AS s1,c.Title AS t1,c.CourseName AS c1,c.DayOfTheWeek AS d1,c.Time as m1,m.SectionID AS s2,h.CourseName AS c2,s.Title AS t2,w.DayOfTheWeek AS d2,w.Time AS m2 " + 
                         		"FROM CurrentSchedule c, ClassMeeting m, WeeklyMeeting w, Classes s,CourseHasClass h " +
-                        		"WHERE c.SectionID <> m.SectionID AND m.MeetingID = w.MeetingID AND w.DayOfTheWeek = c.DayOfTheWeek AND w.Time = c.Time " +  
+                        		"WHERE c.SectionID <> m.SectionID AND s.SectionID = m.SectionID AND s.Title not in (Select title from CurrentSchedule) "+
+                        		"AND m.MeetingID = w.MeetingID AND w.DayOfTheWeek = c.DayOfTheWeek AND w.Time = c.Time " +  
                         		"AND s.SectionID = m.SectionID AND h.SectionID = s.SectionID");		
  						
  						// Commit transaction
