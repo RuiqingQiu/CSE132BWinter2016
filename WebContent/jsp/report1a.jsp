@@ -27,7 +27,9 @@
      	<li><a href="report1c.jsp">Report1C</a></li>
      	<li><a href="report1d.jsp">Report1D</a></li>
      	<li><a href="report1e.jsp">Report1E</a></li>
-     	<li><a href="#">Report</a></li>
+     	<li><a href="report2a.jsp">Report2A</a></li>
+     	<li><a href="report2b.jsp">Report2B</a></li>
+     	<li><a href="report3a.jsp">Report3A</a></li>
       </ul>   
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
