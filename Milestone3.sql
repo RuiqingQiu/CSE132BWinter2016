@@ -214,8 +214,13 @@ WHERE c.SectionID <> m.SectionID AND s.SectionID = m.SectionID AND s.Title not i
 AND m.MeetingID = w.MeetingID AND w.DayOfTheWeek = c.DayOfTheWeek AND w.Time = c.Time 
 AND h.SectionID = s.SectionID;
 
-/*
+
 -- Report 2b
+-- Display all the professors who are teching this quarter
+Select SSN,Name
+From faculty;
+
+
 -- Display all the sections in the current quarter
 Select c.SectionID,h.CourseName,c.Title,c.Quarter,c.Year,c.MaxEnrollment
 From Classes c, CourseHasClass h
@@ -233,8 +238,12 @@ Select * from EnrolledStudent;
 
 Select s.StudentID,s.SectionID,w.DayOfTheWeek,w.Time
 From EnrolledStudent e, StudentEnrollment s,ClassMeeting c,WeeklyMeeting w
-WHERE e.StudentID = s.StudentID AND c.SectionID = s.SectionID AND c.MeetingID = w.MeetingID;
-*/
+WHERE e.StudentID = s.StudentID AND c.SectionID = s.SectionID AND c.MeetingID = w.MeetingID
+UNION
+SELECT i.FacultyName,c.SectionID,w.DayOfTheWeek, w.Time
+FROM Instructor i, ClassMeeting c,WeeklyMeeting w
+WHERE i.FacultyName = 'Adele' AND i.SectionID = c.SectionID AND c.MeetingID = w.MeetingID;
+
 
 
 

@@ -73,17 +73,22 @@
                     if (action != null && action.equals("query")) {
                     	 Statement stmt = conn.createStatement();
                     	 String SectionID = request.getParameter("SectionID");
+                    	 String FacultyName = request.getParameter("FacultyName");
                      	 stmt.executeUpdate(
                      			"CREATE OR REPLACE VIEW EnrolledStudent AS( " +
 											"SELECT s.StudentID "+
 											"FROM StudentEnrollment s "+
 											"WHERE s.SectionID = '" + SectionID + "');");
                      	 
-
+				
                          PreparedStatement pstmt = conn.prepareStatement(
                         		"Select s.StudentID,s.SectionID,w.DayOfTheWeek,w.Time " + 
 								"From EnrolledStudent e, StudentEnrollment s,ClassMeeting c,WeeklyMeeting w " + 
-								"WHERE e.StudentID = s.StudentID AND c.SectionID = s.SectionID AND c.MeetingID = w.MeetingID;");	
+								"WHERE e.StudentID = s.StudentID AND c.SectionID = s.SectionID AND c.MeetingID = w.MeetingID " +
+								"UNION " +
+								"SELECT i.FacultyName,c.SectionID,w.DayOfTheWeek, w.Time "+ 
+								"FROM Instructor i, ClassMeeting c,WeeklyMeeting w " +
+								"WHERE i.FacultyName = 'Kelly Clarkson' AND i.SectionID = c.SectionID AND c.MeetingID = w.MeetingID;");	
  						
  						// Commit transaction
  						ResultSet rs = pstmt.executeQuery();
@@ -326,10 +331,11 @@
  	        %>
  	                    
  	                    
- 	               
-            <!-- Add an HTML table header row to format the results -->
-                <h2>All sections in current quarter</h2>
+
+            	
+               
                 <table border="1" class="table table-bordered">
+                 <caption>All sections in current quarter</caption>
                     <tr>
                         <th>SectionID</th>
                         <th>CourseName</th>
@@ -345,6 +351,11 @@
 									("Select c.SectionID,h.CourseName,c.Title,c.Quarter,c.Year,c.MaxEnrollment " +
 											"From Classes c, CourseHasClass h "+
 											"WHERE c.Quarter='Winter' AND c.Year='2016' AND h.SectionID = c.SectionID;");
+							
+							Statement s = conn.createStatement();
+							ResultSet f_rs = s.executeQuery
+									("SELECT * FROM Faculty;");
+							
 			            		// if there is no entry in the Department table
 								if (!rs.isBeforeFirst() ) {    
 
@@ -362,8 +373,30 @@
 										<td><%= rs.getString("Quarter") %></td>
 										<td><%= rs.getString("Year") %></td>
 										<td><%= rs.getString("MaxEnrollment") %></td>
+										<td>
+										<label>Faculty Name : </label>
+										<select name="FacultyName">
+										<%
+											// if there is no entry in the Department table
+											if (!f_rs.isBeforeFirst() ) { 
+					
+											}
+											else{
+										%>
+												<option value="" ></option>
+										<% 
+												while(f_rs.next()){
+										%>
+												<option value="<%= f_rs.getString("Name") %>" >  <%= "Name : " + f_rs.getString("Name") +" , "+ "Title: " +  f_rs.getString("Title") %> </option>
+										<%
+												}// end of while rs.next
+											}// end of else 
+										%>	
+										</select><br></td>
 										<input type="hidden" value="<%= rs.getString("SectionID") %>" name="SectionID">
+										
 										<td><input class="btn btn-default" type="submit" value="Search"></td>
+									
                         			</form>
 									</tr>
 									<% 
