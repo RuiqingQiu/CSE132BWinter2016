@@ -352,9 +352,7 @@
 											"From Classes c, CourseHasClass h "+
 											"WHERE c.Quarter='Winter' AND c.Year='2016' AND h.SectionID = c.SectionID;");
 							
-							Statement s = conn.createStatement();
-							ResultSet f_rs = s.executeQuery
-									("SELECT * FROM Faculty;");
+							
 							
 			            		// if there is no entry in the Department table
 								if (!rs.isBeforeFirst() ) {    
@@ -378,6 +376,9 @@
 										<select name="FacultyName">
 										<%
 											// if there is no entry in the Department table
+											Statement s = conn.createStatement();
+											ResultSet f_rs = s.executeQuery
+											("SELECT * FROM Faculty;");
 											if (!f_rs.isBeforeFirst() ) { 
 					
 											}
