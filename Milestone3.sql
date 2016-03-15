@@ -242,7 +242,7 @@ WHERE e.StudentID = s.StudentID AND c.SectionID = s.SectionID AND c.MeetingID = 
 UNION
 SELECT i.FacultyName,c.SectionID,w.DayOfTheWeek, w.Time
 FROM Instructor i, ClassMeeting c,WeeklyMeeting w
-WHERE i.FacultyName = 'Adele' AND i.SectionID = c.SectionID AND c.MeetingID = w.MeetingID;
+WHERE i.FacultyName = 'Kelly Clarkson' AND i.SectionID = c.SectionID AND c.MeetingID = w.MeetingID;
 
 
 

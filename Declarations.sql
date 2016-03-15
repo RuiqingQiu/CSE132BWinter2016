@@ -276,6 +276,7 @@ CREATE TABLE ReviewSession(
 	ReviewID varchar(255) NOT NULL PRIMARY KEY,
 	Location varchar(255),
 	IsMandatory BOOLEAN,
+	DayOfTheWeek varchar(255),
 	Date varchar(255),
 	Time varchar(255)
 );
@@ -288,7 +289,8 @@ CREATE TABLE ClassMeeting(
 CREATE TABLE ClassReview(
 	CR_ID Serial Primary Key,
 	SectionID varchar(255) references Classes(SectionID) ON DELETE CASCADE,
-	ReviewID varchar(255) references ReviewSession(ReviewID) ON DELETE CASCADE
+	ReviewID varchar(255) references ReviewSession(ReviewID) ON DELETE CASCADE,
+	IsFinal BOOLEAN
 );
 
 CREATE TABLE Instructor(
