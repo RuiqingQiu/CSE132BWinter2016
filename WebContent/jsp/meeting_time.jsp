@@ -36,7 +36,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-	<h2>Enter Meeting Time For Classes</h2>
+	<h2>Enter Meeting Time For Sections in Current Quarter</h2>
 
             <%-- Set the scripting language to Java and --%>
             <%-- Import the java.sql package --%>
@@ -115,9 +115,10 @@
 	    				   // get all the values where name = DaysOfTheWeek
 	    				   String[] daysSelected = request.getParameterValues("DayOfTheWeek");
 	    				   String finalResult = "";
-	    				   for(int i = 0;i<daysSelected.length;i++){
-	    					   finalResult = finalResult.concat(daysSelected[i].substring(0,3));
-	    					   finalResult = finalResult.concat(" ");
+	    				   for(int i = 0;i < daysSelected.length;i++){
+	    					   //finalResult = finalResult.concat(daysSelected[i].substring(0,3));
+	    					   finalResult = finalResult.concat(daysSelected[i]);
+	    					   //System.out.println("daysSelected[i]" + daysSelected[i]);
 	    				   }
 	    				   pstmt.setString(5,finalResult);
 	    				   pstmt.setString(6,request.getParameter("Time"));
@@ -168,8 +169,10 @@
       				   String[] daysUpdated = request.getParameterValues("DayOfTheWeek");
       				   String result = "";
       				   for(int i = 0;i<daysUpdated.length;i++){
-      					   result = result.concat(daysUpdated[i].substring(0,3));
-      					   result = result.concat(" ");
+      					   //result = result.concat(daysUpdated[i].substring(0,3));
+      					   result = result.concat(daysUpdated[i]);
+
+      					  // result = result.concat(" ");
       				   }
       				   pstmt.setString(4,result);
       				   pstmt.setString(5,request.getParameter("Time"));
@@ -224,8 +227,11 @@
                          <input type="hidden" value="insert" name="action">
                     <%
 						Statement findSection = conn.createStatement();
+                    	String currentQuarter = "Winter";
+                    	String currentYear = "2016";
+                    	// get all the sections in current quarter
 						ResultSet rs_section = findSection.executeQuery
-								("SELECT * FROM Classes");
+								("SELECT * FROM Classes WHERE Quarter= '" + currentQuarter + "' AND Year = '"+currentYear+"'");
 					%>
 			             SectionID:<select name="SectionID">
 			            <%
@@ -263,6 +269,7 @@
             						<option value = ""></option>
             						<option value="Lecture">Lecture</option>
 									<option value="Discussion">Discussion</option>
+									<option value="Lab">Lab</option>
 									</select><br>
 						Location: <input value="" name="Location" size=10><br>
 						IsMandatory:<select name="IsMandatory">
@@ -271,11 +278,11 @@
 								<option>No</option>
 							</select><br>
 						DayOfWeek:  
-							<input type="checkbox" name="DayOfTheWeek" value="Monday">Monday
-  							<input type="checkbox" name="DayOfTheWeek" value="Tuesday">Tuesday
-  							<input type="checkbox" name="DayOfTheWeek" value="Wednesday">Wednesday
-  							<input type="checkbox" name="DayOfTheWeek" value="Thursday">Thursday
-  							<input type="checkbox" name="DayOfTheWeek" value="Friday">Friday 
+							<input type="checkbox" name="DayOfTheWeek" value="M">Monday
+  							<input type="checkbox" name="DayOfTheWeek" value="Tue">Tuesday
+  							<input type="checkbox" name="DayOfTheWeek" value="W">Wednesday
+  							<input type="checkbox" name="DayOfTheWeek" value="Thu">Thursday
+  							<input type="checkbox" name="DayOfTheWeek" value="F">Friday 
   							<br>
   						Time:<input value="" type="time" name="Time" size="10"><br>
                     
@@ -341,16 +348,24 @@
                           				%>
                                 			<select name="MeetingType">
                             			  		<%
-                            			  				if(typeSelected.equals("Lecture")){
+                            			  				if(typeSelected.equals("Lec")){
                             			  		 %>
-                            			  			 	<option value="Lecture" selected>Lecture</option>
-                            			  			 	<option value="Discussion">Discussion</option>
+                            			  			 	<option value="Lec" selected>Lecture</option>
+                            			  			 	<option value="Dis">Discussion</option>
+                            			  			 	<option value="Lab">Lab</option>
                             			  			 <%
-                            			  				}else{
+                            			  				}else if(typeSelected.equals("Dis")){
                             			  			 %>
-                            			  			 	<option value="Lecture">Lecture</option>
-                            			  			 	<option value="Discussion" selected>Discussion</option>
+                            			  			 	<option value="Lec">Lecture</option>
+                            			  			 	<option value="Dis" selected>Discussion</option>
+                            			  			 	<option value="Lab">Lab</option>
                             			  			 <%
+                            			  			 	}else{
+                            			  			 %>
+                            			  			 		<option value="Lec">Lecture</option>
+                                			  			 	<option value="Dis" selected>Discussion</option>
+                                			  			 	<option value="Lab" selected>Lab</option>
+                            						<% 
                             			  			 	}
                             			  			 %>
                             			  	</select>
@@ -380,74 +395,92 @@
                             		<td>
                                 		<% 
                           				 	String dayOfWeek = rs.getString("DayOfTheWeek");
-                          					String split[]= dayOfWeek.split("\\s+");
                           					Boolean mon = false;
                           					Boolean tue = false;
                           					Boolean wed = false;
                           					Boolean thu = false;
                           					Boolean fri = false;
                           					
-                          					for(int j = 0;j<split.length;j++){
-                          						switch(split[j]){
-                          							case "Mon": mon = true;break;
-                          							case "Tue": tue = true;break;
-                          							case "Wed": wed = true;break;
-                          							case "Thu": thu = true;break;
-                          							case "Fri": fri = true;break;
-                          							default: 
-                          								System.out.println("DefaultCase " + split[j]);
-                          								break;	
-                          						}// end of switch statement
-                          					}// end of for loop	
-                          					
+                          					String current = "";
+                 							for(int i = 0;i< dayOfWeek.length();i++){
+                 								current = current + dayOfWeek.charAt(i);
+                 								//System.out.println("current " + current);
+                 								//System.out.println(current.equals("M"));
+                 								switch(current){
+                 								case "M": 
+                 									mon = true;
+                 									current = "";
+                 									break;
+                 								case "W":
+                 									wed = true;
+                 									current = "";
+                 									break;
+                 								case "F":
+                 									fri = true;
+                 									current = "";
+                 									break;
+                 								case "Tue":
+                 									tue = true;
+                 									current = "";
+                 									break;
+                 								case "Thu":
+                 									thu = true;
+                 									current = "";
+                 									break;
+                 								default:
+                 									//System.out.println("default");
+                 									continue;
+                 								} // end of switch statement
+                 							}
+                 						
                           					if(mon){
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Monday" checked>Monday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="M" checked>Monday<br>
                           					
                           				<%
                           					}else{
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Monday">Monday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="M">Monday<br>
                           				<%
                           					}
                           					
                           					if(tue){
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Tuesday" checked>Tuesday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Tue" checked>Tuesday<br>
                           				<%
                           					}else{
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Tuesday">Tuesday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Tue">Tuesday<br>
                           				<%
                           					}
                           					
                           					if(wed){
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Wednesday" checked>Wednesday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="W" checked>Wednesday<br>
                           				<%
                           					}else{
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Wednesday">Wednesday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="W">Wednesday<br>
                           				<%
                           					}
                           					
                           					if(thu){
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Thursday" checked>Thursday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Thu" checked>Thursday<br>
                           				<%
                           					}else{
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Thursday">Thursday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="Thu">Thursday<br>
                           				<%
                           					}
                           					
                           					if(fri){
                           				%>
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Friday" checked>Friday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="F" checked>Friday<br>
                           				<%
                           					}else{
                           				%>	
-                          					<input type="checkbox" name= "DayOfTheWeek" value="Friday">Friday<br>
+                          					<input type="checkbox" name= "DayOfTheWeek" value="F">Friday<br>
                           				<%
                           					}
                           				%>      	
