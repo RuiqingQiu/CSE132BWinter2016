@@ -164,7 +164,7 @@
  								switch(current){
  								case "M": 
  									mon[index] = 1;
- 									System.out.println("Here Mon");
+ 									//System.out.println("Here Mon");
  									current = "";
  									break;
  								case "W":

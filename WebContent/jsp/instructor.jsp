@@ -163,11 +163,14 @@
 							</select>
                             
                             </th>
+                            
                             <th>
                             <%
 							departmentStatement = conn.createStatement();
+                            String currentQuarter = "Winter";
+                            String currentYear = "2016";
 							rs_department = departmentStatement.executeQuery
-									("SELECT * FROM Classes");
+									("SELECT * FROM Classes WHERE Quarter = '"+currentQuarter+"' AND Year = '"+currentYear+"'");
 							%>
 			                <select name="SectionID">
 			            	
@@ -185,7 +188,7 @@
 							<% 	
 								while(rs_department.next()){
 							%>	
-							<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") %> </option>
+							<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") + " : " + rs_department.getString("Title")%> </option>
 			            	<%
 								} // close of while loop
 							}// close of else statement
@@ -252,12 +255,12 @@
                             		while (rs_department.next() ) {
 											if(rs_department.getString("SectionID").equals(rs.getString("SectionID"))){
 									%>
-									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" selected> <%= rs_department.getString("SectionID") %> </option>
+									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" selected> <%= rs_department.getString("SectionID") + " : " + rs_department.getString("Title") %> </option>
 									<% 			
 											}
 											else{
 									%>
-									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") %> </option>
+									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") + " : " + rs_department.getString("Title") %> </option>
 									<%
 											}
 									} // close of while loop
