@@ -1,8 +1,36 @@
 ﻿-- The lectures ('LE'), discussions('DI') and lab('LAB') meetings of a section should not happen at the same time.
+DROP Trigger IF EXISTS time_conflict_trigger on ClassMeeting;
 
+CREATE OR REPLACE FUNCTION time_conflict_check() RETURNS TRIGGER AS $time_conflict_check$
+DECLARE t RECORD;
+    BEGIN
+    FOR t in SELECT * from ClassMeeting WHERE SectionID = NEW.SectionID
+    LOOP
+    if ((Select Time from WeeklyMeeting WHERE MeetingID = t.MeetingID AND MeetingID <> NEW.MeetingID) = 
+	(Select Time from WeeklyMeeting WHERE MeetingID = NEW.MeetingID ))
+        then
+		if ((Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = t.MeetingID AND MeetingID <> NEW.MeetingID) LIKE concat('%',(Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = New.MeetingID),'%',NULL))
+				then
+					Raise Exception 'time conflict';
+				
+				end if;
+     end if;
+	END LOOP;
+	RETURN NEW;
+    END;
+$time_conflict_check$ LANGUAGE plpgsql;
+
+CREATE TRIGGER time_conflict_trigger Before INSERT ON ClassMeeting
+FOR EACH ROW EXECUTE PROCEDURE time_conflict_check();
+
+/*
+INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(30,'Lec','WLH 2001',false,'F','10:00AM');
+INSERT INTO ClassMeeting VALUES (2,30);
+*/
 
 -- If the enrollment limit of a section has been reached then additional enrollments should be rejected. 
 -- It is not required to update the waitlist .
+
 DROP Trigger IF EXISTS enrollment_trigger on StudentEnrollment;
 
 CREATE OR REPLACE FUNCTION enrollment_limit_check() RETURNS TRIGGER AS $enrollment_check$
@@ -17,7 +45,6 @@ $enrollment_check$ LANGUAGE plpgsql;
 
 CREATE TRIGGER enrollment_trigger Before INSERT ON StudentEnrollment
 FOR EACH ROW EXECUTE PROCEDURE enrollment_limit_check();
-
 
 -- A professor should not have multiple sections at the same time. For example, a professor that is scheduled to teach classes X and Y 
 -- should not have conflicting sections, mainly overlapping meetings. It is enough to check for the regular meetings (e.g., "LE"). 

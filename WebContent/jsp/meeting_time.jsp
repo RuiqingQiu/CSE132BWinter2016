@@ -299,6 +299,8 @@
                         <th>IsMandatory</th>
                         <th>DayOfTheWeek</th>
                         <th>Time</th>
+                        <th>Update</th>
+                        <th>Delete</th>
                     </tr>
                    
 
