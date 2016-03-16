@@ -150,6 +150,7 @@
                         <th>Year</th>
                         <th>MaxEnrollment</th>
                         <th>Units</th>
+                        <th>Final Grade</th>
 						<th>Action</th>
  			<%-- -------- Handle Input Selection Code -------- --%>
             <%
@@ -285,6 +286,9 @@
                             <td>
                             	<input value="" name="Units">
                             </td>
+                            <td>
+                            	<input value="" name="FinalGrade">
+                            </td>
                 
                             <%-- Button --%>
                             <td>
@@ -305,6 +309,7 @@
                     	<th>SectionID</th>
                     	<th>Course Name</th>
                     	<th>Units</th>
+                    	<th>Final Grade</th>
 						<th>Action</th>
 					</tr>
    
@@ -350,6 +355,10 @@
                   		<input value="<%= rs.getString("Units") %>" name="Units">
                   	</td>
                   	<td>
+                  	   <input value="<%= rs.getString("FinalGrade") %>" name="FinalGrade">
+                  		
+                  	</td>
+                  	<td>
                   		<input class="btn btn-default" type="submit" value="Update">
                   	</td>
                   	</form>
@@ -377,7 +386,7 @@
             <%
                 	if(action != null && action.equals("enroll")){
                 			PreparedStatement pstmt = conn.prepareStatement(
-                                "INSERT INTO AcademicHistory VALUES (?, ?, ?)");
+                                "INSERT INTO AcademicHistory VALUES (?, ?, ?, ?)");
                      	
                              // Begin transaction
                              conn.setAutoCommit(false);
@@ -386,6 +395,7 @@
                              pstmt.setString(1, request.getParameter("StudentID"));
      						 pstmt.setString(2, request.getParameter("SectionID"));
      						 pstmt.setInt(3, Integer.parseInt(request.getParameter("Units")));
+     						 pstmt.setString(4, request.getParameter("FinalGrade"));
 
                              int rowCount = pstmt.executeUpdate();
         
