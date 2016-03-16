@@ -303,8 +303,9 @@
                 <table border="1" class="table table-bordered">
                     <tr>
                     	<th>SectionID</th>
-                    	<th>Units</th>
-						<th>Action</th>
+                    	<th>Course Title</th>
+						<th>Units</th>
+						<th>Actions</th>
 					</tr>
    
             <%-- -------- Iteration Code for displaying the result -------- --%>
@@ -379,8 +380,7 @@
             <%
                 	if(action != null && action.equals("enroll")){
                 			PreparedStatement pstmt = conn.prepareStatement(
-                                "INSERT INTO StudentEnrollment VALUES (?, ?, ?)");
-                     	
+                                "INSERT INTO StudentEnrollment (StudentID, SectionID, Units) VALUES (?, ?, ?)");
                              // Begin transaction
                              conn.setAutoCommit(false);
                              
@@ -388,7 +388,6 @@
                              pstmt.setString(1, request.getParameter("StudentID"));
      						 pstmt.setString(2, request.getParameter("SectionID"));
      						 pstmt.setInt(3, Integer.parseInt(request.getParameter("Units")));
-
                              int rowCount = pstmt.executeUpdate();
         
                              // Commit transaction
