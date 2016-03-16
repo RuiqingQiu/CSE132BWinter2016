@@ -22,6 +22,7 @@ DECLARE t RECORD;
 $time_conflict_check$ LANGUAGE plpgsql;
 
 -- check for irregular meetings(extra credit attempt)
+-- when inserting regular meetings, checking against irregular meeting time as well
 
 DROP Trigger IF EXISTS irregular_meeting_trigger on ClassMeeting;
 
@@ -48,7 +49,6 @@ CREATE TRIGGER time_conflict_trigger Before INSERT ON ClassMeeting
 FOR EACH ROW EXECUTE PROCEDURE time_conflict_check();
 CREATE TRIGGER irregular_meeting_trigger Before INSERT ON ClassMeeting
 FOR EACH ROW EXECUTE PROCEDURE irregular_meeting_check();
-
 
 -- enter final or review sessions
 DROP Trigger IF EXISTS insert_irregular_meeting_trigger on ClassReview;
