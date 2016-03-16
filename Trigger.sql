@@ -121,7 +121,7 @@ CREATE OR REPLACE FUNCTION enrollment_limit_check() RETURNS TRIGGER AS $enrollme
         then
 		Raise Exception 'Enrollment Error Reached Maximum Enrollment Limit';
         end if;
-		RETURN NEW;
+	RETURN NEW;
     END;
 $enrollment_check$ LANGUAGE plpgsql;
 
