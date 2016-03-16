@@ -11,6 +11,7 @@ DECLARE t RECORD;
         then
 		if ((Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = t.MeetingID AND MeetingID <> NEW.MeetingID) LIKE concat('%',(Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = New.MeetingID),'%',NULL))
 				then
+					DELETE from WeeklyMeeting WHERE MeetingID = NEW.MeetingID;
 					Raise Exception 'time conflict';
 				
 				end if;
@@ -20,13 +21,94 @@ DECLARE t RECORD;
     END;
 $time_conflict_check$ LANGUAGE plpgsql;
 
+-- check for irregular meetings(extra credit attempt)
+
+DROP Trigger IF EXISTS irregular_meeting_trigger on ClassMeeting;
+
+CREATE OR REPLACE FUNCTION irregular_meeting_check() RETURNS TRIGGER AS $irregular_time_conflict_check$
+DECLARE t RECORD;
+    BEGIN
+    FOR t in SELECT * from ClassReview WHERE SectionID = NEW.SectionID
+    LOOP
+    if ((Select Time from ReviewSession r WHERE r.ReviewID = t.ReviewID) = 
+	(Select Time from WeeklyMeeting WHERE MeetingID = NEW.MeetingID))
+        then
+		if ((Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = NEW.MeetingID) LIKE concat('%',(Select DayOfTheWeek from ReviewSession WHERE ReviewID = t.ReviewID),'%',NULL))
+				then
+					DELETE from WeeklyMeeting WHERE MeetingID = NEW.MeetingID;
+					Raise Exception 'time conflict';
+		end if;
+     end if;
+     END LOOP;
+	RETURN NEW;
+    END;
+$irregular_time_conflict_check$ LANGUAGE plpgsql;
+
 CREATE TRIGGER time_conflict_trigger Before INSERT ON ClassMeeting
 FOR EACH ROW EXECUTE PROCEDURE time_conflict_check();
+CREATE TRIGGER irregular_meeting_trigger Before INSERT ON ClassMeeting
+FOR EACH ROW EXECUTE PROCEDURE irregular_meeting_check();
 
-/*
-INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(30,'Lec','WLH 2001',false,'F','10:00AM');
-INSERT INTO ClassMeeting VALUES (2,30);
-*/
+-- enter final or review sessions
+DROP Trigger IF EXISTS insert_irregular_meeting_trigger on ClassReview;
+
+CREATE OR REPLACE FUNCTION insert_irregular_meeting_check() RETURNS TRIGGER AS $insert_irregular_time_conflict_check$
+DECLARE t RECORD;
+    BEGIN
+    FOR t in SELECT * from ClassReview WHERE SectionID = NEW.SectionID
+    LOOP
+    if ((Select Time from ReviewSession r WHERE r.ReviewID = t.ReviewID AND r.ReviewID <> New.ReviewID) = 
+	(Select Time from ReviewSession WHERE ReviewID = NEW.ReviewID))
+        then
+		if ((Select DayOfTheWeek from ReviewSession WHERE ReviewID = NEW.ReviewID) LIKE concat('%',(Select DayOfTheWeek from ReviewSession WHERE ReviewID = t.ReviewID),'%',NULL))
+		then
+		      if ((Select Date from ReviewSession v WHERE v.ReviewID = t.ReviewID AND v.ReviewID <> New.ReviewID) = 
+			     (Select Date from ReviewSession WHERE ReviewID = NEW.ReviewID))
+		      then
+			DELETE from ReviewSession WHERE ReviewID = NEW.ReviewID;
+			Raise Exception 'time conflict';
+		       end if;
+		end if;
+     end if;
+     END LOOP;
+	RETURN NEW;
+    END;
+$insert_irregular_time_conflict_check$ LANGUAGE plpgsql;
+
+-- check insert irregular meeting against normal meeting
+DROP Trigger IF EXISTS insert_irregular_meeting_aginst_normal_meeting_trigger on ClassReview;
+
+CREATE OR REPLACE FUNCTION insert_irregular_meeting_check_against_normal_meeting() RETURNS TRIGGER AS $insert_irregular_meeting_check_against_normal_meeting_check$
+DECLARE t RECORD;
+DECLARE tt RECORD;
+    BEGIN
+    FOR t in SELECT * from ClassReview WHERE SectionID = NEW.SectionID
+    LOOP
+	FOR tt in SELECT * from ClassMeeting WHERE SectionID = NEW.SectionID
+	LOOP
+		if ((Select Time from ReviewSession r WHERE r.ReviewID = t.ReviewID AND r.ReviewID <> New.ReviewID) = 
+			(Select w.Time from WeeklyMeeting w WHERE w.MeetingID = tt.MeetingID))
+		then
+			if ((Select DayOfTheWeek from ReviewSession WHERE ReviewID = NEW.ReviewID AND r.ReviewID <> New.ReviewID) LIKE concat('%',(Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = tt.MeetingID),'%',NULL))
+			then
+				DELETE from ReviewSession WHERE ReviewID = NEW.ReviewID;
+				Raise Exception 'time conflict';
+		       end if;
+		end if;
+	END LOOP;
+     END LOOP;
+	RETURN NEW;
+    END;
+$insert_irregular_meeting_check_against_normal_meeting_check$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insert_irregular_meeting_trigger Before INSERT ON ClassReview
+FOR EACH ROW EXECUTE PROCEDURE insert_irregular_meeting_check();
+CREATE TRIGGER insert_irregular_meeting_aginst_normal_meeting_trigger Before INSERT ON ClassReview
+FOR EACH ROW EXECUTE PROCEDURE insert_irregular_meeting_check_against_normal_meeting();
+
+
+--INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(23,'Lec','WLH 2001',false,'M','8:00AM');
+--INSERT INTO ClassMeeting VALUES (1,23);
 
 -- If the enrollment limit of a section has been reached then additional enrollments should be rejected. 
 -- It is not required to update the waitlist .
@@ -75,4 +157,4 @@ $professor_time_conflict_check$ LANGUAGE plpgsql;
 
 CREATE TRIGGER professor_time_conflict_trigger Before INSERT ON Instructor
 FOR EACH ROW EXECUTE PROCEDURE professor_time_conflict_check();
-INSERT INTO Instructor VALUES(2,'Taylor Swift');
+--INSERT INTO Instructor VALUES(2,'Taylor Swift');

@@ -379,7 +379,7 @@ INSERT INTO DegreeConcentration VALUES ('M.S. in Computer Science', 'Systems');
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(1,'Lec','WLH 2001',false,'MWF','10:00AM');
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(13,'Dis','WLH 2001',false,'TueThu','10:00AM');
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(14,'Lab','CSE 250',false,'F','6:00PM');
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(1,'WLH 2001',false,'Mon','Mar 14th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(1,'WLH 2001',false,'M','Mar 14th','8:00AM');
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(1,1);
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(1,13);
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(1,14);
@@ -387,8 +387,8 @@ INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (1,1,true);
 
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(2,'Lec','WLH 2005',false,'MWF','10:00AM');
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(15,'Dis','WLH 2005',false,'TueThu','11:00AM');
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(2,'WLH 2001',false,'Mon','Mar 7th','8:00AM');
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(3,'WLH 2001',false,'Mon','Mar 14th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(2,'WLH 2001',false,'M','Mar 7th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(3,'WLH 2001',false,'M','Mar 14th','8:00AM');
 
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(2,2);
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(2,15);
@@ -396,14 +396,14 @@ INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (2,2,false);
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (2,3,true);
 
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(3,'Lec','WLH 2001',false,'MWF','12:00PM');
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(4,'WLH 2001',false,'Wed','Mar 16th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(4,'WLH 2001',false,'W','Mar 16th','8:00AM');
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(3,3);
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (3,4,true);
 
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(4,'Lec','WLH 2005',false,'MWF','12:00PM');
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(16,'Dis','WLH 2005',false,'WF','1:00PM');
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(5,'WLH 2001',false,'Mon','Mar 7th','9:00AM');
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(6,'WLH 2001',false,'Mon','Mar 14th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(5,'WLH 2001',false,'M','Mar 7th','9:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(6,'WLH 2001',false,'M','Mar 14th','8:00AM');
 
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(4,4);
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(4,16);
@@ -433,11 +433,11 @@ INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time)
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(7,8);
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(18,'Dis','WLH 2001',false,'Thu','1:00PM');
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(7,18);
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(11,'WLH 2001',false,'Fri','Jan 29th','8:00AMs');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(11,'WLH 2001',false,'F','Jan 29th','8:00AMs');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (7,11,false);
 INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(12,'WLH 2001',false,'Thu','Mar 17th','5:00PM');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (7,12,false);
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(13,'WLH 2001',false,'Fri','Mar 18th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(13,'WLH 2001',false,'F','Mar 18th','8:00AM');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (7,13,true);
 
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(9,'Lec','WLH 2005',false,'TueThu','3:00PM');
@@ -453,9 +453,9 @@ INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time)
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(9,10);
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(21,'Dis','WLH 2000',false,'MF','9:00AM');
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(9,21);
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(15,'WLH 2001',false,'Wed','Mar 9th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(15,'WLH 2001',false,'W','Mar 9th','8:00AM');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (9,15,false);
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(16,'WLH 2001',false,'Wed','Mar 16th','8:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(16,'WLH 2001',false,'W','Mar 16th','8:00AM');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (9,16,true);
 
 
@@ -465,9 +465,9 @@ INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time)
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(10,12);
 INSERT INTO WeeklyMeeting(MeetingID,Type,Location,IsMandatory,DayOfTheWeek,Time) VALUES(22,'Lab','WLH 2005',false,'TueThu','3:00PM');
 INSERT INTO ClassMeeting(SectionID,MeetingID) VALUES(10,22);
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(17,'WLH 2001',false,'Mon','Feb 15th','11:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(17,'WLH 2001',false,'M','Feb 15th','11:00AM');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (10,17,false);
-INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(18,'WLH 2001',false,'Mon','Mar 14th','11:00AM');
+INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(18,'WLH 2001',false,'M','Mar 14th','11:00AM');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (10,18,false);
 INSERT INTO ReviewSession(ReviewID,Location,IsMandatory,DayOfTheWeek,Date,Time) VALUES(19,'WLH 2001',false,'Tue','Mar 15th','8:00AM');
 INSERT INTO ClassReview(SectionID,ReviewID,IsFinal) VALUES (10,19,true);

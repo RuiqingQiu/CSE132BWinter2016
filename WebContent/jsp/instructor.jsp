@@ -128,7 +128,8 @@
                 <table border="1" class="table table-bordered">
                     <tr>
                         <th>Faculty Name</th>
-                        <th>Class</th>
+                        <th>Section</th>
+                        <th>Action</th>
                     </tr>
                     <tr>
                         <form action="instructor.jsp" method="get">
@@ -171,6 +172,7 @@
                             String currentYear = "2016";
 							rs_department = departmentStatement.executeQuery
 									("SELECT * FROM Classes WHERE Quarter = '"+currentQuarter+"' AND Year = '"+currentYear+"'");
+							
 							%>
 			                <select name="SectionID">
 			            	
@@ -187,9 +189,20 @@
 								<option value="" ></option>
 							<% 	
 								while(rs_department.next()){
+									// Displaying SectionID + CourseName
+									PreparedStatement ps = null;
+                           	  		String sql = "SELECT * FROM CourseHasClass WHERE SectionID = ?";
+                           	  
+                           	  		ps = conn.prepareStatement(sql);
+                           	  		ps.setString(1, rs_department.getString("SectionID"));
+                         		   // retrieve all the valid meetingID for that seciondID
+                           	  		ResultSet rs_cm = ps.executeQuery();
+                         		    while(rs_cm.next()){
+									
 							%>	
-							<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") + " : " + rs_department.getString("Title")%> </option>
+							<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") + " : " + rs_cm.getString("CourseName")%> </option>
 			            	<%
+                         		    }
 								} // close of while loop
 							}// close of else statement
 							%>
@@ -253,16 +266,26 @@
                         			
   
                             		while (rs_department.next() ) {
+                            			// Displaying SectionID + CourseName
+    									PreparedStatement ps = null;
+                               	  		String sql = "SELECT * FROM CourseHasClass WHERE SectionID = ?";
+                               	  
+                               	  		ps = conn.prepareStatement(sql);
+                               	  		ps.setString(1, rs_department.getString("SectionID"));
+                             		   // retrieve all the valid meetingID for that seciondID
+                               	  		ResultSet rs_cm = ps.executeQuery();
+                             		    while(rs_cm.next()){
 											if(rs_department.getString("SectionID").equals(rs.getString("SectionID"))){
 									%>
-									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" selected> <%= rs_department.getString("SectionID") + " : " + rs_department.getString("Title") %> </option>
+									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" selected> <%= rs_department.getString("SectionID") + " : " + rs_cm.getString("CourseName") %> </option>
 									<% 			
 											}
 											else{
 									%>
-									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") + " : " + rs_department.getString("Title") %> </option>
+									<option value="<%= rs_department.getString("SectionID") %>" name="SectionID" > <%= rs_department.getString("SectionID") + " : " + rs_cm.getString("CourseName") %> </option>
 									<%
 											}
+                             		    }
 									} // close of while loop
                         
 								%>
