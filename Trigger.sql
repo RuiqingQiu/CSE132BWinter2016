@@ -49,6 +49,7 @@ FOR EACH ROW EXECUTE PROCEDURE time_conflict_check();
 CREATE TRIGGER irregular_meeting_trigger Before INSERT ON ClassMeeting
 FOR EACH ROW EXECUTE PROCEDURE irregular_meeting_check();
 
+
 -- enter final or review sessions
 DROP Trigger IF EXISTS insert_irregular_meeting_trigger on ClassReview;
 
@@ -76,6 +77,7 @@ DECLARE t RECORD;
 $insert_irregular_time_conflict_check$ LANGUAGE plpgsql;
 
 -- check insert irregular meeting against normal meeting
+
 DROP Trigger IF EXISTS insert_irregular_meeting_aginst_normal_meeting_trigger on ClassReview;
 
 CREATE OR REPLACE FUNCTION insert_irregular_meeting_check_against_normal_meeting() RETURNS TRIGGER AS $insert_irregular_meeting_check_against_normal_meeting_check$
