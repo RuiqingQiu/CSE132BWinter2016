@@ -12,7 +12,7 @@ DECLARE t RECORD;
 		if ((Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = t.MeetingID AND MeetingID <> NEW.MeetingID) LIKE concat('%',(Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = New.MeetingID),'%',NULL))
 				then
 					DELETE from WeeklyMeeting WHERE MeetingID = NEW.MeetingID;
-					Raise Exception 'time conflict';
+					Raise Exception 'entered meeting time conflict with some other regular meetings';
 				
 				end if;
      end if;
@@ -37,7 +37,7 @@ DECLARE t RECORD;
 		if ((Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = NEW.MeetingID) LIKE concat('%',(Select DayOfTheWeek from ReviewSession WHERE ReviewID = t.ReviewID),'%',NULL))
 				then
 					DELETE from WeeklyMeeting WHERE MeetingID = NEW.MeetingID;
-					Raise Exception 'time conflict';
+					Raise Exception 'entered meeting time conflict with some other irregular meetings';
 		end if;
      end if;
      END LOOP;
@@ -67,7 +67,7 @@ DECLARE t RECORD;
 			     (Select Date from ReviewSession WHERE ReviewID = NEW.ReviewID))
 		      then
 			DELETE from ReviewSession WHERE ReviewID = NEW.ReviewID;
-			Raise Exception 'time conflict';
+			Raise Exception 'entered meeting time conflict with other irregular meeting time';
 		       end if;
 		end if;
      end if;
@@ -94,7 +94,7 @@ DECLARE tt RECORD;
 			if ((Select DayOfTheWeek from ReviewSession WHERE ReviewID = NEW.ReviewID AND r.ReviewID <> New.ReviewID) LIKE concat('%',(Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = tt.MeetingID),'%',NULL))
 			then
 				DELETE from ReviewSession WHERE ReviewID = NEW.ReviewID;
-				Raise Exception 'time conflict';
+				Raise Exception 'entered meeting time conflict with some other regular meetings';
 		       end if;
 		end if;
 	END LOOP;
@@ -148,7 +148,7 @@ DECLARE tt RECORD;
 		then
 			if ((Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = t.MeetingID) LIKE concat('%',(Select DayOfTheWeek from WeeklyMeeting WHERE MeetingID = tt.MeetingID),'%',NULL))
 				then
-					Raise Exception 'time conflict';
+					Raise Exception 'instructor has time conflict with the section selected';
 			end if;
 		end if;
 	END LOOP;
