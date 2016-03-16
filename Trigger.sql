@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION enrollment_limit_check() RETURNS TRIGGER AS $enrollme
         then
 		Raise Exception 'Enrollment Error Reached Maximum Enrollment Limit';
         end if;
-		RETURN NEW;
+	RETURN NEW;
     END;
 $enrollment_check$ LANGUAGE plpgsql;
 
@@ -22,3 +22,18 @@ FOR EACH ROW EXECUTE PROCEDURE enrollment_limit_check();
 -- A professor should not have multiple sections at the same time. For example, a professor that is scheduled to teach classes X and Y 
 -- should not have conflicting sections, mainly overlapping meetings. It is enough to check for the regular meetings (e.g., "LE"). 
 -- Extra credit is given for checking conflicts on the irregular meetings too.
+
+DROP Trigger IF EXISTS instructor_trigger on Instructor;
+
+CREATE OR REPLACE FUNCTION instructor_trigger_check() RETURNS TRIGGER AS $instructor_trigger$
+    BEGIN
+        if (Select count(*) From StudentEnrollment  Where SectionID = NEW.SectionID) >= (Select MaxEnrollment From Classes Where SectionID = NEW.SectionID)
+        then
+		Raise Exception 'Instructor has time conflict with this section';
+        end if;
+	RETURN NEW;
+    END;
+$instructor_trigger$ LANGUAGE plpgsql;
+
+CREATE TRIGGER instructor_trigger Before INSERT ON Instructor
+FOR EACH ROW EXECUTE PROCEDURE enrollment_limit_check();
