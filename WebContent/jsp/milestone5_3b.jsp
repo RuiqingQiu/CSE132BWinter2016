@@ -117,7 +117,7 @@
 			            		
 							%>
 									<tr>
-									 <form action="report3b.jsp" method="get">
+									 <form action="milestone5_3b.jsp" method="get">
                       					<input type="hidden" value="query" name="action">
 										<label>Faculty Name : </label><select name="FacultyName">
 										<%

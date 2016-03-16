@@ -419,11 +419,12 @@
                         // Can't update SectionID because it is PK
 
                        PreparedStatement pstmt = conn.prepareStatement(
-                            "UPDATE AcademicHistory SET Units = ? WHERE StudentID = ? and SectionID = ?"); 
+                            "UPDATE AcademicHistory SET Units = ?, FinalGrade = ? WHERE StudentID = ? and SectionID = ?"); 
                         
-                        pstmt.setString(3, request.getParameter("SectionID"));
-                        pstmt.setString(2,request.getParameter("StudentID"));  
+                        pstmt.setString(4, request.getParameter("SectionID"));
+                        pstmt.setString(3,request.getParameter("StudentID"));  
                         pstmt.setInt(1, Integer.parseInt(request.getParameter("Units")));  
+                        pstmt.setString(2, request.getParameter("FinalGrade"));  
 
                         
                          

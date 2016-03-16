@@ -261,19 +261,7 @@ $cpqg_update$ LANGUAGE plpgsql;
 CREATE TRIGGER cpqg_update After Update ON AcademicHistory
 FOR EACH ROW EXECUTE PROCEDURE cpqg_update_func();
 
---INSERT INTO AcademicHistory VALUES ('A10', '11', 4, 'A');
--- INSERT INTO AcademicHistory VALUES ('A13', '11', 4, 'B');
--- INSERT INTO AcademicHistory VALUES ('A14', '11', 4, 'C');
--- INSERT INTO AcademicHistory VALUES ('A15', '11', 4, 'D');
--- INSERT INTO AcademicHistory VALUES ('A16', '11', 4, 'F');
 
-
-Update AcademicHistory SET FinalGrade = 'D' where StudentID = 'A10' and SectionID = '11';
-
-Select * from CPQG
-WHERE CourseName = 'CSE8A' and FacultyName = 'Justin Bieber'
-Order by Grade;
-/*
 -- Report 3B
 CREATE TABLE CPG(
 	CourseName varchar(255),
@@ -366,13 +354,6 @@ and classes.SectionID = cc.SectionID and a.SectionID = l.SectionID and
 (a.FinalGrade ='F')
 Group by c.CourseName, l.FacultyName) i
 Where cpg.Grade = 'Other' and i.CourseName = cpg.CourseName and i.FacultyName = cpg.FacultyName;
-
-Select * from CPG;
-
-Select Grade, GradeCount
-From CPG
-Where CourseName = 'PHIL165' and FacultyName = 'Flo Rida'
-Order by Grade;
 
 -- Insert into AcademicHistory trigger
 DROP Trigger IF EXISTS cpg_insert on AcademicHistory;
@@ -519,19 +500,7 @@ $cpg_update$ LANGUAGE plpgsql;
 CREATE TRIGGER cpg_update After Update ON AcademicHistory
 FOR EACH ROW EXECUTE PROCEDURE cpg_update_func();
 
--- INSERT INTO AcademicHistory VALUES ('A10', '11', 4, 'A');
--- INSERT INTO AcademicHistory VALUES ('A13', '11', 4, 'B');
--- INSERT INTO AcademicHistory VALUES ('A14', '11', 4, 'C');
--- INSERT INTO AcademicHistory VALUES ('A15', '11', 4, 'D');
--- INSERT INTO AcademicHistory VALUES ('A16', '11', 4, 'F');
 
-
-Update AcademicHistory SET FinalGrade = 'D' where StudentID = 'A10' and SectionID = '11';
-
-Select * from CPG 
-where CourseName = 'CSE8A' and FacultyName = 'Justin Bieber'
-Order by Grade;
-*/
 /*
 Materialized views can greatly accelerate query processing. Let us consider the queries in decision support. 
 The materialized views will consist in tables created with the CREATE TABLE command and updated using triggers.

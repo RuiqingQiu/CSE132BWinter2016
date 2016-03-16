@@ -120,7 +120,7 @@
 			            		
 							%>
 									<tr>
-									 <form action="report3a.jsp" method="get">
+									 <form action="milestone5_3a.jsp" method="get">
                       					<input type="hidden" value="query" name="action">
 										<label>Faculty Name : </label><select name="FacultyName">
 										<%
